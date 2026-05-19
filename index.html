@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MonRogue v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #0a1228;
+    --bg-mid: #162447;
+    --bg-card: #1e2d5a;
+    --bg-card-light: #2a3d7a;
+    --accent: #ffd34e;
+    --accent-hot: #ff8a3d;
+    --gold: #f6c84c;
+    --text: #f5f5f5;
+    --text-dim: #a0aec0;
+    --hp-high: #4ade80;
+    --hp-mid: #fbbf24;
+    --hp-low: #ef4444;
+    --exp-bar: #60a5fa;
+    --type-fire: #ff5722;
+    --type-water: #2196f3;
+    --type-grass: #4caf50;
+    --type-spirit: #9c27b0;
+    --type-normal: #757575;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--bg-dark);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255, 138, 61, 0.08), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(33, 150, 243, 0.08), transparent 40%);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .app {
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .screen { display: none; padding: 16px; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  h1, h2, h3 {
+    font-family: 'Black Han Sans', sans-serif;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+  }
+
+  .btn {
+    font-family: 'Jua', sans-serif;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 17px;
+    color: var(--text);
+    transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-hot)); color: #1a1a1a; font-weight: 700; }
+  .btn-secondary { background: var(--bg-card-light); }
+  .btn-danger { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+
+  /* ===== 시작 화면 ===== */
+  .title-block { text-align: center; padding: 30px 0 24px; }
+  .title-main {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hot) 60%, #ff5722 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 2px;
+    filter: drop-shadow(0 4px 8px rgba(255, 138, 61, 0.3));
+  }
+  .title-sub {
+    font-family: 'Jua', sans-serif;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-size: 14px;
+    letter-spacing: 4px;
+  }
+
+  .section-label {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 18px;
+    color: var(--accent);
+    margin: 18px 0 12px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before, .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+  }
+
+  .monster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .mon-card {
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 12px 10px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .mon-card:active { transform: scale(0.97); }
+  .mon-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(255, 211, 78, 0.4);
+    background: var(--bg-card-light);
+  }
+  .mon-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: radial-gradient(circle at 50% 60%, rgba(255,211,78,0.12), transparent 70%);
+    border-radius: 10px;
+    display: block;
+  }
+  .mon-card-name { font-family: 'Jua', sans-serif; text-align: center; margin-top: 8px; font-size: 17px; }
+  .mon-card-type {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 99px;
+    margin-top: 4px;
+    font-weight: 700;
+    color: white;
+  }
+  .mon-card-info { text-align: center; }
+
+  .start-btn-wrap {
+    position: sticky;
+    bottom: 16px;
+    margin-top: 24px;
+    padding-top: 16px;
+    background: linear-gradient(180deg, transparent, var(--bg-dark) 40%);
+  }
+  .start-btn-wrap .btn { width: 100%; font-size: 19px; padding: 18px; }
+
+  .preview-detail {
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 14px;
+    display: none;
+  }
+  .preview-detail.show { display: block; }
+  .preview-detail-name { font-family: 'Black Han Sans', sans-serif; font-size: 22px; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-top: 10px; }
+  .stat-pill { background: var(--bg-dark); border-radius: 8px; padding: 6px 4px; text-align: center; }
+  .stat-pill-label { font-size: 10px; color: var(--text-dim); }
+  .stat-pill-value { font-family: 'Jua', sans-serif; font-size: 18px; color: var(--accent); }
+
+  /* ===== 배틀 화면 상단 ===== */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: 8px 14px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+  .topbar-item { display: flex; align-items: center; gap: 4px; font-family: 'Jua', sans-serif; }
+  .topbar-label { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
+  .topbar-value { font-family: 'Black Han Sans', sans-serif; font-size: 18px; color: var(--accent); }
+  .topbar-icon { font-size: 16px; }
+
+  /* 파티 표시 */
+  .party-display {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .party-slot {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--bg-card-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .party-slot.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(255, 211, 78, 0.5);
+  }
+  .party-slot.fainted { opacity: 0.4; filter: grayscale(1); }
+  .party-slot.empty { background: rgba(255,255,255,0.05); border-style: dashed; }
+  .party-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .party-slot-hp {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(0,0,0,0.4);
+  }
+  .party-slot-hp-fill {
+    height: 100%;
+    background: var(--hp-high);
+    transition: width 0.3s;
+  }
+  .party-slot-hp-fill.mid { background: var(--hp-mid); }
+  .party-slot-hp-fill.low { background: var(--hp-low); }
+
+  /* ===== 배틀 필드 ===== */
+  .battle-field {
+    border-radius: 16px;
+    padding: 12px;
+    position: relative;
+    border: 3px solid var(--bg-card);
+    overflow: hidden;
+    aspect-ratio: 16/12;
+    background-size: cover;
+    background-position: center 70%;
+    background-repeat: no-repeat;
+  }
+  /* 배경 상단 어두운 오버레이 (캐릭터 정보 카드 가독성용) */
+  .battle-field::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .enemy-row, .player-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  /* enemy: sprite를 오른쪽으로 */
+  .enemy-row { flex-direction: row-reverse; }
+  /* player: sprite를 왼쪽으로 (기본) */
+  .player-row { margin-top: 6px; }
+
+  .sprite-wrap {
+    flex: 0 0 130px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    perspective: 500px;
+  }
+  /* 바닥 그림자 (별도 요소) */
+  .sprite-shadow {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 14px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), rgba(0,0,0,0) 70%);
+    z-index: 0;
+    animation: shadow-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes shadow-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1, 1); opacity: 0.85; }
+    50%      { transform: translateX(-50%) scale(0.82, 0.7); opacity: 0.55; }
+  }
+  /* 캐릭터 이미지: idle 떠다님 + 마주보기 기울임 */
+  .sprite-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35));
+    transition: filter 0.2s;
+    transform-origin: bottom center;
+    --flip: 1;
+    animation: idle-bob 2.4s ease-in-out infinite;
+  }
+  /* flipped 클래스가 있으면 좌우 반전 */
+  .sprite-wrap.flipped img { --flip: -1; }
+
+  @keyframes idle-bob {
+    0%, 100% { transform: scaleX(var(--flip)) rotateY(-12deg) translateY(0); }
+    50%      { transform: scaleX(var(--flip)) rotateY(-12deg) translateY(-6px); }
+  }
+
+  /* 공격 대시 */
+  .sprite-wrap.attacking img { animation: dash-anim 0.5s ease-out; }
+  @keyframes dash-anim {
+    0%   { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
+    35%  { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(28px) scale(1.06); }
+    100% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
+  }
+
+  /* 피격 흔들림 + 빨갛게 */
+  .sprite-wrap.hit img { animation: shake-anim 0.45s; }
+  @keyframes shake-anim {
+    0%,100% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
+    15% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(-10px); filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) brightness(1.7) sepia(0.8) saturate(4) hue-rotate(-25deg); }
+    35% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(10px); }
+    55% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(-7px); }
+    75% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(7px); }
+  }
+
+  /* 쓰러짐 */
+  .sprite-wrap.faint img { animation: faint-anim 0.9s forwards; }
+  @keyframes faint-anim {
+    0%   { opacity: 1; transform: scaleX(var(--flip)) rotateY(-12deg) translateY(0); }
+    100% { opacity: 0; transform: scaleX(var(--flip)) rotateY(-12deg) translateY(70px) rotate(18deg); }
+  }
+  .sprite-wrap.faint .sprite-shadow,
+  .sprite-wrap.captured .sprite-shadow { animation: none; opacity: 0; transition: opacity 0.4s; }
+
+  /* 잡힘 (enemy만) */
+  .sprite-wrap.captured img { animation: captured-anim 1s forwards; }
+  @keyframes captured-anim {
+    0%   { opacity: 1; transform: scaleX(var(--flip)) rotateY(-12deg) scale(1);   filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    50%  { opacity: 1; transform: scaleX(var(--flip)) rotateY(-12deg) scale(0.4); filter: drop-shadow(0 0 24px var(--accent)) brightness(2.2); }
+    100% { opacity: 0; transform: scaleX(var(--flip)) rotateY(-12deg) scale(0); }
+  }
+
+  /* 배틀 필드 흔들림 (피격 시) */
+  .battle-field.shake { animation: field-shake 0.3s; }
+  @keyframes field-shake {
+    0%,100% { transform: translate(0,0); }
+    20% { transform: translate(-4px, 2px); }
+    40% { transform: translate(4px, -2px); }
+    60% { transform: translate(-3px, -1px); }
+    80% { transform: translate(3px, 2px); }
+  }
+
+  /* 화면 플래시 (히트 시) */
+  .battle-flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 5;
+    mix-blend-mode: screen;
+  }
+  .battle-flash.flash-hit { animation: flash-hit 0.25s; }
+  @keyframes flash-hit {
+    0% { opacity: 0; }
+    30% { opacity: 0.55; }
+    100% { opacity: 0; }
+  }
+
+  /* ===== 스킬 발사체 ===== */
+  .fx-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+    overflow: visible;
+  }
+  .projectile {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    will-change: transform, left, top, opacity;
+  }
+  .projectile.fire {
+    background: radial-gradient(circle at 35% 35%, #fff3a0 0%, #ffb84d 30%, #ff5722 60%, transparent 75%);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 12px #ff8a3d) blur(0.3px);
+    animation: spin-fast 0.4s linear infinite;
+  }
+  .projectile.water {
+    background: radial-gradient(ellipse at 35% 30%, #e3f2fd 0%, #64b5f6 30%, #1976d2 65%, transparent 80%);
+    border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%;
+    filter: drop-shadow(0 0 10px #2196f3);
+    animation: spin-slow 0.6s linear infinite;
+  }
+  .projectile.normal {
+    width: 70px;
+    height: 30px;
+    background: linear-gradient(90deg, transparent 0%, #fff 30%, #fff 70%, transparent 100%);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 8px #fff);
+  }
+  .projectile.grass {
+    background: radial-gradient(ellipse at 35% 30%, #d4f5b3 0%, #7fc34a 35%, #3d8b1f 70%, transparent 85%);
+    border-radius: 60% 30% 60% 30% / 50% 60% 40% 50%;
+    filter: drop-shadow(0 0 10px #7fc34a);
+    animation: spin-slow 0.6s linear infinite;
+  }
+  .projectile.spirit {
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e1b3ff 25%, #9c27b0 55%, transparent 80%);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 14px #d580ff) blur(0.4px);
+    animation: spin-fast 0.3s linear infinite;
+  }
+  @keyframes spin-fast { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes spin-slow { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+  /* 명중 폭발 */
+  .impact {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .impact.fire {
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, #fff3a0 0%, #ff8a3d 30%, #ff3030 55%, transparent 70%);
+    border-radius: 50%;
+    animation: impact-pop 0.5s forwards;
+    filter: drop-shadow(0 0 15px #ff5722);
+  }
+  .impact.water {
+    width: 110px; height: 110px;
+    background: radial-gradient(circle, #e3f2fd 0%, #64b5f6 35%, #1565c0 60%, transparent 75%);
+    border-radius: 50%;
+    animation: impact-pop 0.5s forwards;
+    filter: drop-shadow(0 0 15px #2196f3);
+  }
+  .impact.normal {
+    width: 90px; height: 90px;
+    background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.4) 40%, transparent 65%);
+    border-radius: 50%;
+    animation: impact-pop 0.4s forwards;
+  }
+  .impact.grass {
+    width: 110px; height: 110px;
+    background: radial-gradient(circle, #d4f5b3 0%, #7fc34a 35%, #3d8b1f 60%, transparent 75%);
+    border-radius: 50%;
+    animation: impact-pop 0.5s forwards;
+    filter: drop-shadow(0 0 15px #7fc34a);
+  }
+  .impact.spirit {
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, #ffffff 0%, #e1b3ff 30%, #9c27b0 55%, transparent 75%);
+    border-radius: 50%;
+    animation: impact-pop 0.55s forwards;
+    filter: drop-shadow(0 0 20px #d580ff);
+  }
+  @keyframes impact-pop {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    35%  { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+  }
+
+  /* 슬래시 (노말 기술 전용 추가) */
+  .slash {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 8px;
+    background: linear-gradient(90deg, transparent 0%, #fff 50%, transparent 100%);
+    border-radius: 4px;
+    filter: drop-shadow(0 0 6px #fff);
+    pointer-events: none;
+    z-index: 5;
+    animation: slash-anim 0.4s forwards;
+  }
+  @keyframes slash-anim {
+    0% { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scaleX(0); }
+    30% { opacity: 1; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.2); }
+  }
+
+  .info-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.94);
+    color: #1a1a1a;
+    border-radius: 10px;
+    padding: 8px 12px;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+  }
+  .info-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .info-card-name { font-family: 'Black Han Sans', sans-serif; font-size: 16px; color: #1a1a1a; }
+  .info-card-lv { font-family: 'Jua', sans-serif; font-size: 12px; color: #555; }
+  .hp-bar-wrap { background: #2a2a2a; border-radius: 99px; height: 9px; overflow: hidden; }
+  .hp-bar { height: 100%; background: var(--hp-high); border-radius: 99px; transition: width 0.5s ease-out, background 0.3s; }
+  .hp-bar.mid { background: var(--hp-mid); }
+  .hp-bar.low { background: var(--hp-low); }
+  .hp-text { font-family: 'Jua', sans-serif; font-size: 11px; color: #444; text-align: right; margin-top: 2px; }
+  .exp-bar-wrap { background: #2a2a2a; border-radius: 99px; height: 4px; overflow: hidden; margin-top: 3px; }
+  .exp-bar { height: 100%; background: var(--exp-bar); transition: width 0.5s ease-out; }
+  /* 상태이상 표시 */
+  .status-row { margin-top: 4px; min-height: 16px; }
+  .status-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-family: 'Jua', sans-serif;
+  }
+  /* 기술 버튼의 상태이상 표시 */
+  .move-status {
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'Jua', sans-serif;
+    margin-top: 2px;
+  }
+  /* sprite의 상태이상 시각 효과 */
+  .sprite-wrap.status-burn img { animation: idle-bob 2.4s ease-in-out infinite, burn-tint 1.2s ease-in-out infinite; }
+  .sprite-wrap.status-paralyze img { animation: idle-bob 2.4s ease-in-out infinite, para-tint 0.8s ease-in-out infinite; }
+  .sprite-wrap.status-poison img { animation: idle-bob 2.4s ease-in-out infinite, poison-tint 1.5s ease-in-out infinite; }
+  .sprite-wrap.status-sleep img { animation: idle-bob 4s ease-in-out infinite; opacity: 0.7; }
+  @keyframes burn-tint {
+    0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 8px #ff5722) sepia(0.3) saturate(1.5); }
+  }
+  @keyframes para-tint {
+    0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 8px #fbbf24) brightness(1.3); }
+  }
+  @keyframes poison-tint {
+    0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 10px #9c27b0) hue-rotate(-20deg); }
+  }
+  /* 잠 zZ 표시 */
+  .sprite-wrap.status-sleep::after {
+    content: '💤';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 24px;
+    z-index: 3;
+    animation: zz-bob 1.5s ease-in-out infinite;
+  }
+  @keyframes zz-bob {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(-6px); opacity: 1; }
+  }
+  .type-badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 8px;
+    border-radius: 99px;
+    color: white;
+    font-weight: 700;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .message-box {
+    margin-top: 10px;
+    background: var(--bg-card);
+    border: 2px solid var(--bg-card-light);
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-height: 56px;
+    font-family: 'Jua', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    position: relative;
+  }
+  .message-box::after {
+    content: '▼';
+    position: absolute;
+    bottom: 8px;
+    right: 14px;
+    font-size: 10px;
+    color: var(--accent);
+    animation: bob 1s infinite;
+    opacity: 0;
+  }
+  .message-box.tap::after { opacity: 1; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  /* 메인 액션 메뉴 */
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .action-grid.hidden { display: none; }
+  .action-btn {
+    background: var(--bg-card);
+    border: 2px solid var(--bg-card-light);
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-family: 'Jua', sans-serif;
+    font-size: 16px;
+  }
+  .action-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .action-btn .icon { font-size: 20px; margin-right: 4px; }
+  .action-btn .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    margin-left: 4px;
+    font-weight: 700;
+  }
+
+  /* 기술 메뉴 */
+  .moves-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .moves-grid.hidden { display: none; }
+  .move-btn {
+    background: var(--bg-card);
+    border: 2px solid var(--bg-card-light);
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .move-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .move-btn-name { font-family: 'Jua', sans-serif; font-size: 15px; }
+  .move-btn-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 11px; color: var(--text-dim); }
+  .back-btn {
+    margin-top: 8px;
+    background: var(--bg-card-light);
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    color: var(--text-dim);
+    font-family: 'Jua', sans-serif;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* 데미지 팝업 */
+  .damage-pop {
+    position: absolute;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 28px;
+    color: #ff3030;
+    text-shadow: 2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff;
+    pointer-events: none;
+    animation: damage-rise 1s forwards;
+    z-index: 10;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .damage-pop.crit { color: #ffea00; font-size: 36px; }
+  .damage-pop.weak { color: #aaaaaa; font-size: 22px; }
+  .damage-pop.heal { color: #4ade80; }
+  @keyframes damage-rise {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    20% { transform: translate(-50%, -25px) scale(1.15); }
+    100% { transform: translate(-50%, -50px); opacity: 0; }
+  }
+
+  /* 모달 */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--bg-mid);
+    border: 2px solid var(--bg-card-light);
+    border-radius: 18px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .modal-close {
+    margin-top: 14px;
+    width: 100%;
+    background: var(--bg-card-light);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--text);
+    font-family: 'Jua', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  /* 파티 모달 - 교체 선택 */
+  .party-list { display: flex; flex-direction: column; gap: 10px; }
+  .party-item {
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .party-item:not(.disabled):active { transform: scale(0.98); }
+  .party-item.active { border-color: var(--accent); background: var(--bg-card-light); }
+  .party-item.disabled { opacity: 0.4; cursor: not-allowed; }
+  .party-item img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+  }
+  .party-item-info { flex: 1; }
+  .party-item-name { font-family: 'Jua', sans-serif; font-size: 16px; }
+  .party-item-meta { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .party-item-hp { background: #2a2a2a; border-radius: 99px; height: 6px; margin-top: 6px; overflow: hidden; }
+  .party-item-hp-fill { height: 100%; background: var(--hp-high); transition: width 0.3s; }
+
+  /* 상점/인벤토리 모달 */
+  .shop-grid { display: flex; flex-direction: column; gap: 10px; }
+  .shop-row {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .shop-icon { font-size: 32px; }
+  .shop-info { flex: 1; }
+  .shop-name { font-family: 'Jua', sans-serif; font-size: 15px; }
+  .shop-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
+  .shop-buy {
+    background: linear-gradient(135deg, var(--accent), var(--accent-hot));
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'Jua', sans-serif;
+    color: #1a1a1a;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+    white-space: nowrap;
+  }
+  .shop-buy:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .shop-buy:disabled { opacity: 0.4; cursor: not-allowed; }
+  .shop-tab-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+    padding: 4px;
+    border-radius: 10px;
+  }
+  .shop-tab {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'Jua', sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .shop-tab.active { background: var(--bg-card-light); color: var(--text); }
+
+  .inventory-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 14px;
+    background: var(--bg-card);
+    padding: 8px;
+    border-radius: 10px;
+  }
+  .inv-pill {
+    text-align: center;
+    padding: 6px;
+    background: var(--bg-mid);
+    border-radius: 8px;
+    font-family: 'Jua', sans-serif;
+  }
+  .inv-pill-icon { font-size: 20px; }
+  .inv-pill-count { font-family: 'Black Han Sans', sans-serif; color: var(--accent); font-size: 16px; }
+  .inv-pill-label { font-size: 10px; color: var(--text-dim); }
+
+  /* ===== 게임오버 ===== */
+  .gameover-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  .gameover-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 60px;
+    color: var(--hp-low);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+    filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.4));
+  }
+  .gameover-sub { font-family: 'Jua', sans-serif; color: var(--text-dim); margin-bottom: 30px; }
+  .result-box {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 24px;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bg-card-light);
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-label { font-family: 'Jua', sans-serif; color: var(--text-dim); }
+  .result-value { font-family: 'Black Han Sans', sans-serif; color: var(--accent); font-size: 18px; }
+  .gameover-btn { width: 100%; max-width: 320px; }
+
+  /* 타입 색상 */
+  .type-fire { background: var(--type-fire); }
+  .type-water { background: var(--type-water); }
+  .type-grass { background: var(--type-grass); }
+  .type-spirit { background: var(--type-spirit); }
+  .type-normal { background: var(--type-normal); }
+
+  /* 잡기 결과 카드 */
+  .capture-card {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .capture-card img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    background: radial-gradient(circle, rgba(255,211,78,0.2), transparent 70%);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    animation: capture-glow 1.5s infinite;
+  }
+  @keyframes capture-glow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(255,211,78,0.5)); }
+    50% { filter: drop-shadow(0 0 20px rgba(255,211,78,0.9)); }
+  }
+  .capture-name { font-family: 'Black Han Sans', sans-serif; font-size: 24px; color: var(--accent); }
+  .capture-msg { font-family: 'Jua', sans-serif; color: var(--text); margin-top: 6px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 시작 화면 ===== -->
+  <div id="start-screen" class="screen active">
+    <div class="title-block">
+      <div class="title-main">MONROGUE</div>
+      <div class="title-sub">v2 · PARTY EDITION</div>
+    </div>
+
+    <div class="section-label">파트너 선택</div>
+    <div class="monster-grid" id="monster-grid"></div>
+
+    <div class="preview-detail" id="preview-detail">
+      <div class="mon-card-info">
+        <div class="preview-detail-name" id="preview-name"></div>
+        <div id="preview-type"></div>
+      </div>
+      <div class="stats-row" id="preview-stats"></div>
+    </div>
+
+    <div class="start-btn-wrap">
+      <button id="start-btn" class="btn btn-primary" disabled>몬스터를 선택하세요</button>
+    </div>
+  </div>
+
+  <!-- ===== 배틀 화면 ===== -->
+  <div id="battle-screen" class="screen">
+    <div class="topbar">
+      <div class="topbar-item">
+        <span class="topbar-label">WAVE</span>
+        <span class="topbar-value" id="wave-display">1</span>
+      </div>
+      <div class="topbar-item">
+        <span class="topbar-icon">🪙</span>
+        <span class="topbar-value" id="coin-display">0</span>
+      </div>
+      <div class="topbar-item">
+        <span class="topbar-label">SCORE</span>
+        <span class="topbar-value" id="score-display">0</span>
+      </div>
+    </div>
+
+    <div class="party-display" id="party-display"></div>
+
+    <div class="battle-field" id="battle-field">
+      <div class="enemy-row">
+        <div class="sprite-wrap" id="enemy-sprite">
+          <div class="sprite-shadow"></div>
+          <img id="enemy-img" src="" alt="">
+        </div>
+        <div class="info-card">
+          <div class="info-card-top">
+            <div>
+              <span class="info-card-name" id="enemy-name"></span>
+              <span class="type-badge" id="enemy-type"></span>
+            </div>
+            <div class="info-card-lv" id="enemy-lv">Lv 1</div>
+          </div>
+          <div class="hp-bar-wrap"><div class="hp-bar" id="enemy-hp-bar"></div></div>
+          <div class="status-row" id="enemy-status"></div>
+        </div>
+      </div>
+
+      <div class="player-row">
+        <div class="sprite-wrap player" id="player-sprite">
+          <div class="sprite-shadow"></div>
+          <img id="player-img" src="" alt="">
+        </div>
+        <div class="info-card">
+          <div class="info-card-top">
+            <div>
+              <span class="info-card-name" id="player-name"></span>
+              <span class="type-badge" id="player-type"></span>
+            </div>
+            <div class="info-card-lv" id="player-lv">Lv 1</div>
+          </div>
+          <div class="hp-bar-wrap"><div class="hp-bar" id="player-hp-bar"></div></div>
+          <div class="hp-text" id="player-hp-text">100 / 100</div>
+          <div class="exp-bar-wrap"><div class="exp-bar" id="player-exp-bar"></div></div>
+          <div class="status-row" id="player-status"></div>
+        </div>
+      </div>
+
+      <!-- 스킬 효과 레이어 -->
+      <div class="fx-layer" id="fx-layer"></div>
+      <!-- 명중 시 화면 플래시 -->
+      <div class="battle-flash" id="battle-flash"></div>
+    </div>
+
+    <div class="message-box" id="message-box" onclick="advanceMessage()">준비...</div>
+
+    <!-- 메인 액션 메뉴 (싸우기/교체/잡기/아이템) -->
+    <div class="action-grid hidden" id="action-grid">
+      <button class="action-btn" onclick="showMoves()"><span class="icon">⚔️</span>싸우기</button>
+      <button class="action-btn" onclick="showPartyMenu()"><span class="icon">🔄</span>교체</button>
+      <button class="action-btn" onclick="attemptCatch()"><span class="icon">🎯</span>잡기 <span class="badge" id="balls-badge">5</span></button>
+      <button class="action-btn" onclick="showShop()"><span class="icon">🎒</span>가방/상점</button>
+    </div>
+
+    <!-- 기술 선택 -->
+    <div class="moves-grid hidden" id="moves-grid"></div>
+    <button class="back-btn hidden" id="moves-back" onclick="showActionMenu()">← 뒤로</button>
+  </div>
+
+  <!-- ===== 게임오버 ===== -->
+  <div id="gameover-screen" class="screen">
+    <div class="gameover-wrap">
+      <div class="gameover-title">GAME OVER</div>
+      <div class="gameover-sub">파티 전원이 쓰러졌다...</div>
+      <div class="result-box">
+        <div class="result-row"><span class="result-label">최종 웨이브</span><span class="result-value" id="final-wave">1</span></div>
+        <div class="result-row"><span class="result-label">처치 수</span><span class="result-value" id="final-kills">0</span></div>
+        <div class="result-row"><span class="result-label">잡은 몬스터</span><span class="result-value" id="final-caught">0</span></div>
+        <div class="result-row"><span class="result-label">점수</span><span class="result-value" id="final-score">0</span></div>
+        <div class="result-row"><span class="result-label">최고 기록</span><span class="result-value" id="best-score">0</span></div>
+      </div>
+      <button class="btn btn-primary gameover-btn" onclick="restartGame()">다시 도전</button>
+    </div>
+  </div>
+
+  <!-- ===== 모달 ===== -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal" id="modal-content"></div>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+// 이미지는 images/ 폴더에 별도 파일로 있음
+const MON_IDS_LIST = [
+  "mon_001","mon_002","mon_003","mon_004","mon_005",
+  "mon_006","mon_007","mon_008","mon_009","mon_010","mon_011"
+];
+const IMAGES = {};
+MON_IDS_LIST.forEach(id => { IMAGES[id] = `images/${id}.png`; });
+const BACKGROUND = "images/background.jpg";
+
+const TYPES = {
+  fire:   { name: "화염", color: "#ff5722" },
+  water:  { name: "해류", color: "#2196f3" },
+  grass:  { name: "자연", color: "#4caf50" },
+  spirit: { name: "정령", color: "#9c27b0" },
+  normal: { name: "노말", color: "#757575" }
+};
+const TYPE_CHART = {
+  fire:   { grass: 2.0, water: 0.5, fire: 0.5 },
+  water:  { fire: 2.0,  grass: 0.5, water: 0.5 },
+  grass:  { water: 2.0, fire: 0.5,  grass: 0.5 },
+  spirit: {},
+  normal: {}
+};
+// status: { type: 'burn'|'paralyze'|'sleep'|'poison', chance: 0~1 }
+const MOVES = {
+  scratch:        { name: "긁기",       power: 35, type: "normal" },
+  ember:          { name: "불꽃세례",   power: 40, type: "fire" },
+  bite:           { name: "물어뜯기",   power: 30, type: "normal" },
+  fire_tail:      { name: "화염꼬리",   power: 45, type: "fire" },
+  headbutt:       { name: "박치기",     power: 40, type: "normal" },
+  fire_mane:      { name: "불꽃갈기",   power: 45, type: "fire" },
+  body_slam:      { name: "몸통박치기", power: 35, type: "normal" },
+  water_drop:     { name: "물방울",     power: 40, type: "water" },
+  scratch_claw:   { name: "할퀴기",     power: 35, type: "normal" },
+  water_stream:   { name: "물줄기",     power: 40, type: "water" },
+  peck:           { name: "쪼기",       power: 35, type: "normal" },
+  ice_shard:      { name: "얼음조각",   power: 45, type: "water" },
+  kick:           { name: "걷어차기",   power: 35, type: "normal" },
+  tackle:         { name: "몸통박치기", power: 35, type: "normal" },
+  leaf_blade:     { name: "잎날",       power: 45, type: "grass" },
+  spore_shot:     { name: "포자발사",   power: 40, type: "grass" },
+  mystic_strike:  { name: "신비타격",   power: 40, type: "normal" },
+  azure_pulse:    { name: "푸른파동",   power: 50, type: "spirit" },
+  crimson_pulse:  { name: "붉은파동",   power: 50, type: "spirit" },
+
+  // 상태이상 기술 (새로 추가)
+  flame_breath:   { name: "불꽃숨결",   power: 35, type: "fire",   status: { type: "burn",     chance: 0.30 } },
+  freeze_beam:    { name: "얼음광선",   power: 35, type: "water",  status: { type: "paralyze", chance: 0.30 } },
+  sleep_spore:    { name: "수면포자",   power: 0,  type: "grass",  status: { type: "sleep",    chance: 0.80 } },
+  poison_powder:  { name: "독가루",     power: 25, type: "grass",  status: { type: "poison",   chance: 0.50 } },
+  mystic_burn:    { name: "신비화염",   power: 40, type: "spirit", status: { type: "burn",     chance: 0.30 } },
+  thunder_punch:  { name: "전기펀치",   power: 35, type: "normal", status: { type: "paralyze", chance: 0.30 } }
+};
+
+// 상태이상 메타 정보
+const STATUS_INFO = {
+  burn:     { name: "화상", icon: "🔥", color: "#ff5722" },
+  paralyze: { name: "마비", icon: "⚡", color: "#fbbf24" },
+  sleep:    { name: "잠",   icon: "💤", color: "#60a5fa" },
+  poison:   { name: "독",   icon: "☠️", color: "#9c27b0" }
+};
+const MONSTERS = {
+  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",   facing: "left",  stats: { hp: 60, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
+  mon_002: { id: "mon_002", name: "불여우", type: "fire",   facing: "right", stats: { hp: 55, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
+  mon_003: { id: "mon_003", name: "활타",   type: "fire",   facing: "left",  stats: { hp: 70, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
+  mon_004: { id: "mon_004", name: "물방이", type: "water",  facing: "left",  stats: { hp: 80, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
+  mon_005: { id: "mon_005", name: "흐름이", type: "water",  facing: "left",  stats: { hp: 60, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
+  mon_006: { id: "mon_006", name: "빙펭",   type: "water",  facing: "left",  stats: { hp: 75, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
+  mon_007: { id: "mon_007", name: "잎토끼", type: "grass",  facing: "left",  stats: { hp: 60, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
+  mon_008: { id: "mon_008", name: "버섯이", type: "grass",  facing: "left",  stats: { hp: 70, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
+  mon_009: { id: "mon_009", name: "짹돌이", type: "grass",  facing: "left",  stats: { hp: 55, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
+  mon_010: { id: "mon_010", name: "청룡",   type: "spirit", facing: "right", stats: { hp: 75, atk: 75, def: 65, spd: 70 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
+  mon_011: { id: "mon_011", name: "봉황",   type: "spirit", facing: "left",  stats: { hp: 70, atk: 80, def: 60, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] }
+};
+const ALL_MON_IDS = Object.keys(MONSTERS);
+
+const PARTY_MAX = 3;
+const SHOP_PRICES = { potion: 30, ball: 30, antidote: 40, gacha: 80 };
+
+let state = {
+  party: [],
+  activeIdx: 0,
+  enemy: null,
+  wave: 1,
+  kills: 0,
+  caught: 0,
+  score: 0,
+  inventory: { potions: 2, balls: 5, antidotes: 1, coins: 0 },
+  messageQueue: [],
+  awaitingTap: false,
+  battleLocked: true,
+  selectedMonId: null
+};
+
+// ===== 유틸 =====
+function $(id) { return document.getElementById(id); }
+function rand(min, max) { return Math.random() * (max - min) + min; }
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+}
+function getActive() { return state.party[state.activeIdx]; }
+
+// 몬스터 인스턴스 생성 (레벨 기반 스탯)
+function makeInstance(monId, level) {
+  const base = MONSTERS[monId];
+  const factor = 1 + (level - 1) * 0.05;  // 레벨당 +5%
+  return {
+    id: base.id,
+    name: base.name,
+    type: base.type,
+    facing: base.facing,
+    maxHp: Math.floor(base.stats.hp * factor),
+    currentHp: Math.floor(base.stats.hp * factor),
+    atk: Math.floor(base.stats.atk * factor),
+    def: Math.floor(base.stats.def * factor),
+    spd: Math.floor(base.stats.spd * factor),
+    moves: [...base.moves],
+    level: level,
+    exp: 0,
+    expToNext: 80 * level,
+    status: null,         // 'burn'|'paralyze'|'sleep'|'poison'|null
+    sleepTurns: 0         // 잠 남은 턴
+  };
+}
+
+// 적 인스턴스 (웨이브 기반 스케일)
+function makeEnemy(monId, wave) {
+  const inst = makeInstance(monId, wave);
+  return inst;
+}
+
+function calcDamage(attacker, defender, moveKey) {
+  const move = MOVES[moveKey];
+  if (move.power === 0) {
+    // 데미지 없는 기술 (수면포자 등) — 0 데미지지만 상태이상은 적용
+    return { damage: 0, typeMult: 1, isCrit: false, move };
+  }
+  const typeMult = TYPE_CHART[move.type]?.[defender.type] ?? 1.0;
+  const stab = (move.type === attacker.type) ? 1.5 : 1.0;
+  const randMult = rand(0.85, 1.0);
+  const crit = (Math.random() < 0.0625) ? 1.5 : 1.0;
+  // 화상 시 공격력 50% 다운
+  const burnMod = (attacker.status === "burn") ? 0.5 : 1.0;
+  const effectiveAtk = attacker.atk * burnMod;
+  const base = (move.power * effectiveAtk / defender.def) * 0.5;
+  const damage = Math.floor(base * typeMult * stab * randMult * crit);
+  return { damage: Math.max(1, damage), typeMult, isCrit: crit > 1, move };
+}
+
+// 스피드 계산 (마비 50% 디버프 반영)
+function effectiveSpd(mon) {
+  return (mon.status === "paralyze") ? mon.spd * 0.5 : mon.spd;
+}
+
+// ===== 시작 화면 =====
+function renderStartScreen() {
+  const grid = $("monster-grid");
+  grid.innerHTML = "";
+  ALL_MON_IDS.forEach(id => {
+    const mon = MONSTERS[id];
+    const card = document.createElement("div");
+    card.className = "mon-card";
+    card.dataset.id = id;
+    card.innerHTML = `
+      <img src="${IMAGES[id]}" alt="${mon.name}">
+      <div class="mon-card-info">
+        <div class="mon-card-name">${mon.name}</div>
+        <div class="mon-card-type type-${mon.type}">${TYPES[mon.type].name}</div>
+      </div>
+    `;
+    card.onclick = () => selectMonster(id);
+    grid.appendChild(card);
+  });
+}
+
+function selectMonster(id) {
+  state.selectedMonId = id;
+  document.querySelectorAll(".mon-card").forEach(c => c.classList.toggle("selected", c.dataset.id === id));
+  const mon = MONSTERS[id];
+  $("preview-detail").classList.add("show");
+  $("preview-name").textContent = mon.name;
+  $("preview-type").innerHTML = `<span class="type-badge type-${mon.type}">${TYPES[mon.type].name}</span>`;
+  const s = mon.stats;
+  $("preview-stats").innerHTML = `
+    <div class="stat-pill"><div class="stat-pill-label">HP</div><div class="stat-pill-value">${s.hp}</div></div>
+    <div class="stat-pill"><div class="stat-pill-label">공격</div><div class="stat-pill-value">${s.atk}</div></div>
+    <div class="stat-pill"><div class="stat-pill-label">방어</div><div class="stat-pill-value">${s.def}</div></div>
+    <div class="stat-pill"><div class="stat-pill-label">스피드</div><div class="stat-pill-value">${s.spd}</div></div>
+  `;
+  const btn = $("start-btn");
+  btn.disabled = false;
+  btn.textContent = `${mon.name}와 함께 시작`;
+}
+
+$("start-btn").onclick = () => {
+  if (!state.selectedMonId) return;
+  startNewRun(state.selectedMonId);
+};
+
+// ===== 게임 시작 =====
+function startNewRun(monId) {
+  // 상태 클래스 cleanup
+  $("player-sprite").classList.remove("faint", "hit", "captured", "attacking");
+  $("enemy-sprite").classList.remove("faint", "hit", "captured", "attacking");
+  $("battle-field").classList.remove("shake");
+  $("battle-flash").classList.remove("flash-hit");
+  $("fx-layer").innerHTML = "";
+
+  state.party = [ makeInstance(monId, 1) ];
+  state.activeIdx = 0;
+  state.wave = 1;
+  state.kills = 0;
+  state.caught = 0;
+  state.score = 0;
+  state.inventory = { potions: 2, balls: 5, antidotes: 1, coins: 0 };
+  state.battleLocked = true;
+
+  showScreen("battle-screen");
+  renderPlayer();
+  renderParty();
+  updateTopbar();
+  spawnNextEnemy();
+}
+
+function spawnNextEnemy() {
+  $("enemy-sprite").classList.remove("faint", "hit", "captured", "attacking");
+  $("player-sprite").classList.remove("faint", "hit", "captured", "attacking");
+  $("fx-layer").innerHTML = "";
+
+  // 죽은 활성 몬스터면 다음 살아있는 거 자동 선택
+  if (getActive().currentHp <= 0) {
+    const alive = state.party.findIndex(m => m.currentHp > 0);
+    if (alive === -1) { endGame(); return; }
+    state.activeIdx = alive;
+  }
+
+  const enemyId = pickRandom(ALL_MON_IDS);
+  state.enemy = makeEnemy(enemyId, state.wave);
+
+  // 웨이브 시작 시 활성 몬스터 회복 (30%)
+  if (state.wave > 1) {
+    const p = getActive();
+    const heal = Math.floor(p.maxHp * 0.3);
+    p.currentHp = Math.min(p.maxHp, p.currentHp + heal);
+  }
+
+  renderEnemy();
+  renderPlayer();
+  renderParty();
+  updateTopbar();
+  hideAllMenus();
+
+  queueMessage(`야생의 ${state.enemy.name}(이)가 나타났다!`);
+  queueAction(() => {
+    showActionMenu();
+    state.battleLocked = false;
+  });
+  startMessages();
+}
+
+function renderEnemy() {
+  $("enemy-img").src = `${IMAGES[state.enemy.id]}`;
+  $("enemy-name").textContent = state.enemy.name;
+  $("enemy-type").textContent = TYPES[state.enemy.type].name;
+  $("enemy-type").className = `type-badge type-${state.enemy.type}`;
+  $("enemy-lv").textContent = `Lv ${state.enemy.level}`;
+  $("enemy-sprite").classList.toggle("flipped", state.enemy.facing === "right");
+  // 상태이상 sprite 클래스
+  ["burn","paralyze","sleep","poison"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
+  if (state.enemy.status) $("enemy-sprite").classList.add(`status-${state.enemy.status}`);
+  renderMonStatus("enemy", state.enemy);
+  updateHpBar("enemy", state.enemy);
+}
+
+function renderPlayer() {
+  const p = getActive();
+  $("player-img").src = `${IMAGES[p.id]}`;
+  $("player-name").textContent = p.name;
+  $("player-type").textContent = TYPES[p.type].name;
+  $("player-type").className = `type-badge type-${p.type}`;
+  $("player-lv").textContent = `Lv ${p.level}`;
+  $("player-sprite").classList.toggle("flipped", p.facing === "left");
+  // 상태이상 sprite 클래스
+  ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+  if (p.status) $("player-sprite").classList.add(`status-${p.status}`);
+  renderMonStatus("player", p);
+  updateHpBar("player", p);
+  $("player-hp-text").textContent = `${p.currentHp} / ${p.maxHp}`;
+  $("player-exp-bar").style.width = `${(p.exp / p.expToNext) * 100}%`;
+}
+
+function updateHpBar(who, mon) {
+  const bar = $(`${who}-hp-bar`);
+  const pct = (mon.currentHp / mon.maxHp) * 100;
+  bar.style.width = `${pct}%`;
+  bar.classList.remove("mid", "low");
+  if (pct < 25) bar.classList.add("low");
+  else if (pct < 50) bar.classList.add("mid");
+}
+
+function renderParty() {
+  const display = $("party-display");
+  display.innerHTML = "";
+  for (let i = 0; i < PARTY_MAX; i++) {
+    const mon = state.party[i];
+    const slot = document.createElement("div");
+    slot.className = "party-slot";
+    if (!mon) {
+      slot.classList.add("empty");
+    } else {
+      if (i === state.activeIdx) slot.classList.add("active");
+      if (mon.currentHp <= 0) slot.classList.add("fainted");
+      const hpPct = (mon.currentHp / mon.maxHp) * 100;
+      let hpCls = "";
+      if (hpPct < 25) hpCls = "low";
+      else if (hpPct < 50) hpCls = "mid";
+      slot.innerHTML = `
+        <img src="${IMAGES[mon.id]}" alt="${mon.name}">
+        <div class="party-slot-hp"><div class="party-slot-hp-fill ${hpCls}" style="width:${hpPct}%"></div></div>
+      `;
+    }
+    display.appendChild(slot);
+  }
+}
+
+function updateTopbar() {
+  $("wave-display").textContent = state.wave;
+  $("coin-display").textContent = state.inventory.coins;
+  $("score-display").textContent = state.score;
+  $("balls-badge").textContent = state.inventory.balls;
+}
+
+// ===== 메뉴 표시 =====
+function hideAllMenus() {
+  $("action-grid").classList.add("hidden");
+  $("moves-grid").classList.add("hidden");
+  $("moves-back").classList.add("hidden");
+}
+
+function showActionMenu() {
+  hideAllMenus();
+  $("action-grid").classList.remove("hidden");
+  updateTopbar();
+}
+
+function showMoves() {
+  if (state.battleLocked) return;
+  hideAllMenus();
+  const grid = $("moves-grid");
+  grid.innerHTML = "";
+  getActive().moves.forEach(moveKey => {
+    const move = MOVES[moveKey];
+    const btn = document.createElement("button");
+    btn.className = "move-btn";
+    let statusLabel = "";
+    if (move.status) {
+      const s = STATUS_INFO[move.status.type];
+      const pct = Math.round(move.status.chance * 100);
+      statusLabel = `<div class="move-status">${s.icon} ${s.name} ${pct}%</div>`;
+    }
+    btn.innerHTML = `
+      <div class="move-btn-name">${move.name}</div>
+      ${statusLabel}
+      <div class="move-btn-meta">
+        <span class="type-badge type-${move.type}">${TYPES[move.type].name}</span>
+        <span>위력 ${move.power}</span>
+      </div>
+    `;
+    btn.onclick = () => playerAttack(moveKey);
+    grid.appendChild(btn);
+  });
+  grid.classList.remove("hidden");
+  $("moves-back").classList.remove("hidden");
+}
+
+// ===== 배틀 진행 =====
+async function playerAttack(moveKey) {
+  if (state.battleLocked) return;
+  state.battleLocked = true;
+  hideAllMenus();
+
+  const player = getActive();
+  const playerFirst = effectiveSpd(player) >= effectiveSpd(state.enemy);
+
+  // 행동 시도 (상태이상으로 못할 수도)
+  async function tryAttack(attacker, defender, attackerSide, defenderSide, mKey) {
+    // 잠 처리
+    if (attacker.status === "sleep") {
+      if (attacker.sleepTurns > 0) {
+        const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
+        await showMessage(`${label}은(는) 잠들어 있다! (${attacker.sleepTurns}턴 남음)`, 700);
+        attacker.sleepTurns -= 1;
+        if (attacker.sleepTurns <= 0) {
+          attacker.status = null;
+          renderMonStatus(attackerSide, attacker);
+          await showMessage(`${label}은(는) 잠에서 깨어났다!`, 700);
+        }
+        return "blocked";
+      }
+    }
+    // 마비 25% 행동 불가
+    if (attacker.status === "paralyze" && Math.random() < 0.25) {
+      const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
+      await showMessage(`${label}은(는) 마비되어 움직일 수 없다!`, 700);
+      return "blocked";
+    }
+    await executeAttack(attacker, defender, attackerSide, defenderSide, mKey);
+    return "ok";
+  }
+
+  if (playerFirst) {
+    await tryAttack(player, state.enemy, "player", "enemy", moveKey);
+    if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+    await tryAttack(state.enemy, player, "enemy", "player", pickRandom(state.enemy.moves));
+    if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+  } else {
+    await tryAttack(state.enemy, player, "enemy", "player", pickRandom(state.enemy.moves));
+    if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+    await tryAttack(player, state.enemy, "player", "enemy", moveKey);
+    if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+  }
+
+  // 턴 끝: 화상/독 데미지 (양쪽 다 체크)
+  await applyEndTurnStatus(player, "player");
+  if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+  await applyEndTurnStatus(state.enemy, "enemy");
+  if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+
+  state.battleLocked = false;
+  showActionMenu();
+}
+
+// 턴 종료 시 화상/독 데미지
+async function applyEndTurnStatus(mon, side) {
+  if (mon.status === "burn") {
+    const dmg = Math.max(1, Math.floor(mon.maxHp / 16));
+    mon.currentHp = Math.max(0, mon.currentHp - dmg);
+    const label = (side === "player") ? mon.name : `야생의 ${mon.name}`;
+    await showMessage(`🔥 ${label}은(는) 화상 데미지!`, 600);
+    popDamage(side, dmg, false, 1, `-${dmg}`);
+    updateHpBar(side, mon);
+    if (side === "player") {
+      $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+      renderParty();
+    }
+    await sleep(400);
+  } else if (mon.status === "poison") {
+    const dmg = Math.max(1, Math.floor(mon.maxHp / 8));
+    mon.currentHp = Math.max(0, mon.currentHp - dmg);
+    const label = (side === "player") ? mon.name : `야생의 ${mon.name}`;
+    await showMessage(`☠️ ${label}은(는) 독 데미지!`, 600);
+    popDamage(side, dmg, false, 1, `-${dmg}`);
+    updateHpBar(side, mon);
+    if (side === "player") {
+      $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+      renderParty();
+    }
+    await sleep(400);
+  }
+}
+
+async function executeAttack(attacker, defender, attackerSide, defenderSide, moveKey) {
+  const r = calcDamage(attacker, defender, moveKey);
+  const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
+  await showMessage(`${label}의 ${r.move.name}!`, 500);
+
+  const attSprite = $(`${attackerSide}-sprite`);
+  const defSprite = $(`${defenderSide}-sprite`);
+
+  attSprite.classList.add("attacking");
+  await sleep(150);
+
+  await playSkillEffect(r.move.type, attackerSide, defenderSide);
+
+  attSprite.classList.remove("attacking");
+
+  // 데미지 처리 (위력 0 기술은 데미지 없음)
+  if (r.damage > 0) {
+    $("battle-flash").classList.remove("flash-hit");
+    void $("battle-flash").offsetWidth;
+    $("battle-flash").classList.add("flash-hit");
+
+    $("battle-field").classList.remove("shake");
+    void $("battle-field").offsetWidth;
+    $("battle-field").classList.add("shake");
+
+    defSprite.classList.add("hit");
+    popDamage(defenderSide, r.damage, r.isCrit, r.typeMult);
+
+    defender.currentHp = Math.max(0, defender.currentHp - r.damage);
+    updateHpBar(defenderSide, defender);
+    if (defenderSide === "player") {
+      $("player-hp-text").textContent = `${defender.currentHp} / ${defender.maxHp}`;
+      renderParty();
+    }
+
+    await sleep(450);
+    defSprite.classList.remove("hit");
+    $("battle-field").classList.remove("shake");
+    $("battle-flash").classList.remove("flash-hit");
+  } else {
+    // 위력 0 기술 (수면포자 등) — 짧은 효과만
+    await sleep(300);
+  }
+
+  if (r.isCrit) await showMessage("급소에 맞았다!", 500);
+  if (r.typeMult > 1) await showMessage("효과가 굉장했다!", 500);
+  else if (r.typeMult > 0 && r.typeMult < 1) await showMessage("효과가 별로인 듯하다...", 500);
+
+  // 상태이상 적용 (방어자가 살아있고, 이미 상태이상 없을 때만)
+  if (r.move.status && defender.currentHp > 0 && !defender.status) {
+    if (Math.random() < r.move.status.chance) {
+      await applyStatus(defender, defenderSide, r.move.status.type);
+    }
+  }
+}
+
+// 상태이상 적용
+async function applyStatus(mon, side, statusType) {
+  mon.status = statusType;
+  if (statusType === "sleep") {
+    mon.sleepTurns = 1 + Math.floor(Math.random() * 3);  // 1~3턴
+  }
+  const info = STATUS_INFO[statusType];
+  const label = (side === "player") ? mon.name : `야생의 ${mon.name}`;
+  await showMessage(`${info.icon} ${label}은(는) ${info.name} 상태가 되었다!`, 800);
+  renderMonStatus(side, mon);
+  if (side === "player") renderParty();
+}
+
+// 상태이상 아이콘 표시
+function renderMonStatus(side, mon) {
+  const wrap = $(`${side}-status`);
+  if (!wrap) return;
+  if (!mon.status) {
+    wrap.innerHTML = "";
+    wrap.classList.remove("active");
+  } else {
+    const info = STATUS_INFO[mon.status];
+    wrap.innerHTML = `<span class="status-pill" style="background:${info.color}">${info.icon} ${info.name}</span>`;
+    wrap.classList.add("active");
+  }
+}
+
+// 스킬 효과 (타입별 발사체)
+async function playSkillEffect(moveType, attackerSide, defenderSide) {
+  const field = $("battle-field");
+  const fxLayer = $("fx-layer");
+  const attSprite = $(`${attackerSide}-sprite`);
+  const defSprite = $(`${defenderSide}-sprite`);
+
+  // 발사 시작점 / 도착점 (fxLayer 기준)
+  const fieldRect = field.getBoundingClientRect();
+  const attRect = attSprite.getBoundingClientRect();
+  const defRect = defSprite.getBoundingClientRect();
+
+  const startX = attRect.left + attRect.width / 2 - fieldRect.left;
+  const startY = attRect.top  + attRect.height / 2 - fieldRect.top;
+  const endX   = defRect.left + defRect.width / 2 - fieldRect.left;
+  const endY   = defRect.top  + defRect.height / 2 - fieldRect.top;
+
+  if (moveType === "normal") {
+    // 노말: 슬래시
+    const slash = document.createElement("div");
+    slash.className = "slash";
+    slash.style.left = endX + "px";
+    slash.style.top = endY + "px";
+    fxLayer.appendChild(slash);
+    setTimeout(() => slash.remove(), 400);
+    await sleep(280);
+  } else {
+    // fire / water / grass / spirit: 발사체
+    const proj = document.createElement("div");
+    proj.className = `projectile ${moveType}`;
+    proj.style.left = startX + "px";
+    proj.style.top = startY + "px";
+    proj.style.transition = "left 0.4s cubic-bezier(0.4, 0, 0.6, 1), top 0.4s cubic-bezier(0.4, 0, 0.6, 1)";
+    fxLayer.appendChild(proj);
+
+    requestAnimationFrame(() => {
+      proj.style.left = endX + "px";
+      proj.style.top = endY + "px";
+    });
+
+    await sleep(400);
+
+    const impact = document.createElement("div");
+    impact.className = `impact ${moveType}`;
+    impact.style.left = endX + "px";
+    impact.style.top = endY + "px";
+    fxLayer.appendChild(impact);
+
+    proj.remove();
+    setTimeout(() => impact.remove(), 550);
+  }
+}
+
+function popDamage(side, dmg, isCrit, typeMult, label) {
+  const sprite = $(`${side}-sprite`);
+  const pop = document.createElement("div");
+  pop.className = "damage-pop";
+  if (isCrit) pop.classList.add("crit");
+  if (typeMult > 0 && typeMult < 1) pop.classList.add("weak");
+  pop.textContent = label || `-${dmg}`;
+  sprite.appendChild(pop);
+  setTimeout(() => pop.remove(), 1000);
+}
+
+function popHeal(side, amount) {
+  const sprite = $(`${side}-sprite`);
+  const pop = document.createElement("div");
+  pop.className = "damage-pop heal";
+  pop.textContent = `+${amount}`;
+  sprite.appendChild(pop);
+  setTimeout(() => pop.remove(), 1000);
+}
+
+async function handleEnemyFaint() {
+  $("enemy-sprite").classList.add("faint");
+  await showMessage(`야생의 ${state.enemy.name}(이)가 쓰러졌다!`, 900);
+
+  // 코인 (이전: 10 + wave*5 → 50% 증가)
+  const coinGain = 15 + state.wave * 8;
+  state.inventory.coins += coinGain;
+  state.kills += 1;
+  const scoreGain = 50 + state.wave * 10;
+  state.score += scoreGain;
+
+  await showMessage(`+${coinGain} 코인 · +${scoreGain} 점수`, 800);
+
+  // 경험치 (이전: state.enemy.level * 12 → 3배)
+  const expGain = state.enemy.level * 36;
+  await grantExp(getActive(), expGain);
+
+  updateTopbar();
+  state.wave += 1;
+  spawnNextEnemy();
+}
+
+async function grantExp(mon, amount) {
+  mon.exp += amount;
+  await showMessage(`${mon.name} +${amount} EXP`, 600);
+  while (mon.exp >= mon.expToNext) {
+    mon.exp -= mon.expToNext;
+    mon.level += 1;
+    // 비율 보존 HP
+    const ratio = mon.currentHp / mon.maxHp;
+    mon.maxHp = Math.floor(mon.maxHp * 1.05);
+    mon.atk = Math.floor(mon.atk * 1.05);
+    mon.def = Math.floor(mon.def * 1.05);
+    mon.spd = Math.floor(mon.spd * 1.05);
+    mon.currentHp = Math.max(1, Math.floor(mon.maxHp * ratio));
+    mon.expToNext = 80 * mon.level;
+    await showMessage(`🎉 레벨 업! ${mon.name} Lv${mon.level}`, 800);
+  }
+  renderPlayer();
+  renderParty();
+}
+
+async function handlePlayerFaint() {
+  $("player-sprite").classList.add("faint");
+  await showMessage(`${getActive().name}(이)가 쓰러졌다...`, 1200);
+  renderParty();
+
+  // 살아있는 몬스터 있는지 확인
+  const aliveIdx = state.party.findIndex((m, i) => i !== state.activeIdx && m && m.currentHp > 0);
+  if (aliveIdx === -1) {
+    endGame();
+    return;
+  }
+  // 강제 교체
+  await showMessage("다음 몬스터를 선택하세요!", 700);
+  showPartyMenu(true);  // forced=true
+}
+
+// ===== 교체 시스템 =====
+function showPartyMenu(forced = false) {
+  if (state.battleLocked && !forced) return;
+  const modal = $("modal-content");
+  let html = `<div class="modal-title">${forced ? "강제 교체" : "파티 교체"}</div><div class="party-list">`;
+  state.party.forEach((mon, i) => {
+    const isActive = i === state.activeIdx;
+    const isFainted = mon.currentHp <= 0;
+    const disabled = isActive || isFainted;
+    const hpPct = (mon.currentHp / mon.maxHp) * 100;
+    let hpCls = "";
+    if (hpPct < 25) hpCls = "low";
+    else if (hpPct < 50) hpCls = "mid";
+    html += `
+      <div class="party-item ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}"
+           ${disabled ? '' : `onclick="swapTo(${i}, ${forced})"`}>
+        <img src="${IMAGES[mon.id]}" alt="${mon.name}">
+        <div class="party-item-info">
+          <div class="party-item-name">${mon.name} <span class="type-badge type-${mon.type}">${TYPES[mon.type].name}</span></div>
+          <div class="party-item-meta">Lv ${mon.level} · HP ${mon.currentHp}/${mon.maxHp} ${isFainted ? '· (쓰러짐)' : ''} ${isActive ? '· (전투중)' : ''}</div>
+          <div class="party-item-hp"><div class="party-item-hp-fill ${hpCls}" style="width:${hpPct}%"></div></div>
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  if (!forced) html += `<button class="modal-close" onclick="closeModal()">취소</button>`;
+  modal.innerHTML = html;
+  $("modal-bg").classList.add("show");
+}
+
+async function swapTo(idx, forced) {
+  closeModal();
+  state.activeIdx = idx;
+  // 이전 sprite의 faint/hit/attacking 클래스 제거 (안 그러면 새 몬스터도 안 보임)
+  $("player-sprite").classList.remove("faint", "hit", "attacking");
+  renderPlayer();
+  renderParty();
+  await showMessage(`${getActive().name}, 가라!`, 700);
+
+  if (forced) {
+    // 강제 교체 - 적의 턴 안 거치고 바로 행동
+    state.battleLocked = false;
+    showActionMenu();
+  } else {
+    // 일반 교체 - 적이 한 턴 공격
+    state.battleLocked = true;
+    hideAllMenus();
+    await executeAttack(state.enemy, getActive(), "enemy", "player", pickRandom(state.enemy.moves));
+    if (getActive().currentHp <= 0) { await handlePlayerFaint(); return; }
+    state.battleLocked = false;
+    showActionMenu();
+  }
+}
+
+// ===== 잡기 시스템 =====
+async function attemptCatch() {
+  if (state.battleLocked) return;
+  if (state.inventory.balls <= 0) {
+    flashMessage("잡기 도구가 없다! 상점에서 구매하세요");
+    return;
+  }
+  if (state.party.length >= PARTY_MAX) {
+    flashMessage("파티가 가득 찼다! (최대 3마리)");
+    return;
+  }
+
+  state.battleLocked = true;
+  hideAllMenus();
+  state.inventory.balls -= 1;
+  updateTopbar();
+
+  await showMessage(`잡기 도구를 던졌다!`, 700);
+
+  // 성공률: HP가 낮을수록 높음
+  const hpRatio = state.enemy.currentHp / state.enemy.maxHp;
+  const successRate = Math.max(0.05, Math.min(0.95, 1 - hpRatio * 0.95));
+  const success = Math.random() < successRate;
+
+  if (success) {
+    // 적을 파티에 추가 — 풀 HP + 상태이상 치료 (잡기 비용 보상)
+    $("enemy-sprite").classList.add("captured");
+    await sleep(800);
+    const captured = state.enemy;
+    captured.currentHp = captured.maxHp;
+    captured.status = null;
+    captured.sleepTurns = 0;
+    captured.exp = 0;
+    captured.expToNext = 80 * captured.level;
+    state.party.push(captured);
+    state.caught += 1;
+
+    await showCaptureModal(captured);
+    renderParty();
+    updateTopbar();
+
+    // 잡았으면 다음 웨이브로 (코인은 안 줌 - 처치 아니라서)
+    state.wave += 1;
+    spawnNextEnemy();
+  } else {
+    await showMessage("앗! 빠져나왔다!", 800);
+    // 실패 시 적이 한 번 공격
+    await executeAttack(state.enemy, getActive(), "enemy", "player", pickRandom(state.enemy.moves));
+    if (getActive().currentHp <= 0) { await handlePlayerFaint(); return; }
+    state.battleLocked = false;
+    showActionMenu();
+  }
+}
+
+function showCaptureModal(mon) {
+  return new Promise(resolve => {
+    const modal = $("modal-content");
+    modal.innerHTML = `
+      <div class="capture-card">
+        <img src="${IMAGES[mon.id]}" alt="${mon.name}">
+        <div class="capture-name">${mon.name} 획득!</div>
+        <div class="capture-msg">Lv ${mon.level} · 파티에 추가되었습니다</div>
+      </div>
+      <button class="modal-close" id="capture-ok">확인</button>
+    `;
+    $("modal-bg").classList.add("show");
+    $("capture-ok").onclick = () => {
+      closeModal();
+      resolve();
+    };
+  });
+}
+
+// ===== 상점/인벤토리 =====
+let shopTab = "inventory";  // inventory | shop | gacha
+
+function showShop() {
+  if (state.battleLocked) return;
+  shopTab = "inventory";
+  renderShopModal();
+  $("modal-bg").classList.add("show");
+}
+
+function renderShopModal() {
+  const modal = $("modal-content");
+  let html = `<div class="modal-title">🎒 가방</div>`;
+  html += `<div class="shop-tab-row">
+    <button class="shop-tab ${shopTab==='inventory'?'active':''}" onclick="switchShopTab('inventory')">아이템</button>
+    <button class="shop-tab ${shopTab==='shop'?'active':''}" onclick="switchShopTab('shop')">🛒 상점</button>
+    <button class="shop-tab ${shopTab==='gacha'?'active':''}" onclick="switchShopTab('gacha')">🎰 뽑기</button>
+  </div>`;
+
+  html += `<div class="inventory-summary">
+    <div class="inv-pill"><div class="inv-pill-icon">🪙</div><div class="inv-pill-count">${state.inventory.coins}</div><div class="inv-pill-label">코인</div></div>
+    <div class="inv-pill"><div class="inv-pill-icon">💊</div><div class="inv-pill-count">${state.inventory.potions}</div><div class="inv-pill-label">회복약</div></div>
+    <div class="inv-pill"><div class="inv-pill-icon">🧪</div><div class="inv-pill-count">${state.inventory.antidotes}</div><div class="inv-pill-label">해독제</div></div>
+    <div class="inv-pill"><div class="inv-pill-icon">🎯</div><div class="inv-pill-count">${state.inventory.balls}</div><div class="inv-pill-label">잡기도구</div></div>
+  </div>`;
+
+  if (shopTab === "inventory") {
+    const activeMon = getActive();
+    const canHeal = state.inventory.potions > 0 && activeMon.currentHp < activeMon.maxHp;
+    const canCure = state.inventory.antidotes > 0 && activeMon.status !== null;
+    html += `<div class="shop-grid">
+      <div class="shop-row">
+        <div class="shop-icon">💊</div>
+        <div class="shop-info">
+          <div class="shop-name">회복약 (${state.inventory.potions})</div>
+          <div class="shop-desc">현재 몬스터의 HP를 50% 회복합니다.</div>
+        </div>
+        <button class="shop-buy" ${!canHeal ? 'disabled' : ''} onclick="usePotion()">사용</button>
+      </div>
+      <div class="shop-row">
+        <div class="shop-icon">🧪</div>
+        <div class="shop-info">
+          <div class="shop-name">해독제 (${state.inventory.antidotes})</div>
+          <div class="shop-desc">상태이상을 치료합니다.</div>
+        </div>
+        <button class="shop-buy" ${!canCure ? 'disabled' : ''} onclick="useAntidote()">사용</button>
+      </div>
+    </div>`;
+  } else if (shopTab === "shop") {
+    html += `<div class="shop-grid">
+      <div class="shop-row">
+        <div class="shop-icon">💊</div>
+        <div class="shop-info">
+          <div class="shop-name">회복약</div>
+          <div class="shop-desc">HP 50% 회복. 30코인</div>
+        </div>
+        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.potion ? 'disabled' : ''} onclick="buyItem('potion')">구매</button>
+      </div>
+      <div class="shop-row">
+        <div class="shop-icon">🧪</div>
+        <div class="shop-info">
+          <div class="shop-name">해독제</div>
+          <div class="shop-desc">상태이상 치료. 40코인</div>
+        </div>
+        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.antidote ? 'disabled' : ''} onclick="buyItem('antidote')">구매</button>
+      </div>
+      <div class="shop-row">
+        <div class="shop-icon">🎯</div>
+        <div class="shop-info">
+          <div class="shop-name">잡기 도구</div>
+          <div class="shop-desc">야생 몬스터 잡기에 사용. 30코인</div>
+        </div>
+        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.ball ? 'disabled' : ''} onclick="buyItem('ball')">구매</button>
+      </div>
+    </div>`;
+  } else if (shopTab === "gacha") {
+    html += `<div class="shop-grid">
+      <div class="shop-row">
+        <div class="shop-icon">🎰</div>
+        <div class="shop-info">
+          <div class="shop-name">아이템 뽑기</div>
+          <div class="shop-desc">80코인. 회복약 60% / 잡기도구 30% / 슈퍼회복(100%) 10%</div>
+        </div>
+        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.gacha ? 'disabled' : ''} onclick="doGacha()">뽑기!</button>
+      </div>
+    </div>`;
+  }
+
+  html += `<button class="modal-close" onclick="closeModal()">닫기</button>`;
+  modal.innerHTML = html;
+}
+
+function switchShopTab(tab) {
+  shopTab = tab;
+  renderShopModal();
+}
+
+function buyItem(item) {
+  if (item === "potion") {
+    if (state.inventory.coins < SHOP_PRICES.potion) return;
+    state.inventory.coins -= SHOP_PRICES.potion;
+    state.inventory.potions += 1;
+  } else if (item === "ball") {
+    if (state.inventory.coins < SHOP_PRICES.ball) return;
+    state.inventory.coins -= SHOP_PRICES.ball;
+    state.inventory.balls += 1;
+  } else if (item === "antidote") {
+    if (state.inventory.coins < SHOP_PRICES.antidote) return;
+    state.inventory.coins -= SHOP_PRICES.antidote;
+    state.inventory.antidotes += 1;
+  }
+  updateTopbar();
+  renderShopModal();
+}
+
+function useAntidote() {
+  const p = getActive();
+  if (state.inventory.antidotes <= 0 || !p.status) return;
+  state.inventory.antidotes -= 1;
+  const cured = STATUS_INFO[p.status].name;
+  p.status = null;
+  p.sleepTurns = 0;
+  // sprite 상태 클래스 제거
+  ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+  renderMonStatus("player", p);
+  renderPlayer();
+  renderParty();
+  renderShopModal();
+  // 잠깐 메시지 (모달 닫지 않음)
+  flashMessage(`🧪 ${p.name}의 ${cured} 상태가 치료됐다!`);
+}
+
+function doGacha() {
+  if (state.inventory.coins < SHOP_PRICES.gacha) return;
+  state.inventory.coins -= SHOP_PRICES.gacha;
+
+  const r = Math.random();
+  let resultMsg, resultIcon;
+  if (r < 0.6) {
+    state.inventory.potions += 1;
+    resultMsg = "회복약 획득!"; resultIcon = "💊";
+  } else if (r < 0.9) {
+    state.inventory.balls += 1;
+    resultMsg = "잡기 도구 획득!"; resultIcon = "🎯";
+  } else {
+    // 슈퍼 회복: 활성 몬스터 풀회복 + 상태이상 치료
+    const p = getActive();
+    p.currentHp = p.maxHp;
+    p.status = null;
+    p.sleepTurns = 0;
+    ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+    resultMsg = `슈퍼 회복! ${p.name} 완전 회복`; resultIcon = "✨";
+    renderPlayer();
+    renderParty();
+  }
+
+  // 결과 카드
+  const modal = $("modal-content");
+  modal.innerHTML = `
+    <div class="modal-title">🎰 뽑기 결과</div>
+    <div class="capture-card">
+      <div style="font-size:80px; margin-bottom:14px;">${resultIcon}</div>
+      <div class="capture-name">${resultMsg}</div>
+    </div>
+    <button class="modal-close" onclick="backToShop()">계속</button>
+  `;
+  updateTopbar();
+}
+
+function backToShop() {
+  shopTab = "inventory";
+  renderShopModal();
+}
+
+function usePotion() {
+  const p = getActive();
+  if (state.inventory.potions <= 0 || p.currentHp >= p.maxHp) return;
+  state.inventory.potions -= 1;
+  const heal = Math.floor(p.maxHp * 0.5);
+  const before = p.currentHp;
+  p.currentHp = Math.min(p.maxHp, p.currentHp + heal);
+  const actualHeal = p.currentHp - before;
+  popHeal("player", actualHeal);
+  renderPlayer();
+  renderParty();
+  renderShopModal();
+}
+
+function closeModal() {
+  $("modal-bg").classList.remove("show");
+}
+
+// ===== 메시지 시스템 =====
+function queueMessage(text) { state.messageQueue.push({ type: "msg", text }); }
+function queueAction(fn) { state.messageQueue.push({ type: "act", fn }); }
+function startMessages() { state.awaitingTap = false; processNextMessage(); }
+
+function processNextMessage() {
+  if (state.messageQueue.length === 0) {
+    $("message-box").classList.remove("tap");
+    return;
+  }
+  const item = state.messageQueue.shift();
+  if (item.type === "act") {
+    item.fn();
+    processNextMessage();
+  } else {
+    $("message-box").textContent = item.text;
+    if (state.messageQueue.length > 0) {
+      $("message-box").classList.add("tap");
+      state.awaitingTap = true;
+    } else {
+      $("message-box").classList.remove("tap");
+    }
+  }
+}
+
+function advanceMessage() {
+  if (state.awaitingTap) {
+    state.awaitingTap = false;
+    processNextMessage();
+  }
+}
+
+async function showMessage(text, delay = 800) {
+  $("message-box").textContent = text;
+  $("message-box").classList.remove("tap");
+  await sleep(delay);
+}
+
+function flashMessage(text) {
+  $("message-box").textContent = text;
+  $("message-box").classList.remove("tap");
+}
+
+// ===== 게임오버 =====
+function endGame() {
+  if (!window._bestScore) window._bestScore = 0;
+  if (state.score > window._bestScore) window._bestScore = state.score;
+
+  $("final-wave").textContent = state.wave;
+  $("final-kills").textContent = state.kills;
+  $("final-caught").textContent = state.caught;
+  $("final-score").textContent = state.score;
+  $("best-score").textContent = window._bestScore;
+
+  showScreen("gameover-screen");
+}
+
+function restartGame() {
+  state.selectedMonId = null;
+  document.querySelectorAll(".mon-card").forEach(c => c.classList.remove("selected"));
+  $("preview-detail").classList.remove("show");
+  const btn = $("start-btn");
+  btn.disabled = true;
+  btn.textContent = "몬스터를 선택하세요";
+  showScreen("start-screen");
+}
+
+// 초기화
+$("battle-field").style.backgroundImage = `url(${BACKGROUND})`;
+renderStartScreen();
+</script>
+</body>
+</html>
