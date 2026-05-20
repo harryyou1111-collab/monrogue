@@ -1219,36 +1219,36 @@ const PASSIVE_INFO = {
 // passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
 const MONSTERS = {
   // === 기존 11마리 ===
-  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
-  mon_002: { id: "mon_002", name: "불여우", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 55, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
-  mon_003: { id: "mon_003", name: "활타",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 70, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
-  mon_004: { id: "mon_004", name: "물방이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 80, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
-  mon_005: { id: "mon_005", name: "흐름이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
-  mon_006: { id: "mon_006", name: "빙펭",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 75, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
-  mon_007: { id: "mon_007", name: "잎토끼", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
-  mon_008: { id: "mon_008", name: "버섯이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 70, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
-  mon_009: { id: "mon_009", name: "짹돌이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 55, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
+  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
+  mon_002: { id: "mon_002", name: "불여우", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 72, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
+  mon_003: { id: "mon_003", name: "활타",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
+  mon_004: { id: "mon_004", name: "물방이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 104, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
+  mon_005: { id: "mon_005", name: "흐름이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
+  mon_006: { id: "mon_006", name: "빙펭",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 98, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
+  mon_007: { id: "mon_007", name: "잎토끼", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
+  mon_008: { id: "mon_008", name: "버섯이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
+  mon_009: { id: "mon_009", name: "짹돌이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 72, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
 
   // 청룡: 정령 → 물 전설
-  mon_010: { id: "mon_010", name: "청룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 75, atk: 75, def: 65, spd: 65 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
+  mon_010: { id: "mon_010", name: "청룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 98, atk: 75, def: 65, spd: 65 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
   // 봉황: 정령 → 불 전설
-  mon_011: { id: "mon_011", name: "봉황",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 70, atk: 80, def: 55, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
+  mon_011: { id: "mon_011", name: "봉황",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
 
   // === 신규 9마리 ===
   // 어둠 일반 3
-  mon_012: { id: "mon_012", name: "그림자늑대", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 60, atk: 75, def: 50, spd: 65 }, moves: ["bite", "shadow_claw", "dark_bite"] },
-  mon_013: { id: "mon_013", name: "박쥐꼬마",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 55, atk: 65, def: 45, spd: 85 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
-  mon_014: { id: "mon_014", name: "까마귀",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 60, atk: 70, def: 50, spd: 70 }, moves: ["peck", "night_slash", "shadow_ball"] },
+  mon_012: { id: "mon_012", name: "그림자늑대", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 75, def: 50, spd: 65 }, moves: ["bite", "shadow_claw", "dark_bite"] },
+  mon_013: { id: "mon_013", name: "박쥐꼬마",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 72, atk: 65, def: 45, spd: 85 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
+  mon_014: { id: "mon_014", name: "까마귀",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 70, def: 50, spd: 70 }, moves: ["peck", "night_slash", "shadow_ball"] },
   // 어둠 전설
-  mon_015: { id: "mon_015", name: "흑룡",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 75, atk: 80, def: 60, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
+  mon_015: { id: "mon_015", name: "흑룡",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 98, atk: 80, def: 60, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
   // 풀 전설
-  mon_016: { id: "mon_016", name: "꽃늑대",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 80, atk: 75, def: 65, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
+  mon_016: { id: "mon_016", name: "꽃늑대",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 104, atk: 75, def: 65, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
   // 전기 전설 (이스터에그)
-  mon_017: { id: "mon_017", name: "별정령",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 65, atk: 75, def: 60, spd: 80 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
+  mon_017: { id: "mon_017", name: "별정령",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 84, atk: 75, def: 60, spd: 80 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
   // 전기 일반 3 (전기뱀장어는 레어)
-  mon_018: { id: "mon_018", name: "번개강아지", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 55, atk: 70, def: 45, spd: 80 }, moves: ["bite", "spark", "thunder_shock"] },
-  mon_019: { id: "mon_019", name: "번개새끼새", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 50, atk: 65, def: 45, spd: 90 }, moves: ["peck", "spark", "thunder_shock"] },
-  mon_020: { id: "mon_020", name: "전기뱀장어", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 70, atk: 80, def: 55, spd: 75 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] }
+  mon_018: { id: "mon_018", name: "번개강아지", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 72, atk: 70, def: 45, spd: 80 }, moves: ["bite", "spark", "thunder_shock"] },
+  mon_019: { id: "mon_019", name: "번개새끼새", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 65, atk: 65, def: 45, spd: 90 }, moves: ["peck", "spark", "thunder_shock"] },
+  mon_020: { id: "mon_020", name: "전기뱀장어", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] }
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
 
@@ -1343,7 +1343,7 @@ function calcDamage(attacker, defender, moveKey) {
   }
 
   const effectiveAtk = attacker.atk * burnMod * starBoostMod;
-  const base = (move.power * effectiveAtk / defender.def) * 0.5;
+  const base = (move.power * effectiveAtk / defender.def) * 0.4;
   const damage = Math.floor(base * typeMult * stab * randMult * crit * fearMod * darkReignMod);
   return { damage: Math.max(1, damage), typeMult, isCrit: crit > 1, move };
 }
@@ -1432,12 +1432,11 @@ function spawnNextEnemy() {
   $("player-sprite").classList.remove("faint", "hit", "captured", "attacking");
   $("fx-layer").innerHTML = "";
 
-  // 죽은 활성 몬스터면 다음 살아있는 거 자동 선택
-  if (getActive().currentHp <= 0) {
-    const alive = state.party.findIndex(m => m.currentHp > 0);
-    if (alive === -1) { endGame(); return; }
-    state.activeIdx = alive;
+  // 활성 몬스터 검증 (배열 길이 변경 가능성)
+  if (state.activeIdx >= state.party.length) {
+    state.activeIdx = 0;
   }
+  if (state.party.length === 0) { endGame(); return; }
 
   const commonIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity !== "legendary");
   const legendaryIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity === "legendary");
@@ -1996,7 +1995,6 @@ async function handlePlayerFaint() {
     await showMessage(`🔥 ${fallen.name}이(가) 불꽃 속에서 부활했다!`, 1200);
     renderPlayer();
     renderParty();
-    // 락 풀고 다시 액션 메뉴 (안 그러면 버튼 씹힘)
     state.battleLocked = false;
     showActionMenu();
     return;
@@ -2004,15 +2002,34 @@ async function handlePlayerFaint() {
 
   $("player-sprite").classList.add("faint");
   await showMessage(`${fallen.name}(이)가 쓰러졌다...`, 1200);
-  renderParty();
+
+  // 죽은 몬스터를 파티에서 제거
+  const fallenIdx = state.activeIdx;
+  state.party.splice(fallenIdx, 1);
 
   // 살아있는 몬스터 있는지 확인
-  const aliveIdx = state.party.findIndex((m, i) => i !== state.activeIdx && m && m.currentHp > 0);
-  if (aliveIdx === -1) {
+  if (state.party.length === 0) {
     endGame();
     return;
   }
-  // 강제 교체
+
+  // 활성 인덱스 갱신 (앞 인덱스 제거로 뒤가 당겨졌으면 0번으로)
+  // 단, 배열이 1개만 남았으면 자동으로 0
+  state.activeIdx = 0;
+
+  // 한 마리만 남았으면 자동 전투 진행
+  if (state.party.length === 1) {
+    $("player-sprite").classList.remove("faint");
+    renderPlayer();
+    renderParty();
+    await showMessage(`${getActive().name}, 가라!`, 700);
+    state.battleLocked = false;
+    showActionMenu();
+    return;
+  }
+
+  // 2마리 이상 있으면 강제 교체 메뉴
+  renderParty();
   await showMessage("다음 몬스터를 선택하세요!", 700);
   showPartyMenu(true);  // forced=true
 }
