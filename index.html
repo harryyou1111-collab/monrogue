@@ -25,6 +25,8 @@
     --type-fire: #ff5722;
     --type-water: #2196f3;
     --type-grass: #4caf50;
+    --type-electric: #fbbf24;
+    --type-dark: #5e35b1;
     --type-spirit: #9c27b0;
     --type-normal: #757575;
   }
@@ -135,6 +137,42 @@
     border-color: var(--accent);
     box-shadow: 0 0 20px rgba(255, 211, 78, 0.4);
     background: var(--bg-card-light);
+  }
+  /* 등급별 스타일 */
+  .mon-card.rarity-rare {
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 0 12px rgba(96, 165, 250, 0.2);
+  }
+  .mon-card.rarity-legendary {
+    border-color: rgba(255, 211, 78, 0.6);
+    box-shadow: 0 0 16px rgba(255, 211, 78, 0.3);
+    background: linear-gradient(135deg, var(--bg-card) 0%, #2d2552 100%);
+  }
+  .mon-card.rarity-legendary.selected,
+  .mon-card.rarity-rare.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(255, 211, 78, 0.5);
+  }
+  .rarity-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-family: 'Jua', sans-serif;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    color: white;
+    font-weight: 700;
+    z-index: 2;
+  }
+  .rarity-badge.rare {
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    box-shadow: 0 0 6px rgba(96, 165, 250, 0.5);
+  }
+  .rarity-badge.legend {
+    background: linear-gradient(135deg, #ffd34e, #ff8a3d);
+    color: #1a1a1a;
+    box-shadow: 0 0 8px rgba(255, 211, 78, 0.6);
   }
   .mon-card img {
     width: 100%;
@@ -430,6 +468,26 @@
     filter: drop-shadow(0 0 14px #d580ff) blur(0.4px);
     animation: spin-fast 0.3s linear infinite;
   }
+  .projectile.electric {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 50% 50%, #fff9c4 0%, #ffeb3b 30%, #fbbf24 60%, transparent 78%);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 14px #fbbf24) drop-shadow(0 0 6px #fff);
+    animation: spin-fast 0.25s linear infinite, electric-flicker 0.15s ease-in-out infinite;
+  }
+  @keyframes electric-flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  .projectile.dark {
+    width: 55px;
+    height: 55px;
+    background: radial-gradient(circle at 35% 35%, #6a4c93 0%, #4a148c 40%, #1a0033 70%, transparent 85%);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 12px #4a148c) blur(0.5px);
+    animation: spin-slow 0.7s linear infinite;
+  }
   @keyframes spin-fast { to { transform: translate(-50%, -50%) rotate(360deg); } }
   @keyframes spin-slow { to { transform: translate(-50%, -50%) rotate(-360deg); } }
 
@@ -473,6 +531,20 @@
     border-radius: 50%;
     animation: impact-pop 0.55s forwards;
     filter: drop-shadow(0 0 20px #d580ff);
+  }
+  .impact.electric {
+    width: 110px; height: 110px;
+    background: radial-gradient(circle, #fff9c4 0%, #ffeb3b 30%, #fbbf24 55%, transparent 75%);
+    border-radius: 50%;
+    animation: impact-pop 0.5s forwards;
+    filter: drop-shadow(0 0 18px #fbbf24);
+  }
+  .impact.dark {
+    width: 115px; height: 115px;
+    background: radial-gradient(circle, #6a4c93 0%, #4a148c 40%, #1a0033 65%, transparent 80%);
+    border-radius: 50%;
+    animation: impact-pop 0.6s forwards;
+    filter: drop-shadow(0 0 20px #4a148c);
   }
   @keyframes impact-pop {
     0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
@@ -524,6 +596,17 @@
   .exp-bar { height: 100%; background: var(--exp-bar); transition: width 0.5s ease-out; }
   /* 상태이상 표시 */
   .status-row { margin-top: 4px; min-height: 16px; }
+  .passive-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #ffd34e, #ff8a3d);
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-family: 'Jua', sans-serif;
+    margin-right: 4px;
+  }
   .status-pill {
     display: inline-block;
     font-size: 10px;
@@ -545,6 +628,13 @@
   .sprite-wrap.status-paralyze img { animation: idle-bob 2.4s ease-in-out infinite, para-tint 0.8s ease-in-out infinite; }
   .sprite-wrap.status-poison img { animation: idle-bob 2.4s ease-in-out infinite, poison-tint 1.5s ease-in-out infinite; }
   .sprite-wrap.status-sleep img { animation: idle-bob 4s ease-in-out infinite; opacity: 0.7; }
+  .sprite-wrap.status-fear img { animation: idle-bob 2.4s ease-in-out infinite, fear-shake 0.4s ease-in-out infinite; }
+  @keyframes fear-shake {
+    0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    25% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 8px #3d1f5e) brightness(0.85); }
+    50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
+    75% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 8px #3d1f5e) brightness(0.85); }
+  }
   @keyframes burn-tint {
     0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)); }
     50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35)) drop-shadow(0 0 8px #ff5722) sepia(0.3) saturate(1.5); }
@@ -874,6 +964,8 @@
   .type-fire { background: var(--type-fire); }
   .type-water { background: var(--type-water); }
   .type-grass { background: var(--type-grass); }
+  .type-electric { background: var(--type-electric); color: #1a1a1a; }
+  .type-dark { background: var(--type-dark); }
   .type-spirit { background: var(--type-spirit); }
   .type-normal { background: var(--type-normal); }
 
@@ -1033,25 +1125,31 @@
 // 이미지는 images/ 폴더에 별도 파일로 있음
 const MON_IDS_LIST = [
   "mon_001","mon_002","mon_003","mon_004","mon_005",
-  "mon_006","mon_007","mon_008","mon_009","mon_010","mon_011"
+  "mon_006","mon_007","mon_008","mon_009","mon_010","mon_011",
+  "mon_012","mon_013","mon_014","mon_015","mon_016",
+  "mon_017","mon_018","mon_019","mon_020"
 ];
 const IMAGES = {};
 MON_IDS_LIST.forEach(id => { IMAGES[id] = `images/${id}.png`; });
 const BACKGROUND = "images/background.jpg";
 
 const TYPES = {
-  fire:   { name: "화염", color: "#ff5722" },
-  water:  { name: "해류", color: "#2196f3" },
-  grass:  { name: "자연", color: "#4caf50" },
-  spirit: { name: "정령", color: "#9c27b0" },
-  normal: { name: "노말", color: "#757575" }
+  fire:     { name: "불",   color: "#ff5722" },
+  water:    { name: "물",   color: "#2196f3" },
+  grass:    { name: "풀",   color: "#4caf50" },
+  electric: { name: "전기", color: "#fbbf24" },
+  dark:     { name: "어둠", color: "#5e35b1" },
+  normal:   { name: "노말", color: "#757575" }
 };
+// 5타입 상성표
+// 공격자 → 방어자: 배수
 const TYPE_CHART = {
-  fire:   { grass: 2.0, water: 0.5, fire: 0.5 },
-  water:  { fire: 2.0,  grass: 0.5, water: 0.5 },
-  grass:  { water: 2.0, fire: 0.5,  grass: 0.5 },
-  spirit: {},
-  normal: {}
+  fire:     { grass: 2.0, dark: 2.0, water: 0.5, fire: 0.5 },
+  water:    { fire: 2.0, electric: 0.5, grass: 0.5, water: 0.5 },
+  grass:    { water: 2.0, fire: 0.5, electric: 0.5, grass: 0.5, dark: 0.5 },
+  electric: { water: 2.0, grass: 0.5, electric: 0.5, dark: 0.5 },
+  dark:     { grass: 2.0, fire: 0.5, dark: 0.5, electric: 2.0 },
+  normal:   {}
 };
 // status: { type: 'burn'|'paralyze'|'sleep'|'poison', chance: 0~1 }
 const MOVES = {
@@ -1072,16 +1170,32 @@ const MOVES = {
   leaf_blade:     { name: "잎날",       power: 45, type: "grass" },
   spore_shot:     { name: "포자발사",   power: 40, type: "grass" },
   mystic_strike:  { name: "신비타격",   power: 40, type: "normal" },
-  azure_pulse:    { name: "푸른파동",   power: 50, type: "spirit" },
-  crimson_pulse:  { name: "붉은파동",   power: 50, type: "spirit" },
 
-  // 상태이상 기술 (새로 추가)
+  // 청룡/봉황 - 정령 → 각자 타입으로
+  azure_pulse:    { name: "푸른파동",   power: 55, type: "water" },
+  crimson_pulse:  { name: "붉은파동",   power: 55, type: "fire" },
+
+  // 상태이상
   flame_breath:   { name: "불꽃숨결",   power: 35, type: "fire",   status: { type: "burn",     chance: 0.30 } },
   freeze_beam:    { name: "얼음광선",   power: 35, type: "water",  status: { type: "paralyze", chance: 0.30 } },
   sleep_spore:    { name: "수면포자",   power: 0,  type: "grass",  status: { type: "sleep",    chance: 0.80 } },
   poison_powder:  { name: "독가루",     power: 25, type: "grass",  status: { type: "poison",   chance: 0.50 } },
-  mystic_burn:    { name: "신비화염",   power: 40, type: "spirit", status: { type: "burn",     chance: 0.30 } },
-  thunder_punch:  { name: "전기펀치",   power: 35, type: "normal", status: { type: "paralyze", chance: 0.30 } }
+  mystic_burn:    { name: "신비화염",   power: 40, type: "fire",   status: { type: "burn",     chance: 0.30 } },
+  thunder_punch:  { name: "전기펀치",   power: 35, type: "normal", status: { type: "paralyze", chance: 0.30 } },
+
+  // 어둠 기술
+  shadow_claw:    { name: "그림자할퀴기", power: 40, type: "dark" },
+  dark_bite:      { name: "어둠물기",     power: 45, type: "dark" },
+  shadow_ball:    { name: "그림자구슬",   power: 50, type: "dark" },
+  night_slash:    { name: "야간베기",     power: 45, type: "dark" },
+  dark_pulse:     { name: "악의파동",     power: 55, type: "dark" },
+
+  // 전기 기술
+  spark:          { name: "스파크",       power: 40, type: "electric" },
+  thunder_shock:  { name: "전기쇼크",     power: 45, type: "electric", status: { type: "paralyze", chance: 0.30 } },
+  thunderbolt:    { name: "번개",         power: 55, type: "electric" },
+  volt_tackle:    { name: "볼트태클",     power: 50, type: "electric" },
+  star_blast:     { name: "별빛작렬",     power: 55, type: "electric" }
 };
 
 // 상태이상 메타 정보
@@ -1089,20 +1203,52 @@ const STATUS_INFO = {
   burn:     { name: "화상", icon: "🔥", color: "#ff5722" },
   paralyze: { name: "마비", icon: "⚡", color: "#fbbf24" },
   sleep:    { name: "잠",   icon: "💤", color: "#60a5fa" },
-  poison:   { name: "독",   icon: "☠️", color: "#9c27b0" }
+  poison:   { name: "독",   icon: "☠️", color: "#9c27b0" },
+  fear:     { name: "공포", icon: "😱", color: "#3d1f5e" }
 };
+
+// 패시브 메타 정보
+const PASSIVE_INFO = {
+  azure_blessing:    { name: "수룡의 가호",   desc: "매턴 HP 12% 회복" },
+  phoenix_rebirth:   { name: "불사조",         desc: "HP 0 시 1회 부활 (5웨이브 쿨다운)" },
+  dark_reign:        { name: "어둠의 군림",   desc: "받는 데미지 10% 감소 + 공격받을 때 30% 공포" },
+  natures_blessing:  { name: "자연의 축복",   desc: "상태이상 면역 + 후방 팀원 매턴 10% 회복" },
+  stars_grace:       { name: "별의 가호",     desc: "매턴 적 최대HP 5% 데미지 + 크리 2배 + 교체 첫 공격 +20%" }
+};
+// rarity: 'common'|'rare'|'legendary'
+// passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
 const MONSTERS = {
-  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",   facing: "left",  stats: { hp: 60, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
-  mon_002: { id: "mon_002", name: "불여우", type: "fire",   facing: "right", stats: { hp: 55, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
-  mon_003: { id: "mon_003", name: "활타",   type: "fire",   facing: "left",  stats: { hp: 70, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
-  mon_004: { id: "mon_004", name: "물방이", type: "water",  facing: "left",  stats: { hp: 80, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
-  mon_005: { id: "mon_005", name: "흐름이", type: "water",  facing: "left",  stats: { hp: 60, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
-  mon_006: { id: "mon_006", name: "빙펭",   type: "water",  facing: "left",  stats: { hp: 75, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
-  mon_007: { id: "mon_007", name: "잎토끼", type: "grass",  facing: "left",  stats: { hp: 60, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
-  mon_008: { id: "mon_008", name: "버섯이", type: "grass",  facing: "left",  stats: { hp: 70, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
-  mon_009: { id: "mon_009", name: "짹돌이", type: "grass",  facing: "left",  stats: { hp: 55, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
-  mon_010: { id: "mon_010", name: "청룡",   type: "spirit", facing: "right", stats: { hp: 75, atk: 75, def: 65, spd: 70 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
-  mon_011: { id: "mon_011", name: "봉황",   type: "spirit", facing: "left",  stats: { hp: 70, atk: 80, def: 60, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] }
+  // === 기존 11마리 ===
+  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
+  mon_002: { id: "mon_002", name: "불여우", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 55, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
+  mon_003: { id: "mon_003", name: "활타",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 70, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
+  mon_004: { id: "mon_004", name: "물방이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 80, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
+  mon_005: { id: "mon_005", name: "흐름이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
+  mon_006: { id: "mon_006", name: "빙펭",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 75, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
+  mon_007: { id: "mon_007", name: "잎토끼", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 60, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
+  mon_008: { id: "mon_008", name: "버섯이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 70, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
+  mon_009: { id: "mon_009", name: "짹돌이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 55, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
+
+  // 청룡: 정령 → 물 전설
+  mon_010: { id: "mon_010", name: "청룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 75, atk: 75, def: 65, spd: 65 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
+  // 봉황: 정령 → 불 전설
+  mon_011: { id: "mon_011", name: "봉황",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 70, atk: 80, def: 55, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
+
+  // === 신규 9마리 ===
+  // 어둠 일반 3
+  mon_012: { id: "mon_012", name: "그림자늑대", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 60, atk: 75, def: 50, spd: 65 }, moves: ["bite", "shadow_claw", "dark_bite"] },
+  mon_013: { id: "mon_013", name: "박쥐꼬마",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 55, atk: 65, def: 45, spd: 85 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
+  mon_014: { id: "mon_014", name: "까마귀",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 60, atk: 70, def: 50, spd: 70 }, moves: ["peck", "night_slash", "shadow_ball"] },
+  // 어둠 전설
+  mon_015: { id: "mon_015", name: "흑룡",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 75, atk: 80, def: 60, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
+  // 풀 전설
+  mon_016: { id: "mon_016", name: "꽃늑대",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 80, atk: 75, def: 65, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
+  // 전기 전설 (이스터에그)
+  mon_017: { id: "mon_017", name: "별정령",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 65, atk: 75, def: 60, spd: 80 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
+  // 전기 일반 3 (전기뱀장어는 레어)
+  mon_018: { id: "mon_018", name: "번개강아지", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 55, atk: 70, def: 45, spd: 80 }, moves: ["bite", "spark", "thunder_shock"] },
+  mon_019: { id: "mon_019", name: "번개새끼새", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 50, atk: 65, def: 45, spd: 90 }, moves: ["peck", "spark", "thunder_shock"] },
+  mon_020: { id: "mon_020", name: "전기뱀장어", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 70, atk: 80, def: 55, spd: 75 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] }
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
 
@@ -1138,11 +1284,13 @@ function getActive() { return state.party[state.activeIdx]; }
 // 몬스터 인스턴스 생성 (레벨 기반 스탯)
 function makeInstance(monId, level) {
   const base = MONSTERS[monId];
-  const factor = 1 + (level - 1) * 0.05;  // 레벨당 +5%
+  const factor = 1 + (level - 1) * 0.05;
   return {
     id: base.id,
     name: base.name,
     type: base.type,
+    rarity: base.rarity || "common",
+    passive: base.passive || null,
     facing: base.facing,
     maxHp: Math.floor(base.stats.hp * factor),
     currentHp: Math.floor(base.stats.hp * factor),
@@ -1153,8 +1301,11 @@ function makeInstance(monId, level) {
     level: level,
     exp: 0,
     expToNext: 80 * level,
-    status: null,         // 'burn'|'paralyze'|'sleep'|'poison'|null
-    sleepTurns: 0         // 잠 남은 턴
+    status: null,
+    sleepTurns: 0,
+    // 패시브 추적
+    phoenixUsedWave: -10,  // 마지막 부활 웨이브 (-10 = 아직 안 씀)
+    starGraceBoost: false  // 별정령 교체 후 첫 공격 부스트 플래그
   };
 }
 
@@ -1167,18 +1318,33 @@ function makeEnemy(monId, wave) {
 function calcDamage(attacker, defender, moveKey) {
   const move = MOVES[moveKey];
   if (move.power === 0) {
-    // 데미지 없는 기술 (수면포자 등) — 0 데미지지만 상태이상은 적용
     return { damage: 0, typeMult: 1, isCrit: false, move };
   }
   const typeMult = TYPE_CHART[move.type]?.[defender.type] ?? 1.0;
   const stab = (move.type === attacker.type) ? 1.5 : 1.0;
   const randMult = rand(0.85, 1.0);
-  const crit = (Math.random() < 0.0625) ? 1.5 : 1.0;
+
+  // 크리 확률 (별정령 패시브: 2배)
+  let critChance = 0.0625;
+  if (attacker.passive === "stars_grace") critChance *= 2;
+  const crit = (Math.random() < critChance) ? 1.5 : 1.0;
+
   // 화상 시 공격력 50% 다운
   const burnMod = (attacker.status === "burn") ? 0.5 : 1.0;
-  const effectiveAtk = attacker.atk * burnMod;
+  // 공포 시 받는 데미지 +20%
+  const fearMod = (defender.status === "fear") ? 1.2 : 1.0;
+  // 흑룡 데미지 감소 10%
+  const darkReignMod = (defender.passive === "dark_reign") ? 0.9 : 1.0;
+  // 별정령 교체 첫 공격 +20%
+  let starBoostMod = 1.0;
+  if (attacker.passive === "stars_grace" && attacker.starGraceBoost) {
+    starBoostMod = 1.2;
+    attacker.starGraceBoost = false;  // 1회용
+  }
+
+  const effectiveAtk = attacker.atk * burnMod * starBoostMod;
   const base = (move.power * effectiveAtk / defender.def) * 0.5;
-  const damage = Math.floor(base * typeMult * stab * randMult * crit);
+  const damage = Math.floor(base * typeMult * stab * randMult * crit * fearMod * darkReignMod);
   return { damage: Math.max(1, damage), typeMult, isCrit: crit > 1, move };
 }
 
@@ -1194,9 +1360,13 @@ function renderStartScreen() {
   ALL_MON_IDS.forEach(id => {
     const mon = MONSTERS[id];
     const card = document.createElement("div");
-    card.className = "mon-card";
+    card.className = `mon-card rarity-${mon.rarity || 'common'}`;
     card.dataset.id = id;
+    let rarityBadge = "";
+    if (mon.rarity === "legendary") rarityBadge = `<div class="rarity-badge legend">★ 전설</div>`;
+    else if (mon.rarity === "rare") rarityBadge = `<div class="rarity-badge rare">◆ 레어</div>`;
     card.innerHTML = `
+      ${rarityBadge}
       <img src="${IMAGES[id]}" alt="${mon.name}">
       <div class="mon-card-info">
         <div class="mon-card-name">${mon.name}</div>
@@ -1269,8 +1439,26 @@ function spawnNextEnemy() {
     state.activeIdx = alive;
   }
 
-  const enemyId = pickRandom(ALL_MON_IDS);
+  const commonIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity !== "legendary");
+  const legendaryIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity === "legendary");
+
+  let isWildLegendary = false;
+  let enemyId;
+  if (state.wave >= 10 && Math.random() < 0.03 && legendaryIds.length > 0) {
+    enemyId = pickRandom(legendaryIds);
+    isWildLegendary = true;
+  } else {
+    enemyId = pickRandom(commonIds);
+  }
+
   state.enemy = makeEnemy(enemyId, state.wave);
+
+  // 야생 전설은 살짝 부스트 (보스만큼 강하지 않게)
+  if (isWildLegendary) {
+    state.enemy.maxHp = Math.floor(state.enemy.maxHp * 1.1);
+    state.enemy.currentHp = state.enemy.maxHp;
+    state.enemy.atk = Math.floor(state.enemy.atk * 1.1);
+  }
 
   // 웨이브 시작 시 활성 몬스터 회복 (30%)
   if (state.wave > 1) {
@@ -1285,7 +1473,11 @@ function spawnNextEnemy() {
   updateTopbar();
   hideAllMenus();
 
-  queueMessage(`야생의 ${state.enemy.name}(이)가 나타났다!`);
+  if (isWildLegendary) {
+    queueMessage(`✨ 야생의 전설 ${state.enemy.name}이(가) 나타났다! ✨`);
+  } else {
+    queueMessage(`야생의 ${state.enemy.name}(이)가 나타났다!`);
+  }
   queueAction(() => {
     showActionMenu();
     state.battleLocked = false;
@@ -1301,7 +1493,7 @@ function renderEnemy() {
   $("enemy-lv").textContent = `Lv ${state.enemy.level}`;
   $("enemy-sprite").classList.toggle("flipped", state.enemy.facing === "right");
   // 상태이상 sprite 클래스
-  ["burn","paralyze","sleep","poison"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
+  ["burn","paralyze","sleep","poison","fear"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
   if (state.enemy.status) $("enemy-sprite").classList.add(`status-${state.enemy.status}`);
   renderMonStatus("enemy", state.enemy);
   updateHpBar("enemy", state.enemy);
@@ -1316,7 +1508,7 @@ function renderPlayer() {
   $("player-lv").textContent = `Lv ${p.level}`;
   $("player-sprite").classList.toggle("flipped", p.facing === "left");
   // 상태이상 sprite 클래스
-  ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+  ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
   if (p.status) $("player-sprite").classList.add(`status-${p.status}`);
   renderMonStatus("player", p);
   updateHpBar("player", p);
@@ -1439,6 +1631,12 @@ async function playerAttack(moveKey) {
       await showMessage(`${label}은(는) 마비되어 움직일 수 없다!`, 700);
       return "blocked";
     }
+    // 공포 50% 행동 불가
+    if (attacker.status === "fear" && Math.random() < 0.50) {
+      const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
+      await showMessage(`😱 ${label}은(는) 공포에 떨어 움직일 수 없다!`, 700);
+      return "blocked";
+    }
     await executeAttack(attacker, defender, attackerSide, defenderSide, mKey);
     return "ok";
   }
@@ -1461,8 +1659,71 @@ async function playerAttack(moveKey) {
   await applyEndTurnStatus(state.enemy, "enemy");
   if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
 
+  // 턴 끝: 패시브 효과
+  await applyEndTurnPassives(player, "player");
+  if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+  if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+  await applyEndTurnPassives(state.enemy, "enemy");
+  if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+  if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+
   state.battleLocked = false;
   showActionMenu();
+}
+
+// 턴 끝 패시브 효과
+async function applyEndTurnPassives(mon, side) {
+  if (!mon || mon.currentHp <= 0) return;
+
+  // 청룡: 매턴 HP 12% 회복
+  if (mon.passive === "azure_blessing" && mon.currentHp < mon.maxHp) {
+    const heal = Math.floor(mon.maxHp * 0.12);
+    const before = mon.currentHp;
+    mon.currentHp = Math.min(mon.maxHp, mon.currentHp + heal);
+    const actual = mon.currentHp - before;
+    if (actual > 0) {
+      popHeal(side, actual);
+      updateHpBar(side, mon);
+      if (side === "player") {
+        $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+        renderParty();
+      }
+      await showMessage(`💧 ${mon.name}의 수룡의 가호! HP 회복`, 500);
+    }
+  }
+
+  // 별정령: 매턴 적 최대HP 5% 데미지
+  if (mon.passive === "stars_grace") {
+    const target = (side === "player") ? state.enemy : getActive();
+    const targetSide = (side === "player") ? "enemy" : "player";
+    if (target && target.currentHp > 0) {
+      const dmg = Math.max(1, Math.floor(target.maxHp * 0.05));
+      target.currentHp = Math.max(0, target.currentHp - dmg);
+      popDamage(targetSide, dmg, false, 1, `-${dmg}`);
+      updateHpBar(targetSide, target);
+      if (targetSide === "player") {
+        $("player-hp-text").textContent = `${target.currentHp} / ${target.maxHp}`;
+        renderParty();
+      }
+      await showMessage(`⭐ ${mon.name}의 별의 가호 자동공격!`, 500);
+    }
+  }
+
+  // 꽃늑대: 후방 팀원 매턴 10% 회복 (플레이어 측에서만)
+  if (mon.passive === "natures_blessing" && side === "player") {
+    let healedAny = false;
+    state.party.forEach((m, i) => {
+      if (i === state.activeIdx) return;  // 활성 멤버 제외
+      if (!m || m.currentHp <= 0 || m.currentHp >= m.maxHp) return;
+      const heal = Math.floor(m.maxHp * 0.10);
+      m.currentHp = Math.min(m.maxHp, m.currentHp + heal);
+      healedAny = true;
+    });
+    if (healedAny) {
+      renderParty();
+      await showMessage(`🌿 ${mon.name}의 자연의 축복! 후방 팀원 회복`, 500);
+    }
+  }
 }
 
 // 턴 종료 시 화상/독 데미지
@@ -1542,11 +1803,21 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   if (r.typeMult > 1) await showMessage("효과가 굉장했다!", 500);
   else if (r.typeMult > 0 && r.typeMult < 1) await showMessage("효과가 별로인 듯하다...", 500);
 
-  // 상태이상 적용 (방어자가 살아있고, 이미 상태이상 없을 때만)
-  if (r.move.status && defender.currentHp > 0 && !defender.status) {
+  // 꽃늑대 패시브: 모든 상태이상 면역
+  const defenderImmune = defender.passive === "natures_blessing";
+
+  // 일반 기술의 상태이상 적용
+  if (r.move.status && defender.currentHp > 0 && !defender.status && !defenderImmune) {
     if (Math.random() < r.move.status.chance) {
       await applyStatus(defender, defenderSide, r.move.status.type);
     }
+  }
+
+  // 흑룡 패시브: 공격받을 때 30% 확률로 공포 부여 (공격자에게)
+  if (defender.passive === "dark_reign" && r.damage > 0 && attacker.currentHp > 0
+      && !attacker.status && attacker.passive !== "natures_blessing"
+      && Math.random() < 0.30) {
+    await applyStatus(attacker, attackerSide, "fear");
   }
 }
 
@@ -1563,18 +1834,22 @@ async function applyStatus(mon, side, statusType) {
   if (side === "player") renderParty();
 }
 
-// 상태이상 아이콘 표시
+// 상태이상 아이콘 + 패시브 표시
 function renderMonStatus(side, mon) {
   const wrap = $(`${side}-status`);
   if (!wrap) return;
-  if (!mon.status) {
-    wrap.innerHTML = "";
-    wrap.classList.remove("active");
-  } else {
-    const info = STATUS_INFO[mon.status];
-    wrap.innerHTML = `<span class="status-pill" style="background:${info.color}">${info.icon} ${info.name}</span>`;
-    wrap.classList.add("active");
+  let html = "";
+  // 패시브 (전설 표시)
+  if (mon.passive && PASSIVE_INFO[mon.passive]) {
+    html += `<span class="passive-pill" title="${PASSIVE_INFO[mon.passive].desc}">★ ${PASSIVE_INFO[mon.passive].name}</span>`;
   }
+  // 상태이상
+  if (mon.status) {
+    const info = STATUS_INFO[mon.status];
+    html += `<span class="status-pill" style="background:${info.color}">${info.icon} ${info.name}</span>`;
+  }
+  wrap.innerHTML = html;
+  wrap.classList.toggle("active", !!(mon.passive || mon.status));
 }
 
 // 스킬 효과 (타입별 발사체)
@@ -1651,10 +1926,22 @@ function popHeal(side, amount) {
 }
 
 async function handleEnemyFaint() {
+  // 적 봉황 패시브: 부활 (적은 쿨다운 무시, 한 배틀당 1회만)
+  if (state.enemy.passive === "phoenix_rebirth" && state.enemy.phoenixUsedWave === -10) {
+    state.enemy.currentHp = Math.floor(state.enemy.maxHp * 0.5);
+    state.enemy.status = null;
+    state.enemy.sleepTurns = 0;
+    state.enemy.phoenixUsedWave = state.wave;
+    ["burn","paralyze","sleep","poison","fear"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
+    await showMessage(`🔥 ${state.enemy.name}이(가) 불꽃 속에서 부활했다!`, 1200);
+    renderEnemy();
+    return;
+  }
+
   $("enemy-sprite").classList.add("faint");
   await showMessage(`야생의 ${state.enemy.name}(이)가 쓰러졌다!`, 900);
 
-  // 코인 (이전: 10 + wave*5 → 50% 증가)
+  // 코인
   const coinGain = 15 + state.wave * 8;
   state.inventory.coins += coinGain;
   state.kills += 1;
@@ -1663,7 +1950,7 @@ async function handleEnemyFaint() {
 
   await showMessage(`+${coinGain} 코인 · +${scoreGain} 점수`, 800);
 
-  // 경험치 (이전: state.enemy.level * 12 → 3배)
+  // 경험치
   const expGain = state.enemy.level * 36;
   await grantExp(getActive(), expGain);
 
@@ -1693,8 +1980,24 @@ async function grantExp(mon, amount) {
 }
 
 async function handlePlayerFaint() {
+  const fallen = getActive();
+
+  // 봉황 패시브: 부활 (5웨이브 쿨다운)
+  if (fallen.passive === "phoenix_rebirth"
+      && state.wave - fallen.phoenixUsedWave >= 5) {
+    fallen.currentHp = Math.floor(fallen.maxHp * 0.5);
+    fallen.status = null;
+    fallen.sleepTurns = 0;
+    fallen.phoenixUsedWave = state.wave;
+    ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+    await showMessage(`🔥 ${fallen.name}이(가) 불꽃 속에서 부활했다!`, 1200);
+    renderPlayer();
+    renderParty();
+    return;
+  }
+
   $("player-sprite").classList.add("faint");
-  await showMessage(`${getActive().name}(이)가 쓰러졌다...`, 1200);
+  await showMessage(`${fallen.name}(이)가 쓰러졌다...`, 1200);
   renderParty();
 
   // 살아있는 몬스터 있는지 확인
@@ -1742,8 +2045,15 @@ function showPartyMenu(forced = false) {
 async function swapTo(idx, forced) {
   closeModal();
   state.activeIdx = idx;
-  // 이전 sprite의 faint/hit/attacking 클래스 제거 (안 그러면 새 몬스터도 안 보임)
+  // 이전 sprite의 faint/hit/attacking 클래스 제거
   $("player-sprite").classList.remove("faint", "hit", "attacking");
+
+  // 별정령 패시브: 교체되어 나왔을 때 첫 공격 부스트 활성화
+  const newActive = getActive();
+  if (newActive.passive === "stars_grace") {
+    newActive.starGraceBoost = true;
+  }
+
   renderPlayer();
   renderParty();
   await showMessage(`${getActive().name}, 가라!`, 700);
@@ -1959,7 +2269,7 @@ function useAntidote() {
   p.status = null;
   p.sleepTurns = 0;
   // sprite 상태 클래스 제거
-  ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+  ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
   renderMonStatus("player", p);
   renderPlayer();
   renderParty();
@@ -1986,7 +2296,7 @@ function doGacha() {
     p.currentHp = p.maxHp;
     p.status = null;
     p.sleepTurns = 0;
-    ["burn","paralyze","sleep","poison"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
+    ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
     resultMsg = `슈퍼 회복! ${p.name} 완전 회복`; resultIcon = "✨";
     renderPlayer();
     renderParty();
