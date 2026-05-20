@@ -717,6 +717,14 @@
     font-size: 16px;
   }
   .action-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .action-btn.cooldown {
+    opacity: 0.55;
+    filter: grayscale(0.3);
+  }
+  .action-btn.cooldown .badge {
+    background: #888 !important;
+    color: #fff !important;
+  }
   .action-btn .icon { font-size: 20px; margin-right: 4px; }
   .action-btn .badge {
     display: inline-block;
@@ -1086,7 +1094,7 @@
     <!-- 메인 액션 메뉴 (싸우기/교체/잡기/아이템) -->
     <div class="action-grid hidden" id="action-grid">
       <button class="action-btn" onclick="showMoves()"><span class="icon">⚔️</span>싸우기</button>
-      <button class="action-btn" onclick="showPartyMenu()"><span class="icon">🔄</span>교체</button>
+      <button class="action-btn" id="swap-btn" onclick="showPartyMenu()"><span class="icon">🔄</span>교체<span class="badge" id="swap-cooldown-badge" style="display:none;"></span></button>
       <button class="action-btn" onclick="attemptCatch()"><span class="icon">🎯</span>잡기 <span class="badge" id="balls-badge">5</span></button>
       <button class="action-btn" onclick="showShop()"><span class="icon">🎒</span>가방/상점</button>
     </div>
@@ -1253,7 +1261,7 @@ const MONSTERS = {
 const ALL_MON_IDS = Object.keys(MONSTERS);
 
 const PARTY_MAX = 3;
-const SHOP_PRICES = { potion: 30, ball: 30, antidote: 40, gacha: 80 };
+const SHOP_PRICES = { potion: 40, ball: 35, antidote: 60, gacha: 100 };
 
 let state = {
   party: [],
@@ -1267,7 +1275,8 @@ let state = {
   messageQueue: [],
   awaitingTap: false,
   battleLocked: true,
-  selectedMonId: null
+  selectedMonId: null,
+  swapCooldown: 0  // 교체 후 N턴 동안 교체 불가
 };
 
 // ===== 유틸 =====
@@ -1419,6 +1428,7 @@ function startNewRun(monId) {
   state.score = 0;
   state.inventory = { potions: 2, balls: 5, antidotes: 1, coins: 0 };
   state.battleLocked = true;
+  state.swapCooldown = 0;
 
   showScreen("battle-screen");
   renderPlayer();
@@ -1458,6 +1468,9 @@ function spawnNextEnemy() {
     state.enemy.currentHp = state.enemy.maxHp;
     state.enemy.atk = Math.floor(state.enemy.atk * 1.1);
   }
+
+  // 새 웨이브 시작 시 교체 쿨다운 리셋
+  state.swapCooldown = 0;
 
   // 웨이브 시작 시 활성 몬스터 회복 (30%)
   if (state.wave > 1) {
@@ -1567,6 +1580,18 @@ function showActionMenu() {
   hideAllMenus();
   $("action-grid").classList.remove("hidden");
   updateTopbar();
+
+  // 교체 쿨다운 표시 업데이트
+  const swapBtn = $("swap-btn");
+  const swapBadge = $("swap-cooldown-badge");
+  if (state.swapCooldown > 0) {
+    swapBadge.textContent = state.swapCooldown;
+    swapBadge.style.display = "";
+    swapBtn.classList.add("cooldown");
+  } else {
+    swapBadge.style.display = "none";
+    swapBtn.classList.remove("cooldown");
+  }
 }
 
 function showMoves() {
@@ -1665,6 +1690,9 @@ async function playerAttack(moveKey) {
   await applyEndTurnPassives(state.enemy, "enemy");
   if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
   if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+
+  // 교체 쿨다운 감소
+  if (state.swapCooldown > 0) state.swapCooldown -= 1;
 
   state.battleLocked = false;
   showActionMenu();
@@ -1943,8 +1971,8 @@ async function handleEnemyFaint() {
   $("enemy-sprite").classList.add("faint");
   await showMessage(`야생의 ${state.enemy.name}(이)가 쓰러졌다!`, 900);
 
-  // 코인
-  const coinGain = 15 + state.wave * 8;
+  // 코인 (밸런스 조정: 후반 인플레이션 방지)
+  const coinGain = 15 + state.wave * 5;
   state.inventory.coins += coinGain;
   state.kills += 1;
   const scoreGain = 50 + state.wave * 10;
@@ -1976,6 +2004,18 @@ async function grantExp(mon, amount) {
     mon.currentHp = Math.max(1, Math.floor(mon.maxHp * ratio));
     mon.expToNext = 80 * mon.level;
     await showMessage(`🎉 레벨 업! ${mon.name} Lv${mon.level}`, 800);
+
+    // 레벨업 보너스: HP 15% 회복
+    const heal = Math.floor(mon.maxHp * 0.15);
+    const before = mon.currentHp;
+    mon.currentHp = Math.min(mon.maxHp, mon.currentHp + heal);
+    const actual = mon.currentHp - before;
+    if (actual > 0) {
+      popHeal("player", actual);
+      updateHpBar("player", mon);
+      $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+      await showMessage(`💚 ${mon.name}이(가) 활력을 되찾았다! +${actual} HP`, 600);
+    }
   }
   renderPlayer();
   renderParty();
@@ -2037,6 +2077,11 @@ async function handlePlayerFaint() {
 // ===== 교체 시스템 =====
 function showPartyMenu(forced = false) {
   if (state.battleLocked && !forced) return;
+  // 쿨다운 체크 (강제 교체는 무시)
+  if (!forced && state.swapCooldown > 0) {
+    flashMessage(`교체 쿨타임! ${state.swapCooldown}턴 남음`);
+    return;
+  }
   const modal = $("modal-content");
   let html = `<div class="modal-title">${forced ? "강제 교체" : "파티 교체"}</div><div class="party-list">`;
   state.party.forEach((mon, i) => {
@@ -2082,11 +2127,12 @@ async function swapTo(idx, forced) {
   await showMessage(`${getActive().name}, 가라!`, 700);
 
   if (forced) {
-    // 강제 교체 - 적의 턴 안 거치고 바로 행동
+    // 강제 교체 - 적의 턴 안 거치고 바로 행동, 쿨다운 X
     state.battleLocked = false;
     showActionMenu();
   } else {
-    // 일반 교체 - 적이 한 턴 공격
+    // 일반 교체 - 쿨다운 2턴 설정 + 적이 한 턴 공격
+    state.swapCooldown = 2;
     state.battleLocked = true;
     hideAllMenus();
     await executeAttack(state.enemy, getActive(), "enemy", "player", pickRandom(state.enemy.moves));
@@ -2121,11 +2167,11 @@ async function attemptCatch() {
   const success = Math.random() < successRate;
 
   if (success) {
-    // 적을 파티에 추가 — 풀 HP + 상태이상 치료 (잡기 비용 보상)
+    // 적을 파티에 추가 — HP 50% + 상태이상 치료
     $("enemy-sprite").classList.add("captured");
     await sleep(800);
     const captured = state.enemy;
-    captured.currentHp = captured.maxHp;
+    captured.currentHp = Math.floor(captured.maxHp * 0.5);
     captured.status = null;
     captured.sleepTurns = 0;
     captured.exp = 0;
@@ -2223,7 +2269,7 @@ function renderShopModal() {
         <div class="shop-icon">💊</div>
         <div class="shop-info">
           <div class="shop-name">회복약</div>
-          <div class="shop-desc">HP 50% 회복. 30코인</div>
+          <div class="shop-desc">HP 50% 회복. 40코인</div>
         </div>
         <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.potion ? 'disabled' : ''} onclick="buyItem('potion')">구매</button>
       </div>
@@ -2231,7 +2277,7 @@ function renderShopModal() {
         <div class="shop-icon">🧪</div>
         <div class="shop-info">
           <div class="shop-name">해독제</div>
-          <div class="shop-desc">상태이상 치료. 40코인</div>
+          <div class="shop-desc">상태이상 치료. 60코인</div>
         </div>
         <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.antidote ? 'disabled' : ''} onclick="buyItem('antidote')">구매</button>
       </div>
@@ -2239,7 +2285,7 @@ function renderShopModal() {
         <div class="shop-icon">🎯</div>
         <div class="shop-info">
           <div class="shop-name">잡기 도구</div>
-          <div class="shop-desc">야생 몬스터 잡기에 사용. 30코인</div>
+          <div class="shop-desc">야생 몬스터 잡기에 사용. 35코인</div>
         </div>
         <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.ball ? 'disabled' : ''} onclick="buyItem('ball')">구매</button>
       </div>
@@ -2250,7 +2296,7 @@ function renderShopModal() {
         <div class="shop-icon">🎰</div>
         <div class="shop-info">
           <div class="shop-name">아이템 뽑기</div>
-          <div class="shop-desc">80코인. 회복약 60% / 잡기도구 30% / 슈퍼회복(100%) 10%</div>
+          <div class="shop-desc">100코인. 회복약 60% / 잡기도구 30% / 슈퍼회복(100%) 10%</div>
         </div>
         <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.gacha ? 'disabled' : ''} onclick="doGacha()">뽑기!</button>
       </div>
