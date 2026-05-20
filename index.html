@@ -1935,6 +1935,9 @@ async function handleEnemyFaint() {
     ["burn","paralyze","sleep","poison","fear"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
     await showMessage(`🔥 ${state.enemy.name}이(가) 불꽃 속에서 부활했다!`, 1200);
     renderEnemy();
+    // 락 풀고 다시 액션 메뉴
+    state.battleLocked = false;
+    showActionMenu();
     return;
   }
 
@@ -1993,6 +1996,9 @@ async function handlePlayerFaint() {
     await showMessage(`🔥 ${fallen.name}이(가) 불꽃 속에서 부활했다!`, 1200);
     renderPlayer();
     renderParty();
+    // 락 풀고 다시 액션 메뉴 (안 그러면 버튼 씹힘)
+    state.battleLocked = false;
+    showActionMenu();
     return;
   }
 
