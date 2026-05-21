@@ -300,6 +300,24 @@
     pointer-events: none;
     z-index: 0;
   }
+  /* 보스 모드: 빨간 오버레이 + 진동 효과 */
+  .battle-field.boss-mode::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(220,38,38,0.15) 0%, rgba(127,17,17,0.35) 80%, rgba(60,5,5,0.5) 100%);
+    pointer-events: none;
+    z-index: 0;
+    animation: boss-pulse 2s ease-in-out infinite;
+  }
+  @keyframes boss-pulse {
+    0%, 100% { opacity: 0.9; }
+    50% { opacity: 0.65; }
+  }
+  .battle-field.boss-mode {
+    border-color: #dc2626;
+    box-shadow: 0 0 20px rgba(220,38,38,0.4), inset 0 0 20px rgba(220,38,38,0.2);
+  }
   .enemy-row, .player-row {
     display: flex;
     align-items: flex-start;
@@ -1037,6 +1055,10 @@
         <span class="topbar-value" id="coin-display">0</span>
       </div>
       <div class="topbar-item">
+        <span class="topbar-icon">💎</span>
+        <span class="topbar-value" id="gem-display">0</span>
+      </div>
+      <div class="topbar-item">
         <span class="topbar-label">SCORE</span>
         <span class="topbar-value" id="score-display">0</span>
       </div>
@@ -1113,6 +1135,7 @@
         <div class="result-row"><span class="result-label">최종 웨이브</span><span class="result-value" id="final-wave">1</span></div>
         <div class="result-row"><span class="result-label">처치 수</span><span class="result-value" id="final-kills">0</span></div>
         <div class="result-row"><span class="result-label">잡은 몬스터</span><span class="result-value" id="final-caught">0</span></div>
+        <div class="result-row"><span class="result-label">💎 획득 다이아</span><span class="result-value" id="final-gems">0</span></div>
         <div class="result-row"><span class="result-label">점수</span><span class="result-value" id="final-score">0</span></div>
         <div class="result-row"><span class="result-label">최고 기록</span><span class="result-value" id="best-score">0</span></div>
       </div>
@@ -1271,12 +1294,13 @@ let state = {
   kills: 0,
   caught: 0,
   score: 0,
-  inventory: { potions: 2, balls: 5, antidotes: 1, coins: 0 },
+  inventory: { potions: 2, balls: 5, antidotes: 1, coins: 0, gems: 0 },
   messageQueue: [],
   awaitingTap: false,
   battleLocked: true,
   selectedMonId: null,
-  swapCooldown: 0  // 교체 후 N턴 동안 교체 불가
+  swapCooldown: 0,
+  isBossWave: false  // 현재 웨이브가 보스인지
 };
 
 // ===== 유틸 =====
@@ -1426,9 +1450,10 @@ function startNewRun(monId) {
   state.kills = 0;
   state.caught = 0;
   state.score = 0;
-  state.inventory = { potions: 2, balls: 5, antidotes: 1, coins: 0 };
+  state.inventory = { potions: 2, balls: 5, antidotes: 1, coins: 0, gems: 0 };
   state.battleLocked = true;
   state.swapCooldown = 0;
+  state.isBossWave = false;
 
   showScreen("battle-screen");
   renderPlayer();
@@ -1451,9 +1476,14 @@ function spawnNextEnemy() {
   const commonIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity !== "legendary");
   const legendaryIds = ALL_MON_IDS.filter(id => MONSTERS[id].rarity === "legendary");
 
+  // 10웨이브마다 보스 출현
+  const isBoss = state.wave > 0 && state.wave % 10 === 0;
   let isWildLegendary = false;
   let enemyId;
-  if (state.wave >= 10 && Math.random() < 0.03 && legendaryIds.length > 0) {
+
+  if (isBoss && legendaryIds.length > 0) {
+    enemyId = pickRandom(legendaryIds);
+  } else if (state.wave >= 10 && Math.random() < 0.03 && legendaryIds.length > 0) {
     enemyId = pickRandom(legendaryIds);
     isWildLegendary = true;
   } else {
@@ -1461,9 +1491,15 @@ function spawnNextEnemy() {
   }
 
   state.enemy = makeEnemy(enemyId, state.wave);
+  state.isBossWave = isBoss;
 
-  // 야생 전설은 살짝 부스트 (보스만큼 강하지 않게)
-  if (isWildLegendary) {
+  if (isBoss) {
+    // 보스 부스트: HP +100%, 공격 +20%
+    state.enemy.maxHp = Math.floor(state.enemy.maxHp * 2.0);
+    state.enemy.currentHp = state.enemy.maxHp;
+    state.enemy.atk = Math.floor(state.enemy.atk * 1.2);
+  } else if (isWildLegendary) {
+    // 야생 전설 살짝 부스트
     state.enemy.maxHp = Math.floor(state.enemy.maxHp * 1.1);
     state.enemy.currentHp = state.enemy.maxHp;
     state.enemy.atk = Math.floor(state.enemy.atk * 1.1);
@@ -1479,13 +1515,19 @@ function spawnNextEnemy() {
     p.currentHp = Math.min(p.maxHp, p.currentHp + heal);
   }
 
+  // 보스 배경 효과 토글
+  $("battle-field").classList.toggle("boss-mode", isBoss);
+
   renderEnemy();
   renderPlayer();
   renderParty();
   updateTopbar();
   hideAllMenus();
 
-  if (isWildLegendary) {
+  if (isBoss) {
+    queueMessage(`⚔️ BOSS BATTLE ⚔️`);
+    queueMessage(`보스 ${state.enemy.name}이(가) 강림했다!`);
+  } else if (isWildLegendary) {
     queueMessage(`✨ 야생의 전설 ${state.enemy.name}이(가) 나타났다! ✨`);
   } else {
     queueMessage(`야생의 ${state.enemy.name}(이)가 나타났다!`);
@@ -1565,6 +1607,7 @@ function renderParty() {
 function updateTopbar() {
   $("wave-display").textContent = state.wave;
   $("coin-display").textContent = state.inventory.coins;
+  $("gem-display").textContent = state.inventory.gems;
   $("score-display").textContent = state.score;
   $("balls-badge").textContent = state.inventory.balls;
 }
@@ -1969,24 +2012,89 @@ async function handleEnemyFaint() {
   }
 
   $("enemy-sprite").classList.add("faint");
-  await showMessage(`야생의 ${state.enemy.name}(이)가 쓰러졌다!`, 900);
+  const wasBoss = state.isBossWave;
+  const fallenEnemy = state.enemy;
+  const fallenName = state.enemy.name;
 
-  // 코인 (밸런스 조정: 후반 인플레이션 방지)
-  const coinGain = 15 + state.wave * 5;
+  if (wasBoss) {
+    await showMessage(`⚔️ 보스 ${fallenName}(이)가 쓰러졌다! ⚔️`, 1200);
+  } else {
+    await showMessage(`야생의 ${fallenName}(이)가 쓰러졌다!`, 900);
+  }
+
+  // 코인 (보스는 3배)
+  let coinGain = 15 + state.wave * 5;
+  if (wasBoss) coinGain *= 3;
   state.inventory.coins += coinGain;
   state.kills += 1;
-  const scoreGain = 50 + state.wave * 10;
+  const scoreGain = (50 + state.wave * 10) * (wasBoss ? 3 : 1);
   state.score += scoreGain;
 
   await showMessage(`+${coinGain} 코인 · +${scoreGain} 점수`, 800);
 
   // 경험치
-  const expGain = state.enemy.level * 36;
+  const expGain = state.enemy.level * 36 * (wasBoss ? 2 : 1);
   await grantExp(getActive(), expGain);
 
   updateTopbar();
+
+  // 보스 처치 → 자동 잡기 시도
+  if (wasBoss) {
+    await attemptBossCatch(fallenEnemy);
+  }
+
+  state.isBossWave = false;
+  $("battle-field").classList.remove("boss-mode");
   state.wave += 1;
   spawnNextEnemy();
+}
+
+// 보스 처치 후 자동 잡기 (5번, 40% 확률)
+async function attemptBossCatch(boss) {
+  await sleep(500);
+
+  // 파티 가득 차면 못 잡음
+  if (state.party.length >= PARTY_MAX) {
+    await showMessage(`파티가 가득 차서 ${boss.name}을(를) 잡을 수 없다...`, 1500);
+    state.inventory.gems += 1;
+    await showMessage(`💎 다이아 +1 (보스 처치 보상)`, 800);
+    updateTopbar();
+    return;
+  }
+
+  await showMessage(`💫 전설을 잡을 기회! 5번의 도전!`, 1200);
+
+  let caught = false;
+  for (let i = 1; i <= 5; i++) {
+    await showMessage(`잡기 시도 ${i}/5...`, 700);
+    if (Math.random() < 0.40) {
+      caught = true;
+      break;
+    }
+    await showMessage(`...실패!`, 500);
+  }
+
+  if (caught) {
+    // 잡기 성공
+    const captured = boss;
+    captured.currentHp = Math.floor(captured.maxHp * 0.5);
+    captured.status = null;
+    captured.sleepTurns = 0;
+    captured.exp = 0;
+    captured.expToNext = 80 * captured.level;
+    state.party.push(captured);
+    state.caught += 1;
+    state.inventory.gems += 2;
+    await showMessage(`🎉 ${captured.name}을(를) 잡았다!`, 1500);
+    await showMessage(`💎 다이아 +2 (잡기 성공!)`, 800);
+    renderParty();
+  } else {
+    // 모두 실패
+    state.inventory.gems += 1;
+    await showMessage(`😔 ${boss.name}이(가) 도망쳤다...`, 1200);
+    await showMessage(`💎 다이아 +1 (처치 보상)`, 800);
+  }
+  updateTopbar();
 }
 
 async function grantExp(mon, amount) {
@@ -2236,6 +2344,7 @@ function renderShopModal() {
 
   html += `<div class="inventory-summary">
     <div class="inv-pill"><div class="inv-pill-icon">🪙</div><div class="inv-pill-count">${state.inventory.coins}</div><div class="inv-pill-label">코인</div></div>
+    <div class="inv-pill"><div class="inv-pill-icon">💎</div><div class="inv-pill-count">${state.inventory.gems}</div><div class="inv-pill-label">다이아</div></div>
     <div class="inv-pill"><div class="inv-pill-icon">💊</div><div class="inv-pill-count">${state.inventory.potions}</div><div class="inv-pill-label">회복약</div></div>
     <div class="inv-pill"><div class="inv-pill-icon">🧪</div><div class="inv-pill-count">${state.inventory.antidotes}</div><div class="inv-pill-label">해독제</div></div>
     <div class="inv-pill"><div class="inv-pill-icon">🎯</div><div class="inv-pill-count">${state.inventory.balls}</div><div class="inv-pill-label">잡기도구</div></div>
@@ -2458,6 +2567,7 @@ function endGame() {
   $("final-wave").textContent = state.wave;
   $("final-kills").textContent = state.kills;
   $("final-caught").textContent = state.caught;
+  $("final-gems").textContent = state.inventory.gems;
   $("final-score").textContent = state.score;
   $("best-score").textContent = window._bestScore;
 
