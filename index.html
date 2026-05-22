@@ -1877,9 +1877,11 @@ async function playerAttack(moveKey) {
 async function applyEndTurnPassives(mon, side) {
   if (!mon || mon.currentHp <= 0) return;
 
-  // 청룡: 매턴 HP 12% 회복
+  // 청룡: 매턴 HP 회복 (일반 12% / 보스 6%)
   if (mon.passive === "azure_blessing" && mon.currentHp < mon.maxHp) {
-    const heal = Math.floor(mon.maxHp * 0.12);
+    const isBossEnemy = (side === "enemy" && state.isBossWave);
+    const healPct = isBossEnemy ? 0.06 : 0.12;
+    const heal = Math.floor(mon.maxHp * healPct);
     const before = mon.currentHp;
     mon.currentHp = Math.min(mon.maxHp, mon.currentHp + heal);
     const actual = mon.currentHp - before;
@@ -1894,12 +1896,14 @@ async function applyEndTurnPassives(mon, side) {
     }
   }
 
-  // 별정령: 매턴 적 최대HP 5% 데미지
+  // 별정령: 매턴 적 최대HP 데미지 (일반 5% / 보스 3%)
   if (mon.passive === "stars_grace") {
     const target = (side === "player") ? state.enemy : getActive();
     const targetSide = (side === "player") ? "enemy" : "player";
     if (target && target.currentHp > 0) {
-      const dmg = Math.max(1, Math.floor(target.maxHp * 0.05));
+      const isBossEnemy = (side === "enemy" && state.isBossWave);
+      const dmgPct = isBossEnemy ? 0.03 : 0.05;
+      const dmg = Math.max(1, Math.floor(target.maxHp * dmgPct));
       target.currentHp = Math.max(0, target.currentHp - dmg);
       popDamage(targetSide, dmg, false, 1, `-${dmg}`);
       updateHpBar(targetSide, target);
@@ -2015,11 +2019,14 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
     }
   }
 
-  // 흑룡 패시브: 공격받을 때 30% 확률로 공포 부여 (공격자에게)
+  // 흑룡 패시브: 공격받을 때 공포 부여 (일반 30% / 보스 15%)
   if (defender.passive === "dark_reign" && r.damage > 0 && attacker.currentHp > 0
-      && !attacker.status && attacker.passive !== "natures_blessing"
-      && Math.random() < 0.30) {
-    await applyStatus(attacker, attackerSide, "fear");
+      && !attacker.status && attacker.passive !== "natures_blessing") {
+    const isBossDefender = (defenderSide === "enemy" && state.isBossWave);
+    const fearChance = isBossDefender ? 0.15 : 0.30;
+    if (Math.random() < fearChance) {
+      await applyStatus(attacker, attackerSide, "fear");
+    }
   }
 }
 
@@ -2236,16 +2243,16 @@ function clearCatchBall() {
 }
 
 async function handleEnemyFaint() {
-  // 적 봉황 패시브: 부활 (적은 쿨다운 무시, 한 배틀당 1회만)
+  // 적 봉황 패시브: 부활 (적은 쿨다운 무시, 한 배틀당 1회만 / 보스는 25%)
   if (state.enemy.passive === "phoenix_rebirth" && state.enemy.phoenixUsedWave === -10) {
-    state.enemy.currentHp = Math.floor(state.enemy.maxHp * 0.5);
+    const revivePct = state.isBossWave ? 0.25 : 0.50;
+    state.enemy.currentHp = Math.floor(state.enemy.maxHp * revivePct);
     state.enemy.status = null;
     state.enemy.sleepTurns = 0;
     state.enemy.phoenixUsedWave = state.wave;
     ["burn","paralyze","sleep","poison","fear"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
     await showMessage(`🔥 ${state.enemy.name}이(가) 불꽃 속에서 부활했다!`, 1200);
     renderEnemy();
-    // 락 풀고 다시 액션 메뉴
     state.battleLocked = false;
     showActionMenu();
     return;
