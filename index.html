@@ -1147,19 +1147,352 @@
   }
   .capture-name { font-family: 'Black Han Sans', sans-serif; font-size: 24px; color: var(--accent); }
   .capture-msg { font-family: 'Jua', sans-serif; color: var(--text); margin-top: 6px; font-size: 14px; }
+
+  /* ===== 로비 화면 ===== */
+  .lobby-gem-display {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-light) 100%);
+    border: 2px solid rgba(96, 165, 250, 0.5);
+    border-radius: 14px;
+    padding: 14px 28px;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 28px;
+    color: #60a5fa;
+    text-shadow: 0 0 12px rgba(96, 165, 250, 0.5);
+    margin: 8px auto 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+  }
+  .lobby-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 8px;
+  }
+  .lobby-btn {
+    width: 100%;
+    padding: 22px;
+    font-size: 20px;
+    font-family: 'Jua', sans-serif;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .lobby-btn:active { transform: scale(0.97); }
+  .lobby-btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-hot));
+    color: #1a1a1a;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(255, 211, 78, 0.3);
+  }
+  .lobby-btn-secondary {
+    background: var(--bg-card-light);
+    color: var(--text);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+  .lobby-btn-icon { font-size: 24px; }
+
+  /* ===== 도감 화면 ===== */
+  .back-btn {
+    background: var(--bg-card);
+    color: var(--text);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: 'Jua', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .back-btn:active { transform: scale(0.95); }
+  .collection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px 0 18px;
+  }
+  .collection-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: var(--accent);
+  }
+  .collection-count {
+    font-family: 'Jua', sans-serif;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .collection-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 8px;
+    text-align: center;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .collection-card.locked img {
+    filter: brightness(0) opacity(0.45);
+  }
+  .collection-card.locked .collection-card-name { color: #555; }
+  .collection-card.rarity-rare {
+    border-color: rgba(96, 165, 250, 0.4);
+  }
+  .collection-card.rarity-legendary {
+    border-color: rgba(255, 211, 78, 0.5);
+    background: linear-gradient(135deg, var(--bg-card) 0%, #2d2552 100%);
+  }
+  .collection-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+  .collection-card-name {
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .collection-card-type {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 3px;
+    font-family: 'Jua', sans-serif;
+  }
+  .collection-candy {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.6);
+    color: #fbbf24;
+    font-size: 11px;
+    font-family: 'Jua', sans-serif;
+    padding: 2px 6px;
+    border-radius: 8px;
+  }
+
+  /* ===== 뽑기 화면 ===== */
+  .gacha-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px 0 12px;
+  }
+  .gacha-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 24px;
+    color: var(--accent);
+  }
+  .gacha-gem-display {
+    background: var(--bg-card);
+    border: 2px solid rgba(96, 165, 250, 0.5);
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 18px;
+    color: #60a5fa;
+  }
+  .gacha-pull-area {
+    min-height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-mid) 100%);
+    border-radius: 16px;
+    margin: 12px 0 20px;
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+  }
+  .gacha-placeholder { text-align: center; opacity: 0.7; }
+  .gacha-machine-icon {
+    font-size: 80px;
+    margin-bottom: 16px;
+    animation: gacha-bounce 2s ease-in-out infinite;
+  }
+  @keyframes gacha-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .gacha-rates {
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .gacha-result-card {
+    text-align: center;
+    animation: gacha-reveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+  }
+  @keyframes gacha-reveal {
+    0% { transform: scale(0.2) rotate(180deg); opacity: 0; }
+    60% { transform: scale(1.1) rotate(0); opacity: 1; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .gacha-result-card img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+  }
+  .gacha-result-card.rarity-rare img {
+    filter: drop-shadow(0 0 16px rgba(96, 165, 250, 0.8));
+  }
+  .gacha-result-card.rarity-legendary img {
+    filter: drop-shadow(0 0 24px rgba(255, 211, 78, 0.9));
+    animation: legend-glow 1.5s ease-in-out infinite;
+  }
+  @keyframes legend-glow {
+    0%, 100% { filter: drop-shadow(0 0 24px rgba(255, 211, 78, 0.9)); }
+    50% { filter: drop-shadow(0 0 36px rgba(255, 211, 78, 1)); }
+  }
+  .gacha-rarity-label {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .gacha-rarity-label.rarity-common { color: #aaa; }
+  .gacha-rarity-label.rarity-rare { color: #60a5fa; }
+  .gacha-rarity-label.rarity-legendary { color: var(--accent); }
+  .gacha-result-name {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 26px;
+    margin-top: 10px;
+    color: var(--text);
+  }
+  .gacha-result-type {
+    display: inline-block;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 6px;
+    font-family: 'Jua', sans-serif;
+  }
+  .gacha-new-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hot));
+    color: #1a1a1a;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 16px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .gacha-candy-badge {
+    display: inline-block;
+    background: var(--bg-card-light);
+    color: #fbbf24;
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .lobby-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .debug-btn {
+    margin-top: 24px;
+    background: rgba(255,255,255,0.05);
+    color: #777;
+    border: 1px dashed #555;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Jua', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ===== 시작 화면 ===== -->
-  <div id="start-screen" class="screen active">
+  <!-- ===== 로비 화면 (메인) ===== -->
+  <div id="lobby-screen" class="screen active">
     <div class="title-block">
       <div class="title-main">MONROGUE</div>
       <div class="title-sub">v2 · PARTY EDITION</div>
     </div>
 
-    <div class="section-label">파트너 선택</div>
+    <div class="lobby-gem-display">
+      💎 <span id="lobby-gems">0</span>
+    </div>
+
+    <div class="lobby-buttons">
+      <button id="lobby-collection-btn" class="lobby-btn lobby-btn-secondary">
+        <span class="lobby-btn-icon">📖</span> 내 포켓몬
+      </button>
+      <button id="lobby-gacha-btn" class="lobby-btn lobby-btn-secondary">
+        <span class="lobby-btn-icon">🎁</span> 뽑기
+      </button>
+      <button id="lobby-battle-btn" class="lobby-btn lobby-btn-primary">
+        <span class="lobby-btn-icon">⚔️</span> 배틀 시작
+      </button>
+    </div>
+
+    <!-- 개발용 임시 버튼 (단계 D 완성 후 제거) -->
+    <button id="debug-add-gems" class="debug-btn">🛠️ 잼 +500 (개발용)</button>
+  </div>
+
+  <!-- ===== 뽑기 화면 ===== -->
+  <div id="gacha-screen" class="screen">
+    <button class="back-btn" id="gacha-back">← 로비</button>
+    <div class="gacha-header">
+      <div class="gacha-title">🎁 뽑기</div>
+      <div class="gacha-gem-display">💎 <span id="gacha-gems">0</span></div>
+    </div>
+
+    <div class="gacha-pull-area" id="gacha-pull-area">
+      <div class="gacha-placeholder">
+        <div class="gacha-machine-icon">🎰</div>
+        <div class="gacha-rates">
+          <div>★ 전설 <span style="color:#ffd34e">5%</span></div>
+          <div>◆ 레어 <span style="color:#60a5fa">20%</span></div>
+          <div>일반 <span style="color:#aaa">75%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lobby-buttons">
+      <button id="gacha-pull-btn" class="lobby-btn lobby-btn-primary">
+        <span class="lobby-btn-icon">🎁</span> <span id="gacha-pull-label">1회 뽑기 (100 💎)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== 도감 화면 ===== -->
+  <div id="collection-screen" class="screen">
+    <button class="back-btn" id="collection-back">← 로비</button>
+    <div class="collection-header">
+      <div class="collection-title">📖 도감</div>
+      <div class="collection-count" id="collection-count">0 / 0</div>
+    </div>
+    <div class="collection-grid" id="collection-grid"></div>
+  </div>
+
+  <!-- ===== 몬스터 선택 화면 ===== -->
+  <div id="start-screen" class="screen">
+    <button class="back-btn" id="select-back-btn">← 로비</button>
+    <div class="title-block" style="padding: 16px 0 12px;">
+      <div class="title-main" style="font-size: 28px;">파트너 선택</div>
+    </div>
+
     <div class="monster-grid" id="monster-grid"></div>
 
     <div class="preview-detail" id="preview-detail">
@@ -1429,6 +1762,7 @@ let state = {
   // ===== 메타 진행 (영구 저장, 런과 무관) =====
   ownedMons: [],     // 영구 보유 몬스터 ID 배열
   metaGems: 0,       // 영구 잼 (뽑기에 사용)
+  candies: {},       // 진화용 사탕 { monId: count } (중복 뽑기 시 누적)
   // ===== 런 단위 (게임 시작 시 초기화) =====
   party: [],
   activeIdx: 0,
@@ -1453,6 +1787,7 @@ function loadProgress() {
     if (!raw) {
       state.ownedMons = [...STARTER_MON_IDS];
       state.metaGems = 0;
+      state.candies = {};
       saveProgress();
       return;
     }
@@ -1461,10 +1796,12 @@ function loadProgress() {
       ? data.ownedMons.filter(id => MONSTERS[id])  // 존재하지 않는 ID 제거(안전)
       : [...STARTER_MON_IDS];
     state.metaGems = (typeof data.metaGems === "number") ? data.metaGems : 0;
+    state.candies = (data.candies && typeof data.candies === "object") ? data.candies : {};
   } catch(e) {
     console.error("진행도 로드 실패:", e);
     state.ownedMons = [...STARTER_MON_IDS];
     state.metaGems = 0;
+    state.candies = {};
   }
 }
 
@@ -1473,6 +1810,7 @@ function saveProgress() {
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       ownedMons: state.ownedMons,
       metaGems: state.metaGems,
+      candies: state.candies,
       savedAt: Date.now()
     }));
   } catch(e) {
@@ -2908,11 +3246,173 @@ function restartGame() {
   const btn = $("start-btn");
   btn.disabled = true;
   btn.textContent = "몬스터를 선택하세요";
-  showScreen("start-screen");
+  renderLobby();  // 잼 표시 업데이트 (단계 D에서 metaGems 가산 후)
+  showScreen("lobby-screen");
 }
+
+// ===== 로비 화면 =====
+function renderLobby() {
+  $("lobby-gems").textContent = state.metaGems;
+}
+
+// ===== 도감 화면 =====
+function renderCollection() {
+  $("collection-count").textContent = `${state.ownedMons.length} / ${ALL_MON_IDS.length}`;
+  const grid = $("collection-grid");
+  grid.innerHTML = "";
+  ALL_MON_IDS.forEach(id => {
+    const mon = MONSTERS[id];
+    const owned = state.ownedMons.includes(id);
+    const candyCount = state.candies[id] || 0;
+    const card = document.createElement("div");
+    card.className = `collection-card rarity-${mon.rarity || 'common'}${owned ? '' : ' locked'}`;
+    card.innerHTML = `
+      ${owned && candyCount > 0 ? `<div class="collection-candy">🍬 ${candyCount}</div>` : ''}
+      <img src="${IMAGES[id]}" alt="${owned ? mon.name : '???'}">
+      <div class="collection-card-name">${owned ? mon.name : '???'}</div>
+      ${owned ? `<div class="collection-card-type type-${mon.type}">${TYPES[mon.type].name}</div>` : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ===== 뽑기 시스템 =====
+// 등급 확률 (단계 C 합의: 75/20/5)
+const GACHA_RATES = { common: 75, rare: 20, legendary: 5 };
+
+function rollRarity() {
+  const r = Math.random() * 100;
+  if (r < GACHA_RATES.legendary) return "legendary";
+  if (r < GACHA_RATES.legendary + GACHA_RATES.rare) return "rare";
+  return "common";
+}
+
+function doGacha() {
+  const cost = SHOP_PRICES.gacha;
+  if (state.metaGems < cost) return;  // 버튼 비활성화 상태에선 안 불릴 거지만 안전장치
+
+  state.metaGems -= cost;
+
+  // 등급 결정 → 해당 등급 풀에서 랜덤 (풀이 비면 다른 등급으로 fallback)
+  let rarity = rollRarity();
+  let pool = GACHA_POOL_IDS.filter(id => (MONSTERS[id].rarity || 'common') === rarity);
+  if (pool.length === 0) {
+    // fallback: 더 낮은 등급 → 더 높은 등급 순으로 탐색
+    const fallbackOrder = ["common", "rare", "legendary"];
+    for (const r of fallbackOrder) {
+      pool = GACHA_POOL_IDS.filter(id => (MONSTERS[id].rarity || 'common') === r);
+      if (pool.length > 0) { rarity = r; break; }
+    }
+  }
+  if (pool.length === 0) {
+    // 풀 자체가 비었으면 (이론상 발생 X) 환불
+    state.metaGems += cost;
+    alert("뽑기 풀이 비어있습니다");
+    return;
+  }
+
+  const pulledId = pickRandom(pool);
+  const isNew = !state.ownedMons.includes(pulledId);
+
+  if (isNew) {
+    state.ownedMons.push(pulledId);
+  } else {
+    // 중복 → 진화용 사탕 +1 (진화 시스템에서 사용 예정)
+    state.candies[pulledId] = (state.candies[pulledId] || 0) + 1;
+  }
+
+  saveProgress();
+  renderGachaResult(pulledId, isNew);
+  updateGachaUI();
+}
+
+function renderGachaResult(monId, isNew) {
+  const mon = MONSTERS[monId];
+  const rarityClass = mon.rarity || 'common';
+  const rarityLabel = rarityClass === 'legendary' ? '★ 전설' : rarityClass === 'rare' ? '◆ 레어' : '일반';
+  $("gacha-pull-area").innerHTML = `
+    <div class="gacha-result-card rarity-${rarityClass}">
+      ${isNew
+        ? '<div class="gacha-new-badge">NEW!</div>'
+        : `<div class="gacha-candy-badge">🍬 사탕 +1 (보유 ${state.candies[monId]})</div>`}
+      <div class="gacha-rarity-label rarity-${rarityClass}">${rarityLabel}</div>
+      <img src="${IMAGES[monId]}" alt="${mon.name}">
+      <div class="gacha-result-name">${mon.name}</div>
+      <span class="gacha-result-type type-${mon.type}">${TYPES[mon.type].name}</span>
+    </div>
+  `;
+}
+
+function updateGachaUI() {
+  $("gacha-gems").textContent = state.metaGems;
+  const btn = $("gacha-pull-btn");
+  const canAfford = state.metaGems >= SHOP_PRICES.gacha;
+  btn.disabled = !canAfford;
+  $("gacha-pull-label").textContent = canAfford
+    ? `1회 뽑기 (${SHOP_PRICES.gacha} 💎)`
+    : `잼 부족 (${state.metaGems} / ${SHOP_PRICES.gacha})`;
+}
+
+// ===== 로비 버튼 이벤트 =====
+$("lobby-battle-btn").onclick = () => {
+  renderStartScreen();  // 새로 뽑은 몬도 즉시 반영
+  showScreen("start-screen");
+};
+$("lobby-collection-btn").onclick = () => {
+  renderCollection();
+  showScreen("collection-screen");
+};
+$("lobby-gacha-btn").onclick = () => {
+  updateGachaUI();
+  // 이전 결과 초기화 (placeholder 복귀)
+  $("gacha-pull-area").innerHTML = `
+    <div class="gacha-placeholder">
+      <div class="gacha-machine-icon">🎰</div>
+      <div class="gacha-rates">
+        <div>★ 전설 <span style="color:#ffd34e">5%</span></div>
+        <div>◆ 레어 <span style="color:#60a5fa">20%</span></div>
+        <div>일반 <span style="color:#aaa">75%</span></div>
+      </div>
+    </div>
+  `;
+  showScreen("gacha-screen");
+};
+$("collection-back").onclick = () => showScreen("lobby-screen");
+$("gacha-back").onclick = () => {
+  renderLobby();  // 잼 변동 반영
+  showScreen("lobby-screen");
+};
+$("gacha-pull-btn").onclick = doGacha;
+$("select-back-btn").onclick = () => {
+  // 선택 상태 리셋
+  state.selectedMonId = null;
+  document.querySelectorAll(".mon-card").forEach(c => c.classList.remove("selected"));
+  $("preview-detail").classList.remove("show");
+  const sb = $("start-btn");
+  sb.disabled = true;
+  sb.textContent = "몬스터를 선택하세요";
+  showScreen("lobby-screen");
+};
+
+// 개발용 임시 잼 추가 (단계 D 완성 후 제거 예정)
+$("debug-add-gems").onclick = () => {
+  state.metaGems += 500;
+  saveProgress();
+  renderLobby();
+};
+
+// ===== 페이지 이탈 경고 (배틀 중에만) =====
+window.addEventListener("beforeunload", (e) => {
+  if ($("battle-screen").classList.contains("active")) {
+    e.preventDefault();
+    e.returnValue = "진행 중인 런이 사라져요. 정말 나가시겠어요?";
+    return e.returnValue;
+  }
+});
 
 // 초기화
 loadProgress();  // 영구 진행도 먼저 로드
+renderLobby();   // 로비 잼 표시
 $("battle-field").style.backgroundImage = `url(${BACKGROUND})`;
 renderStartScreen();
 </script>
