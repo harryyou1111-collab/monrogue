@@ -1415,10 +1415,21 @@ const MONSTERS = {
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
 
+// ===== 메타 진행 시스템 =====
+// 처음 시작할 때 영구 보유하는 스타팅 5마리 (각 타입 1마리)
+const STARTER_MON_IDS = ["mon_001", "mon_004", "mon_007", "mon_012", "mon_018"];
+// 뽑기로 얻을 수 있는 풀 (스타팅 제외 전부 자동 포함)
+const GACHA_POOL_IDS = ALL_MON_IDS.filter(id => !STARTER_MON_IDS.includes(id));
+const SAVE_KEY = "monrogue_save_v1";
+
 const PARTY_MAX = 3;
 const SHOP_PRICES = { potion: 40, ball: 35, antidote: 60, gacha: 100 };
 
 let state = {
+  // ===== 메타 진행 (영구 저장, 런과 무관) =====
+  ownedMons: [],     // 영구 보유 몬스터 ID 배열
+  metaGems: 0,       // 영구 잼 (뽑기에 사용)
+  // ===== 런 단위 (게임 시작 시 초기화) =====
   party: [],
   activeIdx: 0,
   enemy: null,
@@ -1434,6 +1445,40 @@ let state = {
   swapCooldown: 0,
   isBossWave: false  // 현재 웨이브가 보스인지
 };
+
+// ===== localStorage 저장/로드 =====
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) {
+      state.ownedMons = [...STARTER_MON_IDS];
+      state.metaGems = 0;
+      saveProgress();
+      return;
+    }
+    const data = JSON.parse(raw);
+    state.ownedMons = (Array.isArray(data.ownedMons) && data.ownedMons.length)
+      ? data.ownedMons.filter(id => MONSTERS[id])  // 존재하지 않는 ID 제거(안전)
+      : [...STARTER_MON_IDS];
+    state.metaGems = (typeof data.metaGems === "number") ? data.metaGems : 0;
+  } catch(e) {
+    console.error("진행도 로드 실패:", e);
+    state.ownedMons = [...STARTER_MON_IDS];
+    state.metaGems = 0;
+  }
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      ownedMons: state.ownedMons,
+      metaGems: state.metaGems,
+      savedAt: Date.now()
+    }));
+  } catch(e) {
+    console.error("진행도 저장 실패:", e);
+  }
+}
 
 // ===== 유틸 =====
 function $(id) { return document.getElementById(id); }
@@ -1522,8 +1567,10 @@ function effectiveSpd(mon) {
 function renderStartScreen() {
   const grid = $("monster-grid");
   grid.innerHTML = "";
-  ALL_MON_IDS.forEach(id => {
+  // ownedMons 기반으로만 렌더링 (영구 보유 중인 몬스터만 시작 가능)
+  state.ownedMons.forEach(id => {
     const mon = MONSTERS[id];
+    if (!mon) return;
     const card = document.createElement("div");
     card.className = `mon-card rarity-${mon.rarity || 'common'}`;
     card.dataset.id = id;
@@ -2865,6 +2912,7 @@ function restartGame() {
 }
 
 // 초기화
+loadProgress();  // 영구 진행도 먼저 로드
 $("battle-field").style.backgroundImage = `url(${BACKGROUND})`;
 renderStartScreen();
 </script>
