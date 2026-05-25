@@ -1288,6 +1288,116 @@
     justify-content: space-between;
     margin: 16px 0 12px;
   }
+  /* ===== 뽑기 연출 ===== */
+  .gacha-pull-area.suspense {
+    background: radial-gradient(circle at center, #1a2347 0%, #050810 100%);
+  }
+  .gacha-machine-anim {
+    font-size: 100px;
+    animation: gacha-shake 0.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255,211,78,0.5));
+  }
+  @keyframes gacha-shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-6px) rotate(-3deg); }
+    75% { transform: translateX(6px) rotate(3deg); }
+  }
+  .gacha-burst {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .gacha-burst.common  { background: radial-gradient(circle, #ffffff 0%, #cccccc 50%, transparent 70%); animation: gacha-burst-pop 0.7s ease-out forwards; }
+  .gacha-burst.rare    { background: radial-gradient(circle, #93c5fd 0%, #3b82f6 50%, transparent 70%); animation: gacha-burst-pop 0.9s ease-out forwards; }
+  .gacha-burst.legendary { background: radial-gradient(circle, #fff7d6 0%, #ffd34e 40%, #ff8a3d 70%, transparent 80%); animation: gacha-burst-pop-legendary 1.1s ease-out forwards; }
+  @keyframes gacha-burst-pop {
+    0%   { width: 20px; height: 20px; opacity: 1; }
+    100% { width: 500px; height: 500px; opacity: 0; }
+  }
+  @keyframes gacha-burst-pop-legendary {
+    0%   { width: 20px; height: 20px; opacity: 1; }
+    60%  { width: 400px; height: 400px; opacity: 1; }
+    100% { width: 800px; height: 800px; opacity: 0; }
+  }
+  /* 등급별 빛 광선 (레어/전설) */
+  .gacha-rays {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255,211,78,0.6) 10deg,
+      transparent 20deg,
+      transparent 50deg,
+      rgba(255,211,78,0.4) 60deg,
+      transparent 70deg,
+      transparent 100deg,
+      rgba(255,138,61,0.5) 110deg,
+      transparent 120deg,
+      transparent 160deg,
+      rgba(255,211,78,0.4) 170deg,
+      transparent 180deg,
+      transparent 220deg,
+      rgba(255,211,78,0.5) 230deg,
+      transparent 240deg,
+      transparent 280deg,
+      rgba(255,138,61,0.4) 290deg,
+      transparent 300deg,
+      transparent 340deg,
+      rgba(255,211,78,0.5) 350deg,
+      transparent 360deg
+    );
+    animation: rays-spin 3s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .gacha-rays.rare {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(96,165,250,0.5) 10deg,
+      transparent 20deg,
+      transparent 60deg,
+      rgba(147,197,253,0.4) 70deg,
+      transparent 80deg,
+      transparent 120deg,
+      rgba(96,165,250,0.5) 130deg,
+      transparent 140deg,
+      transparent 180deg,
+      rgba(147,197,253,0.4) 190deg,
+      transparent 200deg,
+      transparent 240deg,
+      rgba(96,165,250,0.5) 250deg,
+      transparent 260deg,
+      transparent 300deg,
+      rgba(147,197,253,0.4) 310deg,
+      transparent 320deg
+    );
+  }
+  @keyframes rays-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  /* 화면 전체 플래시 (전설) */
+  .gacha-screen-flash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,211,78,0.6) 40%, transparent 80%);
+    z-index: 9999;
+    pointer-events: none;
+    animation: screen-flash-anim 0.6s ease-out forwards;
+  }
+  @keyframes screen-flash-anim {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    100% { opacity: 0; }
+  }
   .gacha-title {
     font-family: 'Black Han Sans', sans-serif;
     font-size: 24px;
@@ -1715,36 +1825,53 @@ const PASSIVE_INFO = {
 // passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
 const MONSTERS = {
   // === 기존 11마리 ===
-  mon_001: { id: "mon_001", name: "불꼬마", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
-  mon_002: { id: "mon_002", name: "불여우", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 72, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
-  mon_003: { id: "mon_003", name: "활타",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
-  mon_004: { id: "mon_004", name: "물방이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 104, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
-  mon_005: { id: "mon_005", name: "흐름이", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
-  mon_006: { id: "mon_006", name: "빙펭",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 98, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
-  mon_007: { id: "mon_007", name: "잎토끼", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
-  mon_008: { id: "mon_008", name: "버섯이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
-  mon_009: { id: "mon_009", name: "짹돌이", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 72, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
+  mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 50, spd: 75 }, moves: ["scratch", "ember", "flame_breath"] },
+  mon_002: { id: "mon_002", name: "폭시루", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 72, atk: 60, def: 45, spd: 90 }, moves: ["bite", "fire_tail", "mystic_burn"] },
+  mon_003: { id: "mon_003", name: "불레오",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 75, def: 55, spd: 50 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
+  mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 104, atk: 50, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
+  mon_005: { id: "mon_005", name: "물토리", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 65, def: 55, spd: 70 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
+  mon_006: { id: "mon_006", name: "펭구리",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 98, atk: 55, def: 65, spd: 55 }, moves: ["peck", "ice_shard", "freeze_beam"] },
+  mon_007: { id: "mon_007", name: "버니풀", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 78, atk: 60, def: 50, spd: 80 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
+  mon_008: { id: "mon_008", name: "도토리", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 91, atk: 65, def: 60, spd: 55 }, moves: ["tackle", "spore_shot", "poison_powder"] },
+  mon_009: { id: "mon_009", name: "입새짹", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 72, atk: 70, def: 45, spd: 85 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
 
   // 청룡: 정령 → 물 전설
-  mon_010: { id: "mon_010", name: "청룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 98, atk: 75, def: 65, spd: 65 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
+  mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 98, atk: 75, def: 65, spd: 65 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
   // 봉황: 정령 → 불 전설
-  mon_011: { id: "mon_011", name: "봉황",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
+  mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
 
   // === 신규 9마리 ===
   // 어둠 일반 3
-  mon_012: { id: "mon_012", name: "그림자늑대", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 75, def: 50, spd: 65 }, moves: ["bite", "shadow_claw", "dark_bite"] },
-  mon_013: { id: "mon_013", name: "박쥐꼬마",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 72, atk: 65, def: 45, spd: 85 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
-  mon_014: { id: "mon_014", name: "까마귀",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 70, def: 50, spd: 70 }, moves: ["peck", "night_slash", "shadow_ball"] },
+  mon_012: { id: "mon_012", name: "쉐도우팽", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 75, def: 50, spd: 65 }, moves: ["bite", "shadow_claw", "dark_bite"] },
+  mon_013: { id: "mon_013", name: "크로윙",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 72, atk: 65, def: 45, spd: 85 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
+  mon_014: { id: "mon_014", name: "까밍",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 78, atk: 70, def: 50, spd: 70 }, moves: ["peck", "night_slash", "shadow_ball"] },
   // 어둠 전설
-  mon_015: { id: "mon_015", name: "흑룡",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 98, atk: 80, def: 60, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
+  mon_015: { id: "mon_015", name: "데스페리온",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 98, atk: 80, def: 60, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
   // 풀 전설
-  mon_016: { id: "mon_016", name: "꽃늑대",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 104, atk: 75, def: 65, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
+  mon_016: { id: "mon_016", name: "월화랑",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 104, atk: 75, def: 65, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
   // 전기 전설 (이스터에그)
-  mon_017: { id: "mon_017", name: "별정령",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 84, atk: 75, def: 60, spd: 80 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
+  mon_017: { id: "mon_017", name: "스타링",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 84, atk: 75, def: 60, spd: 80 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
   // 전기 일반 3 (전기뱀장어는 레어)
-  mon_018: { id: "mon_018", name: "번개강아지", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 72, atk: 70, def: 45, spd: 80 }, moves: ["bite", "spark", "thunder_shock"] },
-  mon_019: { id: "mon_019", name: "번개새끼새", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 65, atk: 65, def: 45, spd: 90 }, moves: ["peck", "spark", "thunder_shock"] },
-  mon_020: { id: "mon_020", name: "전기뱀장어", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] }
+  mon_018: { id: "mon_018", name: "스퍼키", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 72, atk: 70, def: 45, spd: 80 }, moves: ["bite", "spark", "thunder_shock"] },
+  mon_019: { id: "mon_019", name: "찌리짹", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 65, atk: 65, def: 45, spd: 90 }, moves: ["peck", "spark", "thunder_shock"] },
+  mon_020: { id: "mon_020", name: "썬더릴", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 91, atk: 80, def: 55, spd: 75 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] },
+
+  // === 신규 10마리 (단계 D) ===
+  // 불 추가
+  mon_021: { id: "mon_021", name: "타이가르",   type: "fire",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 88, atk: 85, def: 60, spd: 67 }, moves: ["bite", "fire_mane", "flame_breath"] },
+  mon_022: { id: "mon_022", name: "버니콩",     type: "fire",     rarity: "common", passive: null, facing: "left",  stats: { hp: 70, atk: 60, def: 45, spd: 95 }, moves: ["kick", "ember", "fire_tail"] },
+  // 물 추가
+  mon_023: { id: "mon_023", name: "설원가온",   type: "water",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 90, atk: 75, def: 65, spd: 70 }, moves: ["bite", "ice_shard", "freeze_beam"] },
+  mon_024: { id: "mon_024", name: "버블레이",   type: "water",    rarity: "common", passive: null, facing: "left",  stats: { hp: 95, atk: 55, def: 70, spd: 50 }, moves: ["body_slam", "water_drop", "water_stream"] },
+  // 풀 추가
+  mon_025: { id: "mon_025", name: "아르보디어", type: "grass",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 90, atk: 70, def: 70, spd: 70 }, moves: ["headbutt", "leaf_blade", "spore_shot"] },
+  mon_026: { id: "mon_026", name: "리프자드",   type: "grass",    rarity: "common", passive: null, facing: "left",  stats: { hp: 75, atk: 65, def: 55, spd: 75 }, moves: ["scratch", "leaf_blade", "poison_powder"] },
+  // 전기 추가
+  mon_027: { id: "mon_027", name: "라이트닝쿤", type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 70, atk: 65, def: 50, spd: 85 }, moves: ["scratch", "spark", "thunder_shock"] },
+  mon_028: { id: "mon_028", name: "볼툼비",     type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 95, atk: 60, def: 65, spd: 50 }, moves: ["body_slam", "spark", "thunder_punch"] },
+  // 어둠 추가
+  mon_029: { id: "mon_029", name: "팬타르",     type: "dark",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 80, atk: 85, def: 60, spd: 75 }, moves: ["bite", "shadow_claw", "night_slash"] },
+  mon_030: { id: "mon_030", name: "루나냥",     type: "dark",     rarity: "common", passive: null, facing: "left",  stats: { hp: 70, atk: 70, def: 50, spd: 80 }, moves: ["scratch", "shadow_claw", "dark_bite"] }
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
 
@@ -3289,15 +3416,17 @@ function rollRarity() {
 
 function doGacha() {
   const cost = SHOP_PRICES.gacha;
-  if (state.metaGems < cost) return;  // 버튼 비활성화 상태에선 안 불릴 거지만 안전장치
+  if (state.metaGems < cost) return;
+  const btn = $("gacha-pull-btn");
+  if (btn.disabled) return;  // 이중클릭 방지
+  btn.disabled = true;
 
   state.metaGems -= cost;
 
-  // 등급 결정 → 해당 등급 풀에서 랜덤 (풀이 비면 다른 등급으로 fallback)
+  // 등급 결정 → 해당 등급 풀에서 랜덤 (풀이 비면 fallback)
   let rarity = rollRarity();
   let pool = GACHA_POOL_IDS.filter(id => (MONSTERS[id].rarity || 'common') === rarity);
   if (pool.length === 0) {
-    // fallback: 더 낮은 등급 → 더 높은 등급 순으로 탐색
     const fallbackOrder = ["common", "rare", "legendary"];
     for (const r of fallbackOrder) {
       pool = GACHA_POOL_IDS.filter(id => (MONSTERS[id].rarity || 'common') === r);
@@ -3305,33 +3434,66 @@ function doGacha() {
     }
   }
   if (pool.length === 0) {
-    // 풀 자체가 비었으면 (이론상 발생 X) 환불
     state.metaGems += cost;
     alert("뽑기 풀이 비어있습니다");
+    btn.disabled = false;
     return;
   }
 
   const pulledId = pickRandom(pool);
   const isNew = !state.ownedMons.includes(pulledId);
-
-  if (isNew) {
-    state.ownedMons.push(pulledId);
-  } else {
-    // 중복 → 진화용 사탕 +1 (진화 시스템에서 사용 예정)
-    state.candies[pulledId] = (state.candies[pulledId] || 0) + 1;
-  }
-
+  if (isNew) state.ownedMons.push(pulledId);
+  else state.candies[pulledId] = (state.candies[pulledId] || 0) + 1;
   saveProgress();
-  renderGachaResult(pulledId, isNew);
-  updateGachaUI();
+  updateGachaUI();  // 잼 표시는 즉시 갱신
+
+  playGachaAnimation(pulledId, isNew, rarity);
 }
 
-function renderGachaResult(monId, isNew) {
+// ===== 뽑기 연출 (단계별) =====
+function playGachaAnimation(monId, isNew, rarity) {
+  const area = $("gacha-pull-area");
+
+  // 1단계: 흔들림 (전설 1.4초 / 레어 1.0초 / 일반 0.7초)
+  const suspenseTime = rarity === "legendary" ? 1400 : rarity === "rare" ? 1000 : 700;
+  area.classList.add("suspense");
+  area.innerHTML = `
+    <div style="text-align:center; position:relative; z-index:2;">
+      <div class="gacha-machine-anim">🎰</div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    // 2단계: 폭발 + 광선
+    area.innerHTML = `
+      ${rarity !== "common" ? `<div class="gacha-rays ${rarity === "rare" ? "rare" : ""}"></div>` : ""}
+      <div class="gacha-burst ${rarity}"></div>
+    `;
+    // 전설은 화면 전체 플래시
+    if (rarity === "legendary") {
+      const flash = document.createElement("div");
+      flash.className = "gacha-screen-flash";
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 700);
+    }
+
+    // 3단계: 카드 등장 (전설 0.9초 후 / 레어 0.7초 / 일반 0.5초)
+    const cardDelay = rarity === "legendary" ? 900 : rarity === "rare" ? 700 : 500;
+    setTimeout(() => {
+      renderGachaResult(monId, isNew, rarity);
+      $("gacha-pull-btn").disabled = state.metaGems < SHOP_PRICES.gacha;
+    }, cardDelay);
+  }, suspenseTime);
+}
+
+function renderGachaResult(monId, isNew, rarityOverride) {
   const mon = MONSTERS[monId];
-  const rarityClass = mon.rarity || 'common';
+  const rarityClass = rarityOverride || mon.rarity || 'common';
   const rarityLabel = rarityClass === 'legendary' ? '★ 전설' : rarityClass === 'rare' ? '◆ 레어' : '일반';
+  $("gacha-pull-area").classList.remove("suspense");
   $("gacha-pull-area").innerHTML = `
-    <div class="gacha-result-card rarity-${rarityClass}">
+    ${rarityClass !== "common" ? `<div class="gacha-rays ${rarityClass === "rare" ? "rare" : ""}" style="opacity:0.6;"></div>` : ""}
+    <div class="gacha-result-card rarity-${rarityClass}" style="position:relative; z-index:2;">
       ${isNew
         ? '<div class="gacha-new-badge">NEW!</div>'
         : `<div class="gacha-candy-badge">🍬 사탕 +1 (보유 ${state.candies[monId]})</div>`}
@@ -3365,7 +3527,9 @@ $("lobby-collection-btn").onclick = () => {
 $("lobby-gacha-btn").onclick = () => {
   updateGachaUI();
   // 이전 결과 초기화 (placeholder 복귀)
-  $("gacha-pull-area").innerHTML = `
+  const area = $("gacha-pull-area");
+  area.classList.remove("suspense");
+  area.innerHTML = `
     <div class="gacha-placeholder">
       <div class="gacha-machine-icon">🎰</div>
       <div class="gacha-rates">
