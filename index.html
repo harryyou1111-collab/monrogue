@@ -1292,15 +1292,77 @@
   .gacha-pull-area.suspense {
     background: radial-gradient(circle at center, #1a2347 0%, #050810 100%);
   }
-  .gacha-machine-anim {
-    font-size: 100px;
-    animation: gacha-shake 0.4s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(255,211,78,0.5));
+  /* 오브 (이모지 대신 CSS로 그린 마법구체) */
+  .gacha-orb {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: relative;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 8%, transparent 22%),
+      radial-gradient(circle at 50% 50%, #ffd34e 0%, #ff8a3d 40%, #c8336b 70%, #1a0a3a 100%);
+    box-shadow:
+      0 0 40px rgba(255,211,78,0.6),
+      0 0 80px rgba(255,138,61,0.3),
+      inset 0 -20px 30px rgba(0,0,0,0.4),
+      inset 0 20px 20px rgba(255,255,255,0.2);
   }
-  @keyframes gacha-shake {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(-6px) rotate(-3deg); }
-    75% { transform: translateX(6px) rotate(3deg); }
+  .gacha-orb-idle {
+    animation: orb-idle 3s ease-in-out infinite;
+  }
+  @keyframes orb-idle {
+    0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 0 40px rgba(255,211,78,0.6), 0 0 80px rgba(255,138,61,0.3), inset 0 -20px 30px rgba(0,0,0,0.4), inset 0 20px 20px rgba(255,255,255,0.2); }
+    50%      { transform: translateY(-6px) scale(1.03); box-shadow: 0 0 60px rgba(255,211,78,0.8), 0 0 120px rgba(255,138,61,0.5), inset 0 -20px 30px rgba(0,0,0,0.4), inset 0 20px 20px rgba(255,255,255,0.2); }
+  }
+  /* 오브 안의 빛 코어 */
+  .gacha-orb::before {
+    content: "";
+    position: absolute;
+    inset: 25%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,211,78,0.4) 50%, transparent 80%);
+    animation: orb-core-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes orb-core-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  /* 오브 둘레 회전 광점 */
+  .gacha-orb::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 12px white, 0 0 24px rgba(255,211,78,0.8);
+    transform-origin: 4px 78px;
+    animation: orb-spark 2s linear infinite;
+  }
+  @keyframes orb-spark {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  /* 흔들림 상태 */
+  .gacha-orb-shake {
+    animation: orb-shake 0.25s ease-in-out infinite;
+  }
+  @keyframes orb-shake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25%      { transform: translate(-4px, -2px) rotate(-2deg); }
+    50%      { transform: translate(4px, 2px) rotate(0deg); }
+    75%      { transform: translate(-2px, 3px) rotate(2deg); }
+  }
+  /* 오브 깨짐 효과 */
+  .gacha-orb-crack {
+    animation: orb-crack 0.4s ease-out forwards;
+  }
+  @keyframes orb-crack {
+    0%   { transform: scale(1); opacity: 1; filter: brightness(1); }
+    40%  { transform: scale(1.5); opacity: 1; filter: brightness(2); }
+    100% { transform: scale(2.5); opacity: 0; filter: brightness(3); }
   }
   .gacha-burst {
     position: absolute;
@@ -1424,16 +1486,8 @@
     overflow: hidden;
     padding: 20px;
   }
-  .gacha-placeholder { text-align: center; opacity: 0.7; }
-  .gacha-machine-icon {
-    font-size: 80px;
-    margin-bottom: 16px;
-    animation: gacha-bounce 2s ease-in-out infinite;
-  }
-  @keyframes gacha-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
+  .gacha-placeholder { text-align: center; opacity: 0.85; }
+  .gacha-placeholder .gacha-orb { margin: 0 auto 18px; }
   .gacha-rates {
     font-family: 'Jua', sans-serif;
     font-size: 14px;
@@ -1570,7 +1624,7 @@
 
     <div class="gacha-pull-area" id="gacha-pull-area">
       <div class="gacha-placeholder">
-        <div class="gacha-machine-icon">🎰</div>
+        <div class="gacha-orb gacha-orb-idle"></div>
         <div class="gacha-rates">
           <div>★ 전설 <span style="color:#ffd34e">5%</span></div>
           <div>◆ 레어 <span style="color:#60a5fa">20%</span></div>
@@ -1728,16 +1782,9 @@
 <script>
 "use strict";
 
-// 이미지는 images/ 폴더에 별도 파일로 있음
-const MON_IDS_LIST = [
-  "mon_001","mon_002","mon_003","mon_004","mon_005",
-  "mon_006","mon_007","mon_008","mon_009","mon_010","mon_011",
-  "mon_012","mon_013","mon_014","mon_015","mon_016",
-  "mon_017","mon_018","mon_019","mon_020"
-];
+// 이미지는 images/ 폴더에 별도 파일로 있음 (실제 초기화는 ALL_MON_IDS 정의 후 아래에서)
 const IMAGES = {};
-MON_IDS_LIST.forEach(id => { IMAGES[id] = `images/${id}.png`; });
-const BACKGROUND = "images/background.jpg";
+let BACKGROUND = "images/background.jpg";
 
 const TYPES = {
   fire:     { name: "불",   color: "#ff5722" },
@@ -1874,6 +1921,9 @@ const MONSTERS = {
   mon_030: { id: "mon_030", name: "루나냥",     type: "dark",     rarity: "common", passive: null, facing: "left",  stats: { hp: 70, atk: 70, def: 50, spd: 80 }, moves: ["scratch", "shadow_claw", "dark_bite"] }
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
+// 이제 ALL_MON_IDS가 존재하므로 IMAGES 채우기 (mon_001 ~ mon_030 모두 자동)
+ALL_MON_IDS.forEach(id => { IMAGES[id] = `images/${id}.png`; });
+const MON_IDS_LIST = ALL_MON_IDS;  // 다른 코드 호환용 별칭
 
 // ===== 메타 진행 시스템 =====
 // 처음 시작할 때 영구 보유하는 스타팅 5마리 (각 타입 1마리)
@@ -3406,6 +3456,15 @@ function renderCollection() {
 // ===== 뽑기 시스템 =====
 // 등급 확률 (단계 C 합의: 75/20/5)
 const GACHA_RATES = { common: 75, rare: 20, legendary: 5 };
+// 마지막으로 뽑은 타입 (같은 타입 2연속 차단용; 풀이 1타입만 남으면 자동 무시)
+let lastGachaType = null;
+// 진행 중 애니메이션 타임아웃 추적 (중첩 방지용)
+let gachaAnimTimeouts = [];
+function cancelGachaAnim() {
+  gachaAnimTimeouts.forEach(id => clearTimeout(id));
+  gachaAnimTimeouts = [];
+  document.querySelectorAll(".gacha-screen-flash").forEach(el => el.remove());
+}
 
 function rollRarity() {
   const r = Math.random() * 100;
@@ -3440,7 +3499,16 @@ function doGacha() {
     return;
   }
 
-  const pulledId = pickRandom(pool);
+  // 같은 타입 2연속 방지: 직전 타입을 풀에서 제외 (단, 그러면 풀이 비는 경우 무시)
+  let filteredPool = pool;
+  if (lastGachaType) {
+    const candidate = pool.filter(id => MONSTERS[id].type !== lastGachaType);
+    if (candidate.length > 0) filteredPool = candidate;
+    // 같은 타입만 남았으면 어쩔 수 없이 원본 풀 사용
+  }
+
+  const pulledId = pickRandom(filteredPool);
+  lastGachaType = MONSTERS[pulledId].type;  // 다음 뽑기에 영향
   const isNew = !state.ownedMons.includes(pulledId);
   if (isNew) state.ownedMons.push(pulledId);
   else state.candies[pulledId] = (state.candies[pulledId] || 0) + 1;
@@ -3452,6 +3520,7 @@ function doGacha() {
 
 // ===== 뽑기 연출 (단계별) =====
 function playGachaAnimation(monId, isNew, rarity) {
+  cancelGachaAnim();  // 이전 애니메이션 잔존분 정리
   const area = $("gacha-pull-area");
 
   // 1단계: 흔들림 (전설 1.4초 / 레어 1.0초 / 일반 0.7초)
@@ -3459,11 +3528,11 @@ function playGachaAnimation(monId, isNew, rarity) {
   area.classList.add("suspense");
   area.innerHTML = `
     <div style="text-align:center; position:relative; z-index:2;">
-      <div class="gacha-machine-anim">🎰</div>
+      <div class="gacha-orb gacha-orb-shake"></div>
     </div>
   `;
 
-  setTimeout(() => {
+  const t1 = setTimeout(() => {
     // 2단계: 폭발 + 광선
     area.innerHTML = `
       ${rarity !== "common" ? `<div class="gacha-rays ${rarity === "rare" ? "rare" : ""}"></div>` : ""}
@@ -3474,16 +3543,19 @@ function playGachaAnimation(monId, isNew, rarity) {
       const flash = document.createElement("div");
       flash.className = "gacha-screen-flash";
       document.body.appendChild(flash);
-      setTimeout(() => flash.remove(), 700);
+      const tFlash = setTimeout(() => flash.remove(), 700);
+      gachaAnimTimeouts.push(tFlash);
     }
 
-    // 3단계: 카드 등장 (전설 0.9초 후 / 레어 0.7초 / 일반 0.5초)
+    // 3단계: 카드 등장
     const cardDelay = rarity === "legendary" ? 900 : rarity === "rare" ? 700 : 500;
-    setTimeout(() => {
+    const t2 = setTimeout(() => {
       renderGachaResult(monId, isNew, rarity);
       $("gacha-pull-btn").disabled = state.metaGems < SHOP_PRICES.gacha;
     }, cardDelay);
+    gachaAnimTimeouts.push(t2);
   }, suspenseTime);
+  gachaAnimTimeouts.push(t1);
 }
 
 function renderGachaResult(monId, isNew, rarityOverride) {
@@ -3525,13 +3597,14 @@ $("lobby-collection-btn").onclick = () => {
   showScreen("collection-screen");
 };
 $("lobby-gacha-btn").onclick = () => {
+  cancelGachaAnim();  // 이전 진행분 정리
   updateGachaUI();
   // 이전 결과 초기화 (placeholder 복귀)
   const area = $("gacha-pull-area");
   area.classList.remove("suspense");
   area.innerHTML = `
     <div class="gacha-placeholder">
-      <div class="gacha-machine-icon">🎰</div>
+      <div class="gacha-orb gacha-orb-idle"></div>
       <div class="gacha-rates">
         <div>★ 전설 <span style="color:#ffd34e">5%</span></div>
         <div>◆ 레어 <span style="color:#60a5fa">20%</span></div>
@@ -3543,7 +3616,9 @@ $("lobby-gacha-btn").onclick = () => {
 };
 $("collection-back").onclick = () => showScreen("lobby-screen");
 $("gacha-back").onclick = () => {
-  renderLobby();  // 잼 변동 반영
+  cancelGachaAnim();  // 뒤로 나가면 진행 중인 애니 종료
+  $("gacha-pull-btn").disabled = state.metaGems < SHOP_PRICES.gacha;
+  renderLobby();
   showScreen("lobby-screen");
 };
 $("gacha-pull-btn").onclick = doGacha;
