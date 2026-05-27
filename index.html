@@ -1688,6 +1688,7 @@
 
     <!-- 개발용 임시 버튼 (단계 D 완성 후 제거) -->
     <button id="debug-add-gems" class="debug-btn">🛠️ 잼 +500 (개발용)</button>
+    <button id="debug-reset" class="debug-btn" style="border-color:#a33; color:#c66; margin-top:8px;">⚠️ 데이터 초기화 (개발용)</button>
   </div>
 
   <!-- ===== 뽑기 화면 ===== -->
@@ -3832,6 +3833,24 @@ $("debug-add-gems").onclick = () => {
   state.metaGems += 500;
   saveProgress();
   renderLobby();
+};
+
+// 개발용 데이터 초기화 (확인 2번)
+$("debug-reset").onclick = () => {
+  const ok1 = confirm("⚠️ 모든 진행도가 사라집니다.\n\n- 보유 몬스터: 스타팅 5마리만 남음\n- 잼: 0으로 리셋\n- 사탕: 전부 사라짐\n\n계속할까요?");
+  if (!ok1) return;
+  const ok2 = confirm("정말 초기화할까요?\n이 작업은 되돌릴 수 없습니다.");
+  if (!ok2) return;
+
+  // localStorage 완전 제거 → loadProgress 호출하면 신규 사용자처럼 초기화됨
+  try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+  state.ownedMons = [...STARTER_MON_IDS];
+  state.metaGems = 0;
+  state.candies = {};
+  lastGachaType = null;
+  saveProgress();
+  renderLobby();
+  alert("초기화 완료. 새 게임을 시작하세요.");
 };
 
 // ===== 페이지 이탈 경고 (배틀 중에만) =====
