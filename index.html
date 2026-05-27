@@ -55,6 +55,241 @@
   }
 
   .screen { display: none; padding: 16px; min-height: 100vh; }
+
+  /* ===== 로비 — 시즌1 솔피닉스 테마 ===== */
+  #lobby-screen.active {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    min-height: 100vh;
+    background-image:
+      linear-gradient(to bottom,
+        rgba(10, 5, 15, 0.0) 0%,
+        rgba(10, 5, 15, 0.0) 55%,
+        rgba(10, 5, 15, 0.5) 75%,
+        rgba(5, 2, 8, 0.92) 90%,
+        rgba(0, 0, 0, 1) 100%
+      ),
+      url('images/lobby_s1.jpg');
+    background-size: cover, cover;
+    background-position: center top, center top;
+    background-repeat: no-repeat, no-repeat;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== 좌상단 레벨 원형 ===== */
+  .player-level {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,200,80,0.95) 0%, rgba(200,100,30,0.95) 60%, rgba(120,40,20,0.95) 100%);
+    border: 2px solid rgba(255,211,78,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: #fff8e7;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    box-shadow: 0 0 14px rgba(255,138,61,0.5), inset 0 -4px 8px rgba(0,0,0,0.3);
+    z-index: 5;
+    cursor: pointer;
+  }
+  .player-level:active { transform: scale(0.95); }
+  /* 시즌 라벨 (레벨 원형 아래) */
+  .season-label {
+    position: absolute;
+    top: 72px;
+    left: 14px;
+    width: 52px;
+    text-align: center;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #ffd34e;
+    text-shadow:
+      0 0 8px rgba(255,138,61,1),
+      0 0 16px rgba(255,80,30,0.8),
+      0 0 24px rgba(255,40,10,0.6),
+      0 1px 2px rgba(0,0,0,0.8);
+    z-index: 5;
+    animation: season-flicker 2.5s ease-in-out infinite;
+  }
+  @keyframes season-flicker {
+    0%, 100% {
+      text-shadow:
+        0 0 8px rgba(255,138,61,1),
+        0 0 16px rgba(255,80,30,0.8),
+        0 0 24px rgba(255,40,10,0.6),
+        0 1px 2px rgba(0,0,0,0.8);
+    }
+    50% {
+      text-shadow:
+        0 0 12px rgba(255,180,80,1),
+        0 0 24px rgba(255,120,50,0.9),
+        0 0 36px rgba(255,60,20,0.7),
+        0 1px 2px rgba(0,0,0,0.8);
+    }
+  }
+
+  /* ===== 우상단 잼 ===== */
+  #lobby-screen .lobby-gem-display {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid rgba(96, 165, 250, 0.6);
+    border-radius: 14px;
+    padding: 8px 14px;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 18px;
+    color: #93c5fd;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 5;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ===== 중앙 큰 배틀 버튼 (불꽃 SVG 배경) ===== */
+  .battle-flame-btn {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(0);
+    width: 200px;
+    height: 160px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 4;
+    padding: 0;
+    filter: drop-shadow(0 0 16px rgba(255,138,61,0.7));
+    animation: battle-pulse 2.4s ease-in-out infinite;
+  }
+  .battle-flame-btn:active { transform: translateY(0) scale(0.95); }
+  @keyframes battle-pulse {
+    0%, 100% { filter: drop-shadow(0 0 16px rgba(255,138,61,0.7)); }
+    50%      { filter: drop-shadow(0 0 28px rgba(255,180,80,1)); }
+  }
+  .battle-flame-btn svg { width: 100%; height: 100%; display: block; }
+  .battle-flame-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 36px;
+    color: #fff8e7;
+    text-shadow:
+      0 0 8px rgba(255,40,10,1),
+      0 0 16px rgba(255,80,30,0.9),
+      0 2px 4px rgba(0,0,0,0.8);
+    pointer-events: none;
+    letter-spacing: 2px;
+  }
+
+  /* ===== 좌하·우하 작은 원형 버튼 (퀘스트/뽑기) ===== */
+  .lobby-side-btn {
+    position: absolute;
+    bottom: 100px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(20, 10, 30, 0.75);
+    border: 2px solid rgba(255, 211, 78, 0.5);
+    color: #f5e8d0;
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 4;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5), 0 0 12px rgba(255,138,61,0.3);
+  }
+  .lobby-side-btn:active { transform: scale(0.93); }
+  .lobby-side-btn-icon { font-size: 22px; }
+  .lobby-side-btn-left { left: 14px; }
+  .lobby-side-btn-right { right: 14px; }
+
+  /* ===== 하단 3분할 탭 바 ===== */
+  .lobby-tab-bar {
+    margin-top: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.98) 100%);
+    border-top: 1px solid rgba(255, 211, 78, 0.3);
+    position: relative;
+    z-index: 5;
+  }
+  .lobby-tab {
+    padding: 14px 8px;
+    background: transparent;
+    border: none;
+    color: #d8c8a8;
+    font-family: 'Jua', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-right: 1px solid rgba(255, 211, 78, 0.15);
+    transition: background 0.15s;
+  }
+  .lobby-tab:last-child { border-right: none; }
+  .lobby-tab:active { background: rgba(255, 138, 61, 0.15); }
+  .lobby-tab-icon { font-size: 22px; }
+
+  /* ===== 개발용 버튼 (우하단 구석, 아주 작게) ===== */
+  .debug-corner {
+    position: absolute;
+    bottom: 78px;
+    right: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 6;
+  }
+  .debug-corner .debug-btn {
+    margin: 0;
+    padding: 4px 8px;
+    font-size: 10px;
+    background: rgba(0,0,0,0.7);
+    border: 1px dashed #555;
+    color: #888;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Jua', sans-serif;
+  }
+  .debug-corner .debug-btn.danger { border-color: #a33; color: #c66; }
+
+  /* 기존 title/lobby-buttons 영역 숨김 */
+  #lobby-screen .title-block,
+  #lobby-screen .lobby-buttons { display: none; }
+
+  /* 작은 화면 대응 */
+  @media (max-height: 700px) {
+    .battle-flame-btn { width: 170px; height: 140px; }
+    .battle-flame-label { font-size: 30px; }
+    .lobby-side-btn { width: 64px; height: 64px; bottom: 90px; }
+  }
+  @media (max-height: 600px) {
+    .battle-flame-btn { top: 45%; width: 150px; height: 120px; }
+    .battle-flame-label { font-size: 26px; }
+  }
   .screen.active { display: block; }
 
   h1, h2, h3 {
@@ -1663,32 +1898,102 @@
 <body>
 <div class="app">
 
-  <!-- ===== 로비 화면 (메인) ===== -->
+  <!-- ===== 로비 화면 (메인) - 시즌1 솔피닉스 ===== -->
   <div id="lobby-screen" class="screen active">
-    <div class="title-block">
-      <div class="title-main">MONROGUE</div>
-      <div class="title-sub">v2 · PARTY EDITION</div>
-    </div>
 
+    <!-- 좌상단: 레벨 (숫자만, 시스템 미구현 자리잡기용) -->
+    <div class="player-level" id="player-level">1</div>
+    <!-- 시즌 라벨 (레벨 아래, 불꽃 효과) -->
+    <div class="season-label">S1</div>
+
+    <!-- 우상단: 잼 -->
     <div class="lobby-gem-display">
       💎 <span id="lobby-gems">0</span>
     </div>
 
-    <div class="lobby-buttons">
-      <button id="lobby-collection-btn" class="lobby-btn lobby-btn-secondary">
-        <span class="lobby-btn-icon">📖</span> 내 포켓몬
+    <!-- 중앙 우측: 큰 배틀 버튼 (불꽃 SVG) -->
+    <button id="lobby-battle-btn" class="battle-flame-btn" aria-label="배틀 시작">
+      <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="flameGrad" cx="50%" cy="60%" r="55%">
+            <stop offset="0%"  stop-color="#fff5d0" stop-opacity="0.95"/>
+            <stop offset="35%" stop-color="#ffd34e" stop-opacity="0.95"/>
+            <stop offset="65%" stop-color="#ff5722" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#8a1a05" stop-opacity="0.85"/>
+          </radialGradient>
+          <filter id="flameBlur" x="-10%" y="-10%" width="120%" height="120%">
+            <feGaussianBlur stdDeviation="1.2"/>
+          </filter>
+        </defs>
+        <!-- 불꽃 모양 path: 뾰족한 꼭대기, 둥근 아래, 양옆 작은 갈래 -->
+        <path d="
+          M 100 8
+          C 115 32, 140 36, 152 52
+          C 168 42, 180 50, 178 70
+          C 188 78, 195 96, 188 116
+          C 180 138, 150 152, 100 152
+          C 50 152, 20 138, 12 116
+          C 5 96, 12 78, 22 70
+          C 20 50, 32 42, 48 52
+          C 60 36, 85 32, 100 8 Z"
+          fill="url(#flameGrad)"
+          stroke="rgba(255,211,78,0.7)"
+          stroke-width="2"
+          filter="url(#flameBlur)"
+        />
+        <!-- 안쪽 작은 불꽃 (디테일) -->
+        <path d="
+          M 100 38
+          C 110 60, 125 70, 130 90
+          C 135 110, 125 130, 100 132
+          C 75 130, 65 110, 70 90
+          C 75 70, 90 60, 100 38 Z"
+          fill="rgba(255,245,200,0.35)"
+        />
+      </svg>
+      <span class="battle-flame-label">배틀</span>
+    </button>
+
+    <!-- 좌하 작은 원형: 퀘스트 -->
+    <button id="lobby-quest-btn" class="lobby-side-btn lobby-side-btn-left">
+      <span class="lobby-side-btn-icon">📜</span>
+      <span>퀘스트</span>
+    </button>
+
+    <!-- 우하 작은 원형: 뽑기 -->
+    <button id="lobby-gacha-btn" class="lobby-side-btn lobby-side-btn-right">
+      <span class="lobby-side-btn-icon">🎁</span>
+      <span>뽑기</span>
+    </button>
+
+    <!-- 개발용 버튼 (우하단 구석, 작게) -->
+    <div class="debug-corner">
+      <button id="debug-add-gems" class="debug-btn">🛠️ 잼+500</button>
+      <button id="debug-reset" class="debug-btn danger">⚠️ 초기화</button>
+    </div>
+
+    <!-- 하단 3분할 탭 -->
+    <div class="lobby-tab-bar">
+      <button id="lobby-collection-btn" class="lobby-tab">
+        <span class="lobby-tab-icon">📖</span>
+        <span>내 몬스터</span>
       </button>
-      <button id="lobby-gacha-btn" class="lobby-btn lobby-btn-secondary">
-        <span class="lobby-btn-icon">🎁</span> 뽑기
+      <button id="lobby-inventory-btn" class="lobby-tab">
+        <span class="lobby-tab-icon">🎒</span>
+        <span>인벤토리</span>
       </button>
-      <button id="lobby-battle-btn" class="lobby-btn lobby-btn-primary">
-        <span class="lobby-btn-icon">⚔️</span> 배틀 시작
+      <button id="lobby-shop-btn" class="lobby-tab">
+        <span class="lobby-tab-icon">🏪</span>
+        <span>상점</span>
       </button>
     </div>
 
-    <!-- 개발용 임시 버튼 (단계 D 완성 후 제거) -->
-    <button id="debug-add-gems" class="debug-btn">🛠️ 잼 +500 (개발용)</button>
-    <button id="debug-reset" class="debug-btn" style="border-color:#a33; color:#c66; margin-top:8px;">⚠️ 데이터 초기화 (개발용)</button>
+    <!-- 호환성용 유지 (다른 코드가 참조할 수 있음) -->
+    <div class="title-block" aria-hidden="true">
+      <div class="title-main">MONROGUE</div>
+      <div class="title-sub">v2</div>
+    </div>
+    <div class="lobby-buttons" aria-hidden="true"></div>
   </div>
 
   <!-- ===== 뽑기 화면 ===== -->
@@ -3790,6 +4095,20 @@ $("lobby-battle-btn").onclick = () => {
 $("lobby-collection-btn").onclick = () => {
   renderCollection();
   showScreen("collection-screen");
+};
+
+// 미구현 자리들 - 알림만
+$("player-level").onclick = () => {
+  alert("플레이어 레벨 시스템은 준비 중입니다.\n(사탕으로 레벨업)");
+};
+$("lobby-quest-btn").onclick = () => {
+  alert("퀘스트 시스템은 준비 중입니다.");
+};
+$("lobby-inventory-btn").onclick = () => {
+  alert("인벤토리는 준비 중입니다.\n(보유한 사탕, 아이템 등)");
+};
+$("lobby-shop-btn").onclick = () => {
+  alert("상점은 준비 중입니다.");
 };
 $("lobby-gacha-btn").onclick = () => {
   cancelGachaAnim();  // 이전 진행분 정리
