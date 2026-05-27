@@ -158,71 +158,74 @@
     gap: 6px;
   }
 
-  /* ===== 중앙 큰 배틀 버튼 (스파크/별폭발 SVG) ===== */
+  /* ===== 중앙 큰 배틀 버튼 (직사각형, 멋있게) ===== */
   .battle-flame-btn {
     position: absolute;
-    top: 48%;
-    right: 8px;
-    transform: translateY(0);
-    width: 170px;
-    height: 170px;
-    border: none;
-    background: transparent;
+    bottom: 230px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78%;
+    max-width: 340px;
+    padding: 18px 24px;
+    border: 2px solid rgba(255, 211, 78, 0.85);
+    background:
+      linear-gradient(180deg,
+        rgba(255, 138, 61, 0.95) 0%,
+        rgba(255, 87, 34, 0.95) 55%,
+        rgba(180, 40, 20, 0.95) 100%
+      );
+    border-radius: 16px;
     cursor: pointer;
     z-index: 4;
-    padding: 0;
-    filter: drop-shadow(0 0 18px rgba(255,80,30,0.85));
-    animation: battle-pulse 2.4s ease-in-out infinite;
-  }
-  .battle-flame-btn:active { transform: translateY(0) scale(0.93); }
-  @keyframes battle-pulse {
-    0%, 100% { filter: drop-shadow(0 0 18px rgba(255,80,30,0.85)) drop-shadow(0 0 8px rgba(255,211,78,0.6)); }
-    50%      { filter: drop-shadow(0 0 32px rgba(255,180,80,1))   drop-shadow(0 0 16px rgba(255,255,200,0.8)); }
-  }
-  /* 회전 광선 (배경 효과) */
-  .battle-flame-btn::before {
-    content: "";
-    position: absolute;
-    inset: -12%;
-    background: conic-gradient(
-      from 0deg,
-      transparent 0deg, rgba(255,211,78,0.35) 15deg, transparent 30deg,
-      transparent 75deg, rgba(255,138,61,0.3) 90deg, transparent 105deg,
-      transparent 150deg, rgba(255,211,78,0.35) 165deg, transparent 180deg,
-      transparent 225deg, rgba(255,138,61,0.3) 240deg, transparent 255deg,
-      transparent 300deg, rgba(255,211,78,0.35) 315deg, transparent 330deg
-    );
-    border-radius: 50%;
-    animation: spark-spin 6s linear infinite;
-    z-index: -1;
-  }
-  @keyframes spark-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  .battle-flame-btn svg { width: 100%; height: 100%; display: block; }
-  .battle-flame-label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-family: 'Black Han Sans', sans-serif;
-    font-size: 32px;
+    font-size: 28px;
     color: #fff8e7;
+    letter-spacing: 4px;
     text-shadow:
-      0 0 6px rgba(255,40,10,1),
-      0 0 12px rgba(255,80,30,0.9),
-      0 2px 3px rgba(0,0,0,0.8);
-    pointer-events: none;
-    letter-spacing: 2px;
+      0 0 8px rgba(255, 40, 10, 0.9),
+      0 2px 4px rgba(0,0,0,0.8);
+    box-shadow:
+      0 0 24px rgba(255, 138, 61, 0.6),
+      0 4px 16px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    animation: battle-pulse 2.4s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
+  .battle-flame-btn:active {
+    transform: translateX(-50%) scale(0.97);
+    box-shadow:
+      0 0 18px rgba(255, 138, 61, 0.5),
+      0 2px 8px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  @keyframes battle-pulse {
+    0%, 100% {
+      box-shadow:
+        0 0 24px rgba(255, 138, 61, 0.6),
+        0 4px 16px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+    50% {
+      box-shadow:
+        0 0 40px rgba(255, 180, 80, 0.85),
+        0 4px 16px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    }
+  }
+  .battle-flame-btn::before { display: none; }  /* 회전 광선 제거 */
 
   /* ===== 좌하·우하 작은 원형 버튼 (퀘스트/뽑기) ===== */
   .lobby-side-btn {
     position: absolute;
-    bottom: 88px;
-    width: 68px;
-    height: 68px;
+    bottom: 130px;
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
     background: rgba(20, 10, 30, 0.78);
     border: 2px solid rgba(255, 211, 78, 0.55);
@@ -234,14 +237,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1px;
+    gap: 0px;
     z-index: 4;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     box-shadow: 0 4px 14px rgba(0,0,0,0.5), 0 0 12px rgba(255,138,61,0.3);
+    padding: 8px;
   }
   .lobby-side-btn:active { transform: scale(0.93); }
-  .lobby-side-btn-icon { font-size: 22px; }
+  .lobby-side-btn img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    /* 파란 라인아트 → 따뜻한 크림색으로 변환 */
+    filter: brightness(0) saturate(100%) invert(95%) sepia(15%) saturate(700%) hue-rotate(335deg) brightness(105%) contrast(102%);
+  }
   .lobby-side-btn-left { left: 14px; }
   .lobby-side-btn-right { right: 14px; }
 
@@ -256,7 +266,7 @@
     background: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,1) 100%);
     border-top: 1px solid rgba(255, 211, 78, 0.35);
     z-index: 10;
-    padding-bottom: env(safe-area-inset-bottom, 0px);  /* iPhone 홈바 대응 */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .lobby-tab {
     padding: 10px 6px 12px;
@@ -275,20 +285,24 @@
   }
   .lobby-tab:last-child { border-right: none; }
   .lobby-tab:active { background: rgba(255, 138, 61, 0.15); }
-  .lobby-tab-icon { font-size: 22px; }
-  /* 탭바 자리만큼 화면 아래 패딩 (스크롤 시 마지막 콘텐츠 안 가려지게) */
+  .lobby-tab img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(95%) sepia(15%) saturate(700%) hue-rotate(335deg) brightness(105%) contrast(102%);
+  }
+  /* 탭바 자리만큼 화면 아래 패딩 */
   #lobby-screen.active { padding-bottom: 72px; box-sizing: border-box; }
 
-  /* ===== 개발용 버튼 (탭바 위, 우측) ===== */
+  /* ===== 개발용 버튼 ===== */
   .debug-corner {
     position: absolute;
     bottom: 95px;
-    right: 92px;
+    right: 14px;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    gap: 6px;
     z-index: 6;
-    align-items: flex-end;
   }
   .debug-corner .debug-btn {
     margin: 0;
@@ -303,20 +317,18 @@
   }
   .debug-corner .debug-btn.danger { border-color: #a33; color: #c66; }
 
-  /* 기존 title/lobby-buttons 영역 숨김 */
+  /* 기존 영역 숨김 */
   #lobby-screen .title-block,
   #lobby-screen .lobby-buttons { display: none; }
 
   /* 작은 화면 대응 */
   @media (max-height: 700px) {
-    .battle-flame-btn { width: 150px; height: 150px; top: 44%; }
-    .battle-flame-label { font-size: 28px; }
-    .lobby-side-btn { width: 60px; height: 60px; bottom: 80px; }
-    .debug-corner { bottom: 88px; }
+    .battle-flame-btn { bottom: 210px; font-size: 24px; padding: 14px 20px; }
+    .lobby-side-btn { width: 66px; height: 66px; bottom: 120px; }
+    .lobby-side-btn img { width: 28px; height: 28px; }
   }
   @media (max-height: 600px) {
-    .battle-flame-btn { top: 40%; width: 130px; height: 130px; }
-    .battle-flame-label { font-size: 24px; }
+    .battle-flame-btn { bottom: 190px; font-size: 22px; }
   }
   .screen.active { display: block; }
 
@@ -1939,77 +1951,24 @@
       💎 <span id="lobby-gems">0</span>
     </div>
 
-    <!-- 중앙 우측: 큰 배틀 버튼 (스파크 SVG) -->
+    <!-- 중앙 하단: 큰 배틀 버튼 (직사각형) -->
     <button id="lobby-battle-btn" class="battle-flame-btn" aria-label="배틀 시작">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="sparkCore" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stop-color="#fff8d0" stop-opacity="1"/>
-            <stop offset="25%"  stop-color="#ffd34e" stop-opacity="1"/>
-            <stop offset="55%"  stop-color="#ff5722" stop-opacity="1"/>
-            <stop offset="85%"  stop-color="#8a1a05" stop-opacity="0.95"/>
-            <stop offset="100%" stop-color="#3a0a02" stop-opacity="0.6"/>
-          </radialGradient>
-          <radialGradient id="sparkInner" cx="50%" cy="50%" r="40%">
-            <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.95"/>
-            <stop offset="50%"  stop-color="#ffe88a" stop-opacity="0.5"/>
-            <stop offset="100%" stop-color="#ff8a3d" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <!-- 큰 스파크 (8각 별폭발, 길게 뾰족하게) -->
-        <path d="
-          M 100 4
-          L 116 70
-          L 168 22
-          L 138 82
-          L 196 96
-          L 132 110
-          L 168 178
-          L 110 138
-          L 100 196
-          L 90 138
-          L 32 178
-          L 68 110
-          L 4 96
-          L 62 82
-          L 32 22
-          L 84 70 Z"
-          fill="url(#sparkCore)"
-          stroke="rgba(255,211,78,0.8)"
-          stroke-width="1.5"
-          stroke-linejoin="round"
-        />
-        <!-- 안쪽 작은 스파크 (4각, 회전) -->
-        <path d="
-          M 100 50
-          L 110 95
-          L 150 100
-          L 110 105
-          L 100 150
-          L 90 105
-          L 50 100
-          L 90 95 Z"
-          fill="url(#sparkInner)"
-        />
-        <!-- 중앙 핵 -->
-        <circle cx="100" cy="100" r="22" fill="rgba(255,255,255,0.4)"/>
-      </svg>
-      <span class="battle-flame-label">배틀</span>
+      ⚔ 배틀
     </button>
 
     <!-- 좌하 작은 원형: 퀘스트 -->
     <button id="lobby-quest-btn" class="lobby-side-btn lobby-side-btn-left">
-      <span class="lobby-side-btn-icon">📜</span>
+      <img src="images/icon_quest.png" alt="">
       <span>퀘스트</span>
     </button>
 
     <!-- 우하 작은 원형: 뽑기 -->
     <button id="lobby-gacha-btn" class="lobby-side-btn lobby-side-btn-right">
-      <span class="lobby-side-btn-icon">🎁</span>
+      <img src="images/icon_gacha.png" alt="">
       <span>뽑기</span>
     </button>
 
-    <!-- 개발용 버튼 (우하단 구석, 작게) -->
+    <!-- 개발용 버튼 -->
     <div class="debug-corner">
       <button id="debug-add-gems" class="debug-btn">🛠️ 잼+500</button>
       <button id="debug-reset" class="debug-btn danger">⚠️ 초기화</button>
@@ -2018,15 +1977,15 @@
     <!-- 하단 3분할 탭 -->
     <div class="lobby-tab-bar">
       <button id="lobby-collection-btn" class="lobby-tab">
-        <span class="lobby-tab-icon">📖</span>
+        <img src="images/icon_monster.png" alt="">
         <span>내 몬스터</span>
       </button>
       <button id="lobby-inventory-btn" class="lobby-tab">
-        <span class="lobby-tab-icon">🎒</span>
+        <img src="images/icon_inventory.png" alt="">
         <span>인벤토리</span>
       </button>
       <button id="lobby-shop-btn" class="lobby-tab">
-        <span class="lobby-tab-icon">🏪</span>
+        <img src="images/icon_shop.png" alt="">
         <span>상점</span>
       </button>
     </div>
