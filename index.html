@@ -1280,6 +1280,82 @@
     padding: 2px 6px;
     border-radius: 8px;
   }
+  .collection-card:not(.locked) { cursor: pointer; transition: transform 0.1s; }
+  .collection-card:not(.locked):active { transform: scale(0.95); }
+
+  /* ===== 도감 상세 모달 ===== */
+  .detail-modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 9000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    animation: detail-bg-fadein 0.2s ease-out;
+  }
+  @keyframes detail-bg-fadein { from { opacity: 0; } to { opacity: 1; } }
+  .detail-modal {
+    background: linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-dark) 100%);
+    border: 2px solid var(--bg-card-light);
+    border-radius: 18px;
+    max-width: 500px;
+    width: 100%;
+    padding: 18px;
+    position: relative;
+    animation: detail-popin 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin: 20px 0 40px;
+  }
+  @keyframes detail-popin {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .detail-modal.rarity-rare { border-color: rgba(96, 165, 250, 0.7); box-shadow: 0 0 28px rgba(96, 165, 250, 0.3); }
+  .detail-modal.rarity-legendary { border-color: rgba(255, 211, 78, 0.8); box-shadow: 0 0 32px rgba(255, 211, 78, 0.4); background: linear-gradient(180deg, #2d2552 0%, var(--bg-dark) 100%); }
+  .detail-close {
+    position: absolute; top: 10px; right: 12px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.4);
+    color: var(--text); border: none;
+    font-size: 20px; cursor: pointer; z-index: 2;
+    font-family: 'Jua', sans-serif;
+  }
+  .detail-img-wrap { text-align: center; padding: 12px 0 4px; }
+  .detail-img-wrap img { width: 160px; height: 160px; object-fit: contain; }
+  .detail-modal.rarity-rare .detail-img-wrap img { filter: drop-shadow(0 0 14px rgba(96, 165, 250, 0.6)); }
+  .detail-modal.rarity-legendary .detail-img-wrap img { filter: drop-shadow(0 0 20px rgba(255, 211, 78, 0.7)); }
+  .detail-name-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
+  .detail-name { font-family: 'Black Han Sans', sans-serif; font-size: 28px; color: var(--text); }
+  .detail-rarity { font-family: 'Black Han Sans', sans-serif; font-size: 14px; padding: 2px 10px; border-radius: 10px; }
+  .detail-rarity.rarity-common { background: #555; color: #eee; }
+  .detail-rarity.rarity-rare { background: #2563eb; color: white; }
+  .detail-rarity.rarity-legendary { background: linear-gradient(135deg, var(--accent), var(--accent-hot)); color: #1a1a1a; }
+  .detail-type-row { text-align: center; margin: 6px 0 4px; }
+  .detail-meta-row { text-align: center; font-family: 'Jua', sans-serif; font-size: 13px; color: #aaa; margin-bottom: 14px; }
+  .detail-section { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 12px; margin-top: 12px; }
+  .detail-section-title { font-family: 'Black Han Sans', sans-serif; font-size: 16px; color: var(--accent); margin-bottom: 8px; }
+  .stat-row { display: grid; grid-template-columns: 50px 1fr 36px; align-items: center; gap: 8px; margin-bottom: 6px; font-family: 'Jua', sans-serif; font-size: 13px; }
+  .stat-label { color: #ccc; }
+  .stat-bar-wrap { height: 10px; background: rgba(0,0,0,0.4); border-radius: 5px; overflow: hidden; }
+  .stat-bar { height: 100%; border-radius: 5px; transition: width 0.3s; }
+  .stat-bar.hp  { background: linear-gradient(90deg, #4ade80, #22c55e); }
+  .stat-bar.atk { background: linear-gradient(90deg, #f87171, #ef4444); }
+  .stat-bar.def { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+  .stat-bar.spd { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  .stat-val { text-align: right; color: var(--text); }
+  .skill-row { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; font-family: 'Jua', sans-serif; font-size: 13px; }
+  .skill-row:last-child { margin-bottom: 0; }
+  .skill-name { color: var(--text); font-weight: bold; }
+  .skill-info { display: flex; gap: 6px; align-items: center; }
+  .skill-type-badge { font-size: 11px; padding: 2px 8px; border-radius: 8px; font-family: 'Jua', sans-serif; }
+  .skill-power { font-size: 12px; color: #aaa; }
+  .passive-name { font-family: 'Black Han Sans', sans-serif; font-size: 15px; color: var(--accent); margin-bottom: 4px; }
+  .passive-desc { font-family: 'Jua', sans-serif; font-size: 13px; color: #ddd; line-height: 1.5; }
+  .evo-placeholder { font-family: 'Jua', sans-serif; font-size: 13px; color: #777; text-align: center; padding: 12px 4px; border: 1px dashed #444; border-radius: 8px; }
+  .detail-candy { display: inline-flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 14px; font-family: 'Jua', sans-serif; font-size: 13px; color: #fbbf24; }
 
   /* ===== 뽑기 화면 ===== */
   .gacha-header {
@@ -1862,11 +1938,11 @@ const STATUS_INFO = {
 
 // 패시브 메타 정보
 const PASSIVE_INFO = {
-  azure_blessing:    { name: "수룡의 가호",   desc: "매턴 HP 12% 회복" },
-  phoenix_rebirth:   { name: "불사조",         desc: "HP 0 시 1회 부활 (5웨이브 쿨다운)" },
-  dark_reign:        { name: "어둠의 군림",   desc: "받는 데미지 10% 감소 + 공격받을 때 30% 공포" },
-  natures_blessing:  { name: "자연의 축복",   desc: "상태이상 면역 + 후방 팀원 매턴 10% 회복" },
-  stars_grace:       { name: "별의 가호",     desc: "매턴 적 최대HP 5% 데미지 + 크리 2배 + 교체 첫 공격 +20%" }
+  azure_blessing:    { name: "푸른 축복",     desc: "매 턴 최대 HP의 12%를 회복한다. (보스전: 6%)" },
+  phoenix_rebirth:   { name: "불사조의 부활", desc: "전투 중 쓰러져도 한 번 부활한다. 5웨이브 쿨다운." },
+  dark_reign:        { name: "어둠의 군림",   desc: "받는 피해 10% 감소. 공격받을 때 30% 확률로 적에게 공포 부여. (보스전: 15%)" },
+  natures_blessing:  { name: "자연의 가호",   desc: "모든 상태이상 면역. 파티 뒤쪽에 있을 때 매 턴 10% 회복." },
+  stars_grace:       { name: "별의 은총",     desc: "교체되어 나온 첫 공격 +20%. 크리티컬 확률 2배. 매 턴 적 최대HP 5%만큼 피해. (보스전: 3%)" }
 };
 // rarity: 'common'|'rare'|'legendary'
 // passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
@@ -3449,8 +3525,116 @@ function renderCollection() {
       <div class="collection-card-name">${owned ? mon.name : '???'}</div>
       ${owned ? `<div class="collection-card-type type-${mon.type}">${TYPES[mon.type].name}</div>` : ''}
     `;
+    if (owned) {
+      card.onclick = () => openMonDetail(id);
+    }
     grid.appendChild(card);
   });
+}
+
+// ===== 도감 상세 모달 =====
+function openMonDetail(monId) {
+  const mon = MONSTERS[monId];
+  if (!mon || !state.ownedMons.includes(monId)) return;
+  const rarity = mon.rarity || 'common';
+  const candyCount = state.candies[monId] || 0;
+  const rarityLabel = rarity === 'legendary' ? '★ 전설' : rarity === 'rare' ? '◆ 레어' : '일반';
+  const statMax = 120;  // 막대 그래프 기준 최대값
+
+  // 스킬 HTML
+  const movesHtml = mon.moves.map(mvId => {
+    const mv = MOVES[mvId];
+    if (!mv) return '';
+    return `
+      <div class="skill-row">
+        <span class="skill-name">${mv.name}</span>
+        <span class="skill-info">
+          <span class="skill-type-badge type-${mv.type}">${TYPES[mv.type] ? TYPES[mv.type].name : mv.type}</span>
+          <span class="skill-power">위력 ${mv.power}</span>
+        </span>
+      </div>
+    `;
+  }).join('');
+
+  // 패시브 HTML
+  let passiveHtml;
+  if (mon.passive && PASSIVE_INFO[mon.passive]) {
+    const p = PASSIVE_INFO[mon.passive];
+    passiveHtml = `
+      <div class="detail-section">
+        <div class="detail-section-title">✦ 패시브</div>
+        <div class="passive-name">${p.name}</div>
+        <div class="passive-desc">${p.desc}</div>
+      </div>
+    `;
+  } else {
+    passiveHtml = '';  // 일반/레어는 패시브 섹션 자체 생략
+  }
+
+  // 진화 placeholder (단계 추후)
+  const evoHtml = `
+    <div class="detail-section">
+      <div class="detail-section-title">🌱 진화</div>
+      <div class="evo-placeholder">진화 시스템 준비 중<br><span style="font-size:11px; color:#555;">사탕 🍬 ${candyCount}개 보유</span></div>
+    </div>
+  `;
+
+  // 통계 placeholder (추후 확장용)
+  // const statsHtml = ... 진화 시스템 만들면서 같이 추가 예정
+
+  const html = `
+    <div class="detail-modal-bg" id="detail-modal-bg">
+      <div class="detail-modal rarity-${rarity}" onclick="event.stopPropagation()">
+        <button class="detail-close" onclick="closeMonDetail()">×</button>
+        <div class="detail-img-wrap"><img src="${IMAGES[monId]}" alt="${mon.name}"></div>
+        <div class="detail-name-row">
+          <span class="detail-name">${mon.name}</span>
+          <span class="detail-rarity rarity-${rarity}">${rarityLabel}</span>
+        </div>
+        <div class="detail-type-row"><span class="collection-card-type type-${mon.type}" style="font-size:13px; padding:3px 12px;">${TYPES[mon.type].name}</span></div>
+        <div class="detail-meta-row">No. ${monId.replace('mon_', '')} ${candyCount > 0 ? ` · <span class="detail-candy">🍬 ${candyCount}</span>` : ''}</div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">📊 스탯</div>
+          ${renderStatRow('HP',  'hp',  mon.stats.hp,  statMax)}
+          ${renderStatRow('공격', 'atk', mon.stats.atk, statMax)}
+          ${renderStatRow('방어', 'def', mon.stats.def, statMax)}
+          ${renderStatRow('속도', 'spd', mon.stats.spd, statMax)}
+          <div style="text-align:right; font-family:'Jua',sans-serif; font-size:12px; color:#888; margin-top:6px;">합계 ${mon.stats.hp + mon.stats.atk + mon.stats.def + mon.stats.spd}</div>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-title">⚔ 스킬</div>
+          ${movesHtml}
+        </div>
+
+        ${passiveHtml}
+        ${evoHtml}
+      </div>
+    </div>
+  `;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = html;
+  document.body.appendChild(wrap.firstElementChild);
+
+  // 배경 클릭 시 닫기
+  $("detail-modal-bg").onclick = closeMonDetail;
+}
+
+function renderStatRow(label, cls, value, max) {
+  const pct = Math.min(100, (value / max) * 100);
+  return `
+    <div class="stat-row">
+      <span class="stat-label">${label}</span>
+      <span class="stat-bar-wrap"><span class="stat-bar ${cls}" style="width:${pct}%;"></span></span>
+      <span class="stat-val">${value}</span>
+    </div>
+  `;
+}
+
+function closeMonDetail() {
+  const el = $("detail-modal-bg");
+  if (el) el.remove();
 }
 
 // ===== 뽑기 시스템 =====
@@ -3458,11 +3642,14 @@ function renderCollection() {
 const GACHA_RATES = { common: 75, rare: 20, legendary: 5 };
 // 마지막으로 뽑은 타입 (같은 타입 2연속 차단용; 풀이 1타입만 남으면 자동 무시)
 let lastGachaType = null;
+// 뽑기 진행 중 플래그 (DOM disabled보다 빠르게 작동 - 동시 클릭 차단용)
+let gachaInProgress = false;
 // 진행 중 애니메이션 타임아웃 추적 (중첩 방지용)
 let gachaAnimTimeouts = [];
 function cancelGachaAnim() {
   gachaAnimTimeouts.forEach(id => clearTimeout(id));
   gachaAnimTimeouts = [];
+  gachaInProgress = false;  // 화면 이탈 시 플래그 해제
   document.querySelectorAll(".gacha-screen-flash").forEach(el => el.remove());
 }
 
@@ -3474,10 +3661,15 @@ function rollRarity() {
 }
 
 function doGacha() {
+  // 최우선 가드: 진행 중이면 즉시 차단 (DOM disabled보다 빠름)
+  if (gachaInProgress) return;
   const cost = SHOP_PRICES.gacha;
   if (state.metaGems < cost) return;
   const btn = $("gacha-pull-btn");
-  if (btn.disabled) return;  // 이중클릭 방지
+  if (btn.disabled) return;
+
+  // 가드 잠금: 다음 함수 호출은 여기서 차단됨
+  gachaInProgress = true;
   btn.disabled = true;
 
   state.metaGems -= cost;
@@ -3496,6 +3688,7 @@ function doGacha() {
     state.metaGems += cost;
     alert("뽑기 풀이 비어있습니다");
     btn.disabled = false;
+    gachaInProgress = false;
     return;
   }
 
@@ -3551,6 +3744,7 @@ function playGachaAnimation(monId, isNew, rarity) {
     const cardDelay = rarity === "legendary" ? 900 : rarity === "rare" ? 700 : 500;
     const t2 = setTimeout(() => {
       renderGachaResult(monId, isNew, rarity);
+      gachaInProgress = false;  // 결과 표시 완료, 다음 뽑기 허용
       $("gacha-pull-btn").disabled = state.metaGems < SHOP_PRICES.gacha;
     }, cardDelay);
     gachaAnimTimeouts.push(t2);
