@@ -158,15 +158,13 @@
     gap: 6px;
   }
 
-  /* ===== 중앙 큰 배틀 버튼 (직사각형, 멋있게) ===== */
+  /* ===== 중앙 큰 배틀 버튼 (직사각형, 우측 정렬, 작게) ===== */
   .battle-flame-btn {
     position: absolute;
     bottom: 230px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 78%;
-    max-width: 340px;
-    padding: 18px 24px;
+    right: 14px;
+    width: 160px;
+    padding: 14px 18px;
     border: 2px solid rgba(255, 211, 78, 0.85);
     background:
       linear-gradient(180deg,
@@ -174,51 +172,59 @@
         rgba(255, 87, 34, 0.95) 55%,
         rgba(180, 40, 20, 0.95) 100%
       );
-    border-radius: 16px;
+    border-radius: 14px;
     cursor: pointer;
     z-index: 4;
     font-family: 'Black Han Sans', sans-serif;
-    font-size: 28px;
+    font-size: 24px;
     color: #fff8e7;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     text-shadow:
       0 0 8px rgba(255, 40, 10, 0.9),
       0 2px 4px rgba(0,0,0,0.8);
     box-shadow:
-      0 0 24px rgba(255, 138, 61, 0.6),
-      0 4px 16px rgba(0,0,0,0.5),
+      0 0 20px rgba(255, 138, 61, 0.55),
+      0 4px 14px rgba(0,0,0,0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.3),
       inset 0 -3px 0 rgba(0, 0, 0, 0.25);
     animation: battle-pulse 2.4s ease-in-out infinite;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
   }
   .battle-flame-btn:active {
-    transform: translateX(-50%) scale(0.97);
+    transform: scale(0.95);
     box-shadow:
-      0 0 18px rgba(255, 138, 61, 0.5),
-      0 2px 8px rgba(0,0,0,0.5),
+      0 0 14px rgba(255, 138, 61, 0.4),
+      0 2px 6px rgba(0,0,0,0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   @keyframes battle-pulse {
     0%, 100% {
       box-shadow:
-        0 0 24px rgba(255, 138, 61, 0.6),
-        0 4px 16px rgba(0,0,0,0.5),
+        0 0 20px rgba(255, 138, 61, 0.55),
+        0 4px 14px rgba(0,0,0,0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -3px 0 rgba(0, 0, 0, 0.25);
     }
     50% {
       box-shadow:
-        0 0 40px rgba(255, 180, 80, 0.85),
-        0 4px 16px rgba(0,0,0,0.5),
+        0 0 32px rgba(255, 180, 80, 0.85),
+        0 4px 14px rgba(0,0,0,0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -3px 0 rgba(0, 0, 0, 0.25);
     }
   }
-  .battle-flame-btn::before { display: none; }  /* 회전 광선 제거 */
+  .battle-flame-btn::before { display: none; }
+
+  /* 작은 화면 대응 */
+  @media (max-height: 700px) {
+    .battle-flame-btn { bottom: 210px; font-size: 22px; padding: 12px 16px; width: 140px; }
+  }
+  @media (max-height: 600px) {
+    .battle-flame-btn { bottom: 190px; font-size: 20px; }
+  }
 
   /* ===== 좌하·우하 작은 원형 버튼 (퀘스트/뽑기) ===== */
   .lobby-side-btn {
@@ -323,12 +329,8 @@
 
   /* 작은 화면 대응 */
   @media (max-height: 700px) {
-    .battle-flame-btn { bottom: 210px; font-size: 24px; padding: 14px 20px; }
     .lobby-side-btn { width: 66px; height: 66px; bottom: 120px; }
     .lobby-side-btn img { width: 28px; height: 28px; }
-  }
-  @media (max-height: 600px) {
-    .battle-flame-btn { bottom: 190px; font-size: 22px; }
   }
   .screen.active { display: block; }
 
@@ -1650,6 +1652,21 @@
     box-shadow: 0 0 10px rgba(255,138,61,0.5);
   }
   .dex-filter:active { transform: scale(0.94); }
+  /* 필터 안 색 점 (이모지 대신) */
+  .fil-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .fil-dot.type-fire     { background: #ff5722; box-shadow: 0 0 6px rgba(255,87,34,0.7); }
+  .fil-dot.type-water    { background: #2196f3; box-shadow: 0 0 6px rgba(33,150,243,0.7); }
+  .fil-dot.type-grass    { background: #4caf50; box-shadow: 0 0 6px rgba(76,175,80,0.7); }
+  .fil-dot.type-electric { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,0.7); }
+  .fil-dot.type-dark     { background: #9b87cc; box-shadow: 0 0 6px rgba(155,135,204,0.7); }
   /* 카드 그리드 - 패딩 + 하단 여유 */
   #collection-screen .collection-grid {
     padding: 0 14px 80px;
@@ -2191,10 +2208,6 @@
     <!-- 상단 헤더 -->
     <div class="dex-top">
       <button class="back-btn" id="collection-back">←</button>
-      <div class="dex-title">
-        <img src="images/icon_monster.png" alt="" class="dex-title-icon">
-        <span>몬스터 도감</span>
-      </div>
       <div class="dex-count-pill"><span id="collection-count">0 / 0</span></div>
     </div>
 
@@ -2206,11 +2219,11 @@
     <!-- 타입 필터 -->
     <div class="dex-filter-row" id="dex-filter-row">
       <button class="dex-filter active" data-type="all">전체</button>
-      <button class="dex-filter" data-type="fire">🔥 불</button>
-      <button class="dex-filter" data-type="water">💧 물</button>
-      <button class="dex-filter" data-type="grass">🌿 풀</button>
-      <button class="dex-filter" data-type="electric">⚡ 전기</button>
-      <button class="dex-filter" data-type="dark">🌑 어둠</button>
+      <button class="dex-filter" data-type="fire"><span class="fil-dot type-fire"></span>불</button>
+      <button class="dex-filter" data-type="water"><span class="fil-dot type-water"></span>물</button>
+      <button class="dex-filter" data-type="grass"><span class="fil-dot type-grass"></span>풀</button>
+      <button class="dex-filter" data-type="electric"><span class="fil-dot type-electric"></span>전기</button>
+      <button class="dex-filter" data-type="dark"><span class="fil-dot type-dark"></span>어둠</button>
     </div>
 
     <!-- 카드 그리드 -->
@@ -4002,6 +4015,19 @@ function renderLobby() {
 // ===== 도감 화면 =====
 let dexCurrentFilter = "all";  // 현재 선택된 타입 필터
 
+// 등급 정렬 우선순위 (낮을수록 먼저)
+const RARITY_ORDER = { common: 0, rare: 1, legendary: 2 };
+
+function sortByRarity(ids) {
+  return [...ids].sort((a, b) => {
+    const ra = RARITY_ORDER[MONSTERS[a].rarity || 'common'];
+    const rb = RARITY_ORDER[MONSTERS[b].rarity || 'common'];
+    if (ra !== rb) return ra - rb;
+    // 같은 등급이면 원래 번호순 (mon_001 등)
+    return a.localeCompare(b);
+  });
+}
+
 function renderCollection() {
   $("collection-count").textContent = `${state.ownedMons.length} / ${ALL_MON_IDS.length}`;
   // 진행 바
@@ -4013,9 +4039,12 @@ function renderCollection() {
   grid.innerHTML = "";
 
   // 필터 적용
-  const filteredIds = (dexCurrentFilter === "all")
+  let filteredIds = (dexCurrentFilter === "all")
     ? ALL_MON_IDS
     : ALL_MON_IDS.filter(id => MONSTERS[id].type === dexCurrentFilter);
+
+  // 등급 정렬 적용 (일반 → 레어 → 전설)
+  filteredIds = sortByRarity(filteredIds);
 
   if (filteredIds.length === 0) {
     grid.innerHTML = '<div class="dex-empty">이 타입의 몬스터가 없습니다.</div>';
