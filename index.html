@@ -1276,6 +1276,117 @@
     border-radius: 6px;
     font-size: 10px;
   }
+
+  /* ===== 스킬 상세 모달 ===== */
+  .skill-detail-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .skill-detail-overlay.show { display: flex; }
+  .skill-detail-content {
+    width: 100%;
+    max-width: 380px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #1a0a05 0%, #0a0408 100%);
+    border: 2px solid rgba(255, 211, 78, 0.5);
+    border-radius: 16px;
+    padding: 18px;
+    position: relative;
+    color: #fff8e7;
+    box-shadow: 0 0 24px rgba(255, 138, 61, 0.4);
+  }
+  .skill-detail-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #ffd34e;
+    font-size: 22px;
+    cursor: pointer;
+    font-family: 'Black Han Sans', sans-serif;
+    z-index: 2;
+  }
+  .sd-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .sd-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(255,211,78,0.4);
+    background: rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+  .sd-icon-img { width: 100%; height: 100%; object-fit: cover; }
+  .sd-icon-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .sd-title-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .sd-name {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: #fff8e7;
+    text-shadow: 0 0 8px rgba(255,138,61,0.5);
+  }
+  .sd-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .sd-meta span {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,211,78,0.3);
+    color: #ffd34e;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-family: 'Jua', sans-serif;
+    font-size: 12px;
+  }
+  .sd-desc {
+    background: rgba(255,211,78,0.08);
+    border-left: 3px solid #ffd34e;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    color: #f5e8d0;
+    line-height: 1.5;
+  }
+  .sd-effects-title, .sd-section-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 14px;
+    color: #ffd34e;
+    margin: 12px 0 6px;
+    letter-spacing: 0.5px;
+  }
+  .sd-effects, .sd-section {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,211,78,0.2);
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+  .sd-section { margin-top: 8px; }
+  .sd-effect-line, .sd-section > div {
+    font-family: 'Jua', sans-serif;
+    font-size: 13px;
+    color: #f5e8d0;
+    padding: 3px 0;
+    line-height: 1.4;
+  }
   .back-btn {
     margin-top: 8px;
     background: var(--bg-card-light);
@@ -2498,19 +2609,130 @@ const MOVES = {
   flame_punch: {
     name: "불꽃펀치",
     type: "fire",
-    multiplier: 0.5,        // 시전자 공격 × 0.5
-    cooldown: 0,            // 쿨다운 없음
-    priority: 1,            // 선제기
+    multiplier: 0.5,
+    cooldown: 0,
+    priority: 1,
     icon: "skill_flame_punch.png",
     desc: "선제기. 자신의 속도와 공격을 올린다.",
     effects: [
-      // 자기 속도 +10% (2턴)
       { kind: "spd_up", target: "self", value: 10, duration: 2 },
-      // 자기 공격력 +10% (2턴)
       { kind: "atk_up", target: "self", value: 10, duration: 2 }
     ]
   },
-  // === 구 시스템 스킬 (power 기반, 호환성 유지) ===
+  heat_wave: {
+    name: "열풍",
+    type: "fire",
+    multiplier: 1.5,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_heat_wave.png",
+    desc: "강한 일격. 상대의 공격력을 떨어뜨린다.",
+    effects: [
+      { kind: "atk_down", target: "enemy", value: 30, duration: 2 }
+    ]
+  },
+  meteor_flare: {
+    name: "메테오 플레어",
+    type: "fire",
+    multiplier: 1.5,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_meteor_flare.png",
+    desc: "강한 일격. 자신의 공격력과 속도를 크게 올린다.",
+    effects: [
+      { kind: "atk_up", target: "self", value: 30, duration: 2 },
+      { kind: "spd_up", target: "self", value: 50, duration: 2 }
+    ]
+  },
+  burning_claw: {
+    name: "버닝 클로",
+    type: "fire",
+    multiplier: 1.0,
+    cooldown: 1,
+    priority: 1,
+    icon: "skill_burning_claw.png",
+    desc: "선제기. 상대 속도를 떨어뜨리고 자신 방어를 올린다.",
+    effects: [
+      { kind: "spd_down", target: "enemy", value: 20, duration: 2 },
+      { kind: "def_up",   target: "self",  value: 30, duration: 2 }
+    ]
+  },
+  inferno: {
+    name: "인페르노",
+    type: "fire",
+    multiplier: 2.0,
+    cooldown: 3,
+    priority: 0,
+    icon: "skill_inferno.png",
+    desc: "압도적 데미지와 강한 화상을 동시에.",
+    effects: [
+      { kind: "burn", target: "enemy", value: 15, duration: 3 }
+    ]
+  },
+  flame_purify: {
+    name: "불꽃정화",
+    type: "fire",
+    multiplier: 0,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_flame_purify.png",
+    desc: "자신의 모든 부정적 효과를 해제하고 HP를 회복한다.",
+    effects: [
+      { kind: "cleanse", target: "self" },
+      { kind: "heal",    target: "self", value: 40 }
+    ]
+  },
+  ember_flame: {
+    name: "재와 불꽃",
+    type: "fire",
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_ember_flame.png",
+    desc: "HP가 많으면 강타+적 약화. 적으면 약공격+자가 보호.",
+    conditional: {
+      hpThreshold: 40,
+      above: {
+        multiplier: 1.5,
+        effects: [ { kind: "atk_down", target: "enemy", value: 15, duration: 2 } ]
+      },
+      below: {
+        multiplier: 0.5,
+        effects: [
+          { kind: "heal",   target: "self", value: 30 },
+          { kind: "def_up", target: "self", value: 20, duration: 2 }
+        ]
+      }
+    }
+  },
+  fire_mark: {
+    name: "불의 증표",
+    type: "fire",
+    multiplier: 0,
+    cooldown: 3,
+    priority: 1,
+    icon: "skill_fire_mark.png",
+    desc: "2턴간 상대 공격 -50%, 교체불가, 화상 20%.",
+    effects: [
+      { kind: "atk_down", target: "enemy", value: 50, duration: 2 },
+      { kind: "trapped",  target: "enemy", value: 0,  duration: 2 },
+      { kind: "burn",     target: "enemy", value: 20, duration: 2 }
+    ]
+  },
+  phoenix_nova: {
+    name: "피닉스 노바",
+    type: "fire",
+    multiplier: 2.5,
+    cooldown: 0,            // 쿨다운 X, 대신 판당 1회
+    onceBattle: true,       // 판당 1회 사용 제한
+    priority: 1,
+    icon: "skill_phoenix_nova.png",
+    desc: "치명적 일격 후 첫 사망 시 부활. 영구 능력치 +15%.",
+    effects: [
+      // 부활 효과는 별도 처리 (effects 시스템 밖)
+      { kind: "phoenix_revive", target: "self" }
+    ]
+  },
+  // === 구 시스템 스킬 ===
   scratch:        { name: "긁기",       power: 35, type: "normal" },
   ember:          { name: "불꽃세례",   power: 40, type: "fire" },
   bite:           { name: "물어뜯기",   power: 30, type: "normal" },
@@ -2585,7 +2807,9 @@ const EFFECT_DEFS = {
   spd_down: { label: "속도 감소",   sign: -1, stat: "spd", isBuff: false, defaultValue: 50, defaultDuration: 2, icon: "💨", color: "#90a4ae" },
   heal:     { label: "회복",        stat: null, isBuff: true,  defaultValue: 30, defaultDuration: 0, icon: "💚", color: "#66bb6a" },
   // burn: 대상 최대HP 기준 N%, 매 턴
-  burn:     { label: "화상",        stat: null, isBuff: false, defaultValue: 10, defaultDuration: 2, icon: "🔥", color: "#ff5722" }
+  burn:     { label: "화상",        stat: null, isBuff: false, defaultValue: 10, defaultDuration: 2, icon: "🔥", color: "#ff5722" },
+  // trapped: 교체 불가 (디버프 취급)
+  trapped:  { label: "교체불가",    stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🚫", color: "#7c2d12" }
 };
 
 // 효과 객체를 만드는 헬퍼 (스킬 정의에서 사용)
@@ -2615,7 +2839,7 @@ const PASSIVE_INFO = {
 // passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
 const MONSTERS = {
   // === 기존 11마리 ===
-  mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 320, def: 25, spd: 60 }, moves: ["blaze_fang", "flame_punch", "ember"] },
+  mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 320, def: 25, spd: 60 }, moves: ["blaze_fang", "flame_punch", "ember_flame"] },
   mon_002: { id: "mon_002", name: "폭시루", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 1100, atk: 350, def: 20, spd: 65 }, moves: ["bite", "fire_tail", "mystic_burn"] },
   mon_003: { id: "mon_003", name: "불레오",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 980, atk: 420, def: 20, spd: 65 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
   mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1450, atk: 180, def: 30, spd: 55 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
@@ -2628,7 +2852,7 @@ const MONSTERS = {
   // 청룡: 정령 → 물 전설
   mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 1720, atk: 450, def: 30, spd: 60 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
   // 봉황: 정령 → 불 전설
-  mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: "phoenix_rebirth", facing: "left",  stats: { hp: 1680, atk: 460, def: 25, spd: 65 }, moves: ["mystic_strike", "crimson_pulse", "mystic_burn"] },
+  mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: null, facing: "left",  stats: { hp: 1680, atk: 460, def: 25, spd: 65 }, moves: ["phoenix_nova", "inferno", "meteor_flare", "flame_purify"] },
 
   // === 신규 9마리 ===
   // 어둠 일반 3
@@ -2799,27 +3023,50 @@ function applyEffects(effectList, caster, target) {
   if (!effectList || effectList.length === 0) return [];
   const messages = [];
   effectList.forEach(e => {
-    const def = EFFECT_DEFS[e.kind];
-    if (!def) return;
     const recipient = (e.target === "enemy") ? target : caster;
     if (!recipient) return;
 
+    // === 즉발 특수 효과 ===
+    if (e.kind === "cleanse") {
+      // 모든 부정적 효과 해제 (status + 디버프성 active effects)
+      const before = (recipient.activeEffects || []).length;
+      recipient.activeEffects = (recipient.activeEffects || []).filter(x => {
+        const d = EFFECT_DEFS[x.kind];
+        return d && d.isBuff;  // 버프만 유지, 디버프 다 제거
+      });
+      const removedBuffs = before - recipient.activeEffects.length;
+      // 옛 상태이상도 해제
+      if (recipient.status) {
+        recipient.status = null;
+        recipient.sleepTurns = 0;
+      }
+      messages.push(`${recipient.name} 부정적 효과 해제!`);
+      return;
+    }
+    if (e.kind === "phoenix_revive") {
+      // 피닉스 노바 표식: 다음 사망 시 1회 부활
+      recipient.phoenixRevivePending = true;
+      messages.push(`${recipient.name} 불꽃의 표식이 새겨졌다!`);
+      return;
+    }
     if (e.kind === "heal") {
-      // 즉시 회복 (지속 없음)
       const healAmt = Math.floor(recipient.maxHp * e.value / 100);
       recipient.currentHp = Math.min(recipient.maxHp, recipient.currentHp + healAmt);
       messages.push(`${recipient.name} HP ${healAmt} 회복!`);
-    } else {
-      // 지속 효과: 종류별 1개만 (중첩X, 갱신)
-      addOrRefreshEffect(recipient, {
-        kind: e.kind,
-        value: e.value,
-        duration: e.duration,
-        sourceAtk: caster.atk  // 지속피해 계산용 (시전 시점 공격력 고정)
-      });
-      const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
-      messages.push(`${recipient.name} ${def.label}${sign}`);
+      return;
     }
+
+    // === 지속 효과 ===
+    const def = EFFECT_DEFS[e.kind];
+    if (!def) return;
+    addOrRefreshEffect(recipient, {
+      kind: e.kind,
+      value: e.value,
+      duration: e.duration,
+      sourceAtk: caster.atk
+    });
+    const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
+    messages.push(`${recipient.name} ${def.label}${sign}`);
   });
   return messages;
 }
@@ -2885,13 +3132,24 @@ function clearEffects(mon) {
 // 스킬 사용 시 쿨다운 등록
 function setCooldown(mon, moveKey) {
   const move = MOVES[moveKey];
-  if (!move || !move.cooldown || move.cooldown <= 0) return;
+  if (!move) return;
+  // 판당 1회 표시
+  if (move.onceBattle) {
+    if (!mon.battleUsed) mon.battleUsed = {};
+    mon.battleUsed[moveKey] = true;
+  }
+  if (!move.cooldown || move.cooldown <= 0) return;
   if (!mon.cooldowns) mon.cooldowns = {};
   // +1 하는 이유: 이 턴 끝에 -1 되므로 의도한 쿨다운 턴수 유지
   mon.cooldowns[moveKey] = move.cooldown + 1;
 }
 // 사용 가능 여부 확인
 function isMoveAvailable(mon, moveKey) {
+  // 판당 1회 사용 스킬 체크
+  const move = MOVES[moveKey];
+  if (move && move.onceBattle) {
+    if (mon.battleUsed && mon.battleUsed[moveKey]) return false;
+  }
   if (!mon.cooldowns) return true;
   return !mon.cooldowns[moveKey] || mon.cooldowns[moveKey] <= 0;
 }
@@ -2949,6 +3207,31 @@ function chooseEnemyMove(enemy, player) {
   return best;
 }
 
+// === 피닉스 부활 체크 ===
+// 사망 직전 호출. 부활 표식이 있으면 부활시키고 true 반환.
+async function tryPhoenixRevive(mon, side) {
+  if (!mon || mon.currentHp > 0) return false;
+  if (!mon.phoenixRevivePending) return false;
+  mon.phoenixRevivePending = false;
+  mon.currentHp = Math.floor(mon.maxHp * 0.5);
+  mon.status = null;
+  mon.sleepTurns = 0;
+  mon.activeEffects = [];
+  // 영구 +15% (큰 duration으로 사실상 영구)
+  mon.activeEffects.push({ kind: "atk_up", value: 15, duration: 9999 });
+  mon.activeEffects.push({ kind: "spd_up", value: 15, duration: 9999 });
+  mon.activeEffects.push({ kind: "def_up", value: 15, duration: 9999 });
+  // UI 갱신
+  updateHpBar(side, mon);
+  if (side === "player") {
+    $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+    renderParty();
+  }
+  renderMonStatus(side, mon);
+  await showMessage(`불꽃이 다시 타오른다! ${mon.name} 부활!`, 1000);
+  return true;
+}
+
 // 선공 판정 (priority 우선, 같으면 속도 비교)
 function decideFirstAttacker(playerMove, enemyMove, player, enemy) {
   const pPrio = (playerMove && MOVES[playerMove] && MOVES[playerMove].priority) || 0;
@@ -2969,9 +3252,20 @@ function makeEnemy(monId, wave) {
 }
 
 function calcDamage(attacker, defender, moveKey) {
-  const move = MOVES[moveKey];
+  let move = MOVES[moveKey];
+
+  // === 조건부 스킬 (HP 비율 따라 갈림) ===
+  // 원본 move 객체를 안 건드리고 효과적 move를 만들어 사용
+  if (move.conditional) {
+    const hpPct = (attacker.currentHp / attacker.maxHp) * 100;
+    const branch = hpPct > move.conditional.hpThreshold
+      ? move.conditional.above
+      : move.conditional.below;
+    move = Object.assign({}, move, branch);
+  }
+
   // 데미지 없는 스킬 (회복/버프 전용)
-  if ((move.power === 0 && !move.multiplier) || move.multiplier === 0) {
+  if ((move.power === 0 && move.multiplier === undefined) || move.multiplier === 0) {
     return { damage: 0, typeMult: 1, isCrit: false, move };
   }
 
@@ -3289,17 +3583,18 @@ function showMoves() {
     const btn = document.createElement("button");
     btn.className = "move-btn";
 
-    // 쿨다운 체크
+    // 쿨다운/판당1회 체크
     const cd = getCooldown(active, moveKey);
-    if (cd > 0) {
+    const usedOnce = move.onceBattle && active.battleUsed && active.battleUsed[moveKey];
+    if (cd > 0 || usedOnce) {
       btn.classList.add("cooling");
-      btn.dataset.cd = cd;
+      btn.dataset.cd = usedOnce ? "✖" : cd;
     }
 
-    // 아이콘 (이미지 또는 placeholder)
+    // 아이콘
     const iconPath = move.icon ? `images/${move.icon}` : null;
     const iconHtml = iconPath
-      ? `<div class="move-btn-icon"><img src="${iconPath}" alt="" onerror="this.parentElement.innerHTML='<span class=\\'placeholder\\'>${TYPES[move.type]?.name === '불' ? '🔥' : TYPES[move.type]?.name === '물' ? '💧' : TYPES[move.type]?.name === '풀' ? '🌿' : TYPES[move.type]?.name === '전기' ? '⚡' : '⚔️'}</span>'"></div>`
+      ? `<div class="move-btn-icon"><img src="${iconPath}" alt="" onerror="this.parentElement.innerHTML='<span class=\\'placeholder\\'>⚔️</span>'"></div>`
       : `<div class="move-btn-icon"><span class="placeholder">⚔️</span></div>`;
 
     // 선제기 뱃지
@@ -3307,19 +3602,22 @@ function showMoves() {
       ? `<span class="move-btn-priority">선제</span>`
       : '';
 
-    // 메타 정보 (배율/위력, 쿨다운, 타입)
+    // 메타 (배율/위력 + 쿨다운 또는 판당1회)
     let powerLabel;
-    if (move.multiplier !== undefined) {
-      powerLabel = `×${move.multiplier}`;
+    if (move.conditional) {
+      powerLabel = "조건부";
+    } else if (move.multiplier !== undefined) {
+      powerLabel = move.multiplier === 0 ? "보조" : `×${move.multiplier}`;
     } else {
       powerLabel = `위력 ${move.power}`;
     }
     let cdLabel = "";
-    if (move.cooldown && move.cooldown > 0) {
+    if (move.onceBattle) {
+      cdLabel = `<span class="move-btn-cd">판당 1회</span>`;
+    } else if (move.cooldown && move.cooldown > 0) {
       cdLabel = `<span class="move-btn-cd">쿨 ${move.cooldown}턴</span>`;
     }
 
-    // 기존 status (구 시스템 호환)
     let statusLabel = "";
     if (move.status) {
       const s = STATUS_INFO[move.status.type];
@@ -3339,6 +3637,39 @@ function showMoves() {
       </div>
     `;
     btn.onclick = () => playerAttack(moveKey);
+
+    // 롱프레스 (500ms) → 상세 모달
+    let pressTimer = null;
+    let pressed = false;
+    const startPress = (e) => {
+      pressed = false;
+      pressTimer = setTimeout(() => {
+        pressed = true;
+        if (navigator.vibrate) navigator.vibrate(20);
+        openSkillDetail(moveKey);
+      }, 500);
+    };
+    const cancelPress = (e) => {
+      if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+      // 롱프레스 후 일반 클릭 방지
+      if (pressed) {
+        e.preventDefault();
+        e.stopPropagation();
+        pressed = false;
+        // onclick도 안 실행되게 잠시 비활성화
+        const orig = btn.onclick;
+        btn.onclick = null;
+        setTimeout(() => { btn.onclick = orig; }, 100);
+      }
+    };
+    btn.addEventListener("touchstart", startPress, { passive: true });
+    btn.addEventListener("touchend",   cancelPress);
+    btn.addEventListener("touchmove",  () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } });
+    btn.addEventListener("mousedown",  startPress);
+    btn.addEventListener("mouseup",    cancelPress);
+    btn.addEventListener("mouseleave", () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } });
+    btn.addEventListener("contextmenu", (e) => { e.preventDefault(); openSkillDetail(moveKey); });
+
     grid.appendChild(btn);
   });
   grid.classList.remove("hidden");
@@ -3397,19 +3728,19 @@ async function playerAttack(moveKey) {
 
   if (playerFirst) {
     await tryAttack(player, state.enemy, "player", "enemy", moveKey);
-    if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { await handleEnemyFaint(); return; }
     await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
-    if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+    if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
   } else {
     await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
-    if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+    if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
     await tryAttack(player, state.enemy, "player", "enemy", moveKey);
-    if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
+    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { await handleEnemyFaint(); return; }
   }
 
   // 턴 끝: 화상/독 데미지 (양쪽 다 체크)
   await applyEndTurnStatus(player, "player");
-  if (player.currentHp <= 0) { await handlePlayerFaint(); return; }
+  if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
   await applyEndTurnStatus(state.enemy, "enemy");
   if (state.enemy.currentHp <= 0) { await handleEnemyFaint(); return; }
 
@@ -4086,8 +4417,13 @@ function showPartyMenu(forced = false) {
 
 async function swapTo(idx, forced) {
   closeModal();
-  // 교체될 몬스터의 활성 효과 제거 (포켓몬식)
   const prev = getActive();
+  // 교체불가 체크 (강제 교체는 제외, 즉 사망 시는 OK)
+  if (!forced && prev && prev.activeEffects && prev.activeEffects.some(e => e.kind === "trapped")) {
+    await showMessage(`${prev.name}은(는) 교체할 수 없다!`, 900);
+    state.battleLocked = false;
+    return;
+  }
   if (prev) clearEffects(prev);
   state.activeIdx = idx;
   // 이전 sprite의 faint/hit/attacking 클래스 제거
@@ -4890,11 +5226,108 @@ window.addEventListener("beforeunload", (e) => {
   }
 });
 
+// 스킬 상세 모달 표시
+function openSkillDetail(moveKey) {
+  const move = MOVES[moveKey];
+  if (!move) return;
+  const modal = document.getElementById("skill-detail-modal");
+  const body  = document.getElementById("skill-detail-body");
+  const iconHtml = move.icon
+    ? `<img src="images/${move.icon}" class="sd-icon-img" alt="">`
+    : `<div class="sd-icon-fallback">⚔️</div>`;
+
+  // 효과 설명 텍스트로 변환
+  const effectLines = [];
+  const eList = move.effects || [];
+  eList.forEach(e => {
+    const recipient = (e.target === "enemy") ? "상대" : "자신";
+    if (e.kind === "heal") {
+      effectLines.push(`💚 ${recipient} HP ${e.value}% 회복`);
+    } else if (e.kind === "burn") {
+      effectLines.push(`🔥 ${recipient} 화상: 매 턴 최대HP의 ${e.value}% (${e.duration}턴)`);
+    } else if (e.kind === "trapped") {
+      effectLines.push(`🚫 ${recipient} 교체 불가 (${e.duration}턴)`);
+    } else if (e.kind === "cleanse") {
+      effectLines.push(`✨ ${recipient}의 모든 부정적 효과 해제`);
+    } else if (e.kind === "phoenix_revive") {
+      effectLines.push(`🔥 첫 사망 시 부활 (HP 50%, 영구 능력치 +15%)`);
+    } else {
+      const def = EFFECT_DEFS[e.kind];
+      if (def) {
+        const sign = def.sign > 0 ? "+" : "-";
+        effectLines.push(`${def.icon} ${recipient} ${def.label} ${sign}${e.value}% (${e.duration}턴)`);
+      }
+    }
+  });
+
+  // 조건부 스킬
+  let conditionalHtml = "";
+  if (move.conditional) {
+    const c = move.conditional;
+    const parts = [];
+    parts.push(`<div class="sd-section"><div class="sd-section-title">⚡ HP > ${c.hpThreshold}% 일 때</div>`);
+    parts.push(`<div>데미지 ×${c.above.multiplier}</div>`);
+    (c.above.effects || []).forEach(e => {
+      const def = EFFECT_DEFS[e.kind];
+      const r = e.target === "enemy" ? "상대" : "자신";
+      if (def) parts.push(`<div>${def.icon} ${r} ${def.label} ${def.sign > 0 ? "+" : "-"}${e.value}% (${e.duration}턴)</div>`);
+    });
+    parts.push(`</div>`);
+    parts.push(`<div class="sd-section"><div class="sd-section-title">💧 HP ≤ ${c.hpThreshold}% 일 때</div>`);
+    parts.push(`<div>데미지 ×${c.below.multiplier}</div>`);
+    (c.below.effects || []).forEach(e => {
+      const r = e.target === "enemy" ? "상대" : "자신";
+      if (e.kind === "heal") parts.push(`<div>💚 ${r} HP ${e.value}% 회복</div>`);
+      else {
+        const def = EFFECT_DEFS[e.kind];
+        if (def) parts.push(`<div>${def.icon} ${r} ${def.label} ${def.sign > 0 ? "+" : "-"}${e.value}% (${e.duration}턴)</div>`);
+      }
+    });
+    parts.push(`</div>`);
+    conditionalHtml = parts.join("");
+  }
+
+  // 메인 메타
+  let metaParts = [];
+  if (move.conditional) metaParts.push(`<span>조건부</span>`);
+  else if (move.multiplier !== undefined) metaParts.push(`<span>데미지 ${move.multiplier === 0 ? "없음" : "×" + move.multiplier}</span>`);
+  else if (move.power) metaParts.push(`<span>위력 ${move.power}</span>`);
+  if (move.onceBattle) metaParts.push(`<span>판당 1회</span>`);
+  else if (move.cooldown && move.cooldown > 0) metaParts.push(`<span>쿨 ${move.cooldown}턴</span>`);
+  if (move.priority && move.priority > 0) metaParts.push(`<span>⚡ 선제기</span>`);
+
+  body.innerHTML = `
+    <div class="sd-header">
+      <div class="sd-icon">${iconHtml}</div>
+      <div class="sd-title-wrap">
+        <div class="sd-name">${move.name}</div>
+        <span class="type-badge type-${move.type}">${TYPES[move.type].name}</span>
+      </div>
+    </div>
+    <div class="sd-meta">${metaParts.join("")}</div>
+    ${move.desc ? `<div class="sd-desc">${move.desc}</div>` : ""}
+    ${conditionalHtml}
+    ${effectLines.length ? `<div class="sd-effects-title">상세 효과</div><div class="sd-effects">${effectLines.map(l => `<div class="sd-effect-line">${l}</div>`).join("")}</div>` : ""}
+  `;
+  modal.classList.add("show");
+}
+function closeSkillDetail() {
+  document.getElementById("skill-detail-modal").classList.remove("show");
+}
+
 // 초기화
 loadProgress();  // 영구 진행도 먼저 로드
 renderLobby();   // 로비 잼 표시
 $("battle-field").style.backgroundImage = `url(${BACKGROUND})`;
 renderStartScreen();
 </script>
+<!-- ===== 스킬 상세 모달 ===== -->
+<div id="skill-detail-modal" class="skill-detail-overlay" onclick="if(event.target===this)closeSkillDetail()">
+  <div class="skill-detail-content">
+    <button class="skill-detail-close" onclick="closeSkillDetail()">✕</button>
+    <div id="skill-detail-body"></div>
+  </div>
+</div>
+
 </body>
 </html>
