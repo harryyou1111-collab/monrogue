@@ -3987,6 +3987,9 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
     const msgs = applyEffects(r.move.effects, attacker, defender);
     renderMonStatus(attackerSide, attacker);
     renderMonStatus(defenderSide, defender);
+    updateAtkText(attackerSide, attacker);
+    updateAtkText(defenderSide, defender);
+    updateSpdBadges();
     if (attackerSide === "player") {
       updateHpBar("player", attacker);
       $("player-hp-text").textContent = `${attacker.currentHp} / ${attacker.maxHp}`;
@@ -4027,9 +4030,10 @@ function renderMonStatus(side, mon) {
     const info = STATUS_INFO[mon.status];
     html += `<span class="status-pill" style="background:${info.color}">${info.icon} ${info.name}</span>`;
   }
-  // 활성 효과 (버프/디버프) - 2단계
+  // 활성 효과 (버프/디버프) - 2단계 (공격력 증감은 atk-text에 표시하므로 제외)
   if (mon.activeEffects && mon.activeEffects.length > 0) {
     mon.activeEffects.forEach(e => {
+      if (e.kind === "atk_up" || e.kind === "atk_down") return;
       const def = EFFECT_DEFS[e.kind];
       if (!def) return;
       const sign = def.sign > 0 ? "▲" : (def.sign < 0 ? "▼" : "");
