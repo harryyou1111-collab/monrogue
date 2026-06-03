@@ -1019,8 +1019,11 @@
   .hp-bar.mid { background: var(--hp-mid); }
   .hp-bar.low { background: var(--hp-low); }
   .hp-text { font-family: 'Jua', sans-serif; font-size: 11px; color: #444; text-align: right; margin-top: 2px; }
-  .exp-bar-wrap { background: #2a2a2a; border-radius: 99px; height: 4px; overflow: hidden; margin-top: 3px; }
-  .exp-bar { height: 100%; background: var(--exp-bar); transition: width 0.5s ease-out; }
+  .atk-text { font-family: 'Jua', sans-serif; font-size: 11px; color: #aaa; margin-top: 2px; }
+  .atk-text.buffed { color: #4caf50; font-weight: bold; }
+  .atk-text.nerfed { color: #f44336; font-weight: bold; }
+  .spd-badge { font-family: 'Jua', sans-serif; font-size: 10px; background: #ffe033; color: #333; border-radius: 4px; padding: 1px 5px; position: absolute; right: 0; top: -14px; display: none; }
+  .spd-badge.visible { display: inline; }
   /* 상태이상 표시 */
   .status-row { margin-top: 4px; min-height: 16px; }
   .passive-pill {
@@ -2495,7 +2498,8 @@
             </div>
             <div class="info-card-lv" id="enemy-lv">Lv 1</div>
           </div>
-          <div class="hp-bar-wrap"><div class="hp-bar" id="enemy-hp-bar"></div></div>
+          <div class="hp-bar-wrap" style="position:relative"><div class="hp-bar" id="enemy-hp-bar"></div><span class="spd-badge" id="enemy-spd-badge">⚡빠름</span></div>
+          <div class="atk-text" id="enemy-atk-text"></div>
           <div class="status-row" id="enemy-status"></div>
         </div>
       </div>
@@ -2513,9 +2517,9 @@
             </div>
             <div class="info-card-lv" id="player-lv">Lv 1</div>
           </div>
-          <div class="hp-bar-wrap"><div class="hp-bar" id="player-hp-bar"></div></div>
+          <div class="hp-bar-wrap" style="position:relative"><div class="hp-bar" id="player-hp-bar"></div><span class="spd-badge" id="player-spd-badge">⚡빠름</span></div>
           <div class="hp-text" id="player-hp-text">100 / 100</div>
-          <div class="exp-bar-wrap"><div class="exp-bar" id="player-exp-bar"></div></div>
+          <div class="atk-text" id="player-atk-text"></div>
           <div class="status-row" id="player-status"></div>
         </div>
       </div>
@@ -3485,6 +3489,8 @@ function renderEnemy() {
   if (state.enemy.status) $("enemy-sprite").classList.add(`status-${state.enemy.status}`);
   renderMonStatus("enemy", state.enemy);
   updateHpBar("enemy", state.enemy);
+  updateAtkText("enemy", state.enemy);
+  updateSpdBadges();
 }
 
 function renderPlayer() {
@@ -3501,7 +3507,8 @@ function renderPlayer() {
   renderMonStatus("player", p);
   updateHpBar("player", p);
   $("player-hp-text").textContent = `${p.currentHp} / ${p.maxHp}`;
-  $("player-exp-bar").style.width = `${(p.exp / p.expToNext) * 100}%`;
+  updateAtkText("player", p);
+  updateSpdBadges();
 }
 
 function updateHpBar(who, mon) {
@@ -3511,6 +3518,47 @@ function updateHpBar(who, mon) {
   bar.classList.remove("mid", "low");
   if (pct < 25) bar.classList.add("low");
   else if (pct < 50) bar.classList.add("mid");
+}
+
+function updateAtkText(who, mon) {
+  const el = $(`${who}-atk-text`);
+  if (!el) return;
+  const base = mon.stats.atk;
+  const mult = getStatMultiplier(mon, "atk");
+  const current = Math.round(base * mult);
+  if (mult > 1.0) {
+    el.textContent = `공격력 ${current} (+${Math.round((mult-1)*100)}%)`;
+    el.className = "atk-text buffed";
+  } else if (mult < 1.0) {
+    el.textContent = `공격력 ${current} (-${Math.round((1-mult)*100)}%)`;
+    el.className = "atk-text nerfed";
+  } else {
+    el.textContent = `공격력 ${base}`;
+    el.className = "atk-text";
+  }
+}
+
+function updateSpdBadges() {
+  const enemy = state.enemy;
+  const player = getActive();
+  if (!enemy || !player) return;
+  const eSpdMult = getStatMultiplier(enemy, "spd");
+  const pSpdMult = getStatMultiplier(player, "spd");
+  const eSpd = enemy.stats.spd * eSpdMult;
+  const pSpd = player.stats.spd * pSpdMult;
+  const eBadge = $("enemy-spd-badge");
+  const pBadge = $("player-spd-badge");
+  if (!eBadge || !pBadge) return;
+  if (eSpd > pSpd) {
+    eBadge.classList.add("visible");
+    pBadge.classList.remove("visible");
+  } else if (pSpd > eSpd) {
+    pBadge.classList.add("visible");
+    eBadge.classList.remove("visible");
+  } else {
+    eBadge.classList.remove("visible");
+    pBadge.classList.remove("visible");
+  }
 }
 
 function renderParty() {
