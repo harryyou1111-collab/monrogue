@@ -3523,7 +3523,7 @@ function updateHpBar(who, mon) {
 function updateAtkText(who, mon) {
   const el = $(`${who}-atk-text`);
   if (!el) return;
-  const base = mon.stats.atk;
+  const base = mon.atk;
   const mult = getStatMultiplier(mon, "atk");
   const current = Math.round(base * mult);
   if (mult > 1.0) {
@@ -3544,8 +3544,8 @@ function updateSpdBadges() {
   if (!enemy || !player) return;
   const eSpdMult = getStatMultiplier(enemy, "spd");
   const pSpdMult = getStatMultiplier(player, "spd");
-  const eSpd = enemy.stats.spd * eSpdMult;
-  const pSpd = player.stats.spd * pSpdMult;
+  const eSpd = enemy.spd * eSpdMult;
+  const pSpd = player.spd * pSpdMult;
   const eBadge = $("enemy-spd-badge");
   const pBadge = $("player-spd-badge");
   if (!eBadge || !pBadge) return;
