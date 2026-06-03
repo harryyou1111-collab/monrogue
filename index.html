@@ -688,132 +688,7 @@
     100% { opacity: 0; transform: scaleX(var(--flip)) rotateY(-12deg) scale(0); }
   }
 
-  /* 잡기도구 */
-  .catch-ball {
-    position: absolute;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(180deg, #ef4444 0%, #ef4444 48%, #fff 48%, #fff 52%, #f1f5f9 52%, #f1f5f9 100%);
-    border: 3px solid #1e293b;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.5), inset 0 -8px 12px rgba(0,0,0,0.2);
-    z-index: 5;
-    transform: translate(-50%, -50%);
-  }
-  .catch-ball::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 14px;
-    height: 14px;
-    background: white;
-    border: 3px solid #1e293b;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .catch-ball.thrown {
-    animation: ball-throw 0.5s ease-out forwards;
-  }
-  @keyframes ball-throw {
-    0% { transform: translate(-50%, -50%) scale(0.6) rotate(0deg); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); opacity: 1; }
-  }
-  .catch-ball.shake {
-    animation: ball-shake 0.5s ease-in-out;
-  }
-  @keyframes ball-shake {
-    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-    25% { transform: translate(-50%, -50%) rotate(-25deg); }
-    75% { transform: translate(-50%, -50%) rotate(25deg); }
-  }
-  .catch-ball.success {
-    animation: ball-success 0.6s ease-out forwards;
-  }
-  @keyframes ball-success {
-    0% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
-    50% { transform: translate(-50%, -50%) scale(1.3); filter: brightness(1.8) drop-shadow(0 0 30px var(--accent)); }
-    100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); opacity: 0; }
-  }
-  .catch-ball.broken {
-    animation: ball-break 0.5s ease-out forwards;
-  }
-  @keyframes ball-break {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1.4); filter: brightness(2); }
-    100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-  }
-
-  /* 별 파티클 */
-  .catch-sparkle {
-    position: absolute;
-    font-size: 28px;
-    z-index: 6;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-  }
-  .catch-sparkle.fly {
-    animation: sparkle-fly 0.9s ease-out forwards;
-  }
-  @keyframes sparkle-fly {
-    0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
-    20% { opacity: 1; }
-    100% {
-      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.5) rotate(360deg);
-      opacity: 0;
-    }
-  }
-
-  /* GET 텍스트 */
-  .catch-banner {
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    font-family: 'Jua', sans-serif;
-    font-size: 48px;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 16px var(--accent), 0 0 32px var(--accent), 4px 4px 0 #1e293b;
-    z-index: 7;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-  .catch-banner.show {
-    animation: banner-pop 1.4s ease-out forwards;
-  }
-  @keyframes banner-pop {
-    0% { transform: translate(-50%, -50%) scale(0) rotate(-12deg); opacity: 0; }
-    30% { transform: translate(-50%, -50%) scale(1.3) rotate(0deg); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-    85% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 0; }
-  }
-
-  /* 화면 빛남 (성공) */
-  .battle-field.catch-flash::before {
-    background: radial-gradient(circle at center, rgba(255,211,78,0.6) 0%, transparent 70%);
-    animation: catch-flash-anim 0.6s ease-out forwards;
-  }
-  @keyframes catch-flash-anim {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-
   /* 잡기 실패 X */
-  .catch-fail-x {
-    position: absolute;
-    font-size: 64px;
-    z-index: 7;
-    pointer-events: none;
-    transform: translate(-50%, -50%) scale(0);
-    color: #dc2626;
-    text-shadow: 0 0 12px rgba(0,0,0,0.8), 4px 4px 0 #1e293b;
-    font-weight: 900;
-  }
-  .catch-fail-x.show { animation: fail-pop 0.7s ease-out forwards; }
   @keyframes fail-pop {
     0% { transform: translate(-50%, -50%) scale(0) rotate(-30deg); opacity: 0; }
     50% { transform: translate(-50%, -50%) scale(1.4) rotate(0deg); opacity: 1; }
@@ -2536,8 +2411,7 @@
     <div class="action-grid hidden" id="action-grid">
       <button class="action-btn" onclick="showMoves()"><span class="icon">⚔️</span>싸우기</button>
       <button class="action-btn" id="swap-btn" onclick="showPartyMenu()"><span class="icon">🔄</span>교체<span class="badge" id="swap-cooldown-badge" style="display:none;"></span></button>
-      <button class="action-btn" onclick="attemptCatch()"><span class="icon">🎯</span>잡기 <span class="badge" id="balls-badge">5</span></button>
-      <button class="action-btn" onclick="showShop()"><span class="icon">🎒</span>가방/상점</button>
+      <button class="action-btn" id="potion-btn" onclick="usePotionBattle()"><span class="icon">💊</span>회복약 <span class="badge" id="potions-badge">2</span></button>
     </div>
 
     <!-- 기술 선택 -->
@@ -2553,7 +2427,6 @@
       <div class="result-box">
         <div class="result-row"><span class="result-label">최종 웨이브</span><span class="result-value" id="final-wave">1</span></div>
         <div class="result-row"><span class="result-label">처치 수</span><span class="result-value" id="final-kills">0</span></div>
-        <div class="result-row"><span class="result-label">잡은 몬스터</span><span class="result-value" id="final-caught">0</span></div>
         <div class="result-row"><span class="result-label">💎 획득 다이아</span><span class="result-value" id="final-gems">0</span></div>
         <div class="result-row"><span class="result-label">점수</span><span class="result-value" id="final-score">0</span></div>
         <div class="result-row"><span class="result-label">최고 기록</span><span class="result-value" id="best-score">0</span></div>
@@ -2919,7 +2792,7 @@ let state = {
   kills: 0,
   caught: 0,
   score: 0,
-  inventory: { potions: 2, balls: 5, antidotes: 1, coins: 0, gems: 0 },
+  inventory: { potions: 2, coins: 0, gems: 0 },
   messageQueue: [],
   awaitingTap: false,
   battleLocked: true,
@@ -3003,8 +2876,6 @@ function makeInstance(monId, level) {
     spd: Math.floor(base.stats.spd * factor),
     moves: [...base.moves],
     level: level,
-    exp: 0,
-    expToNext: 80 * level,
     status: null,
     sleepTurns: 0,
     // === 효과 시스템 ===
@@ -3388,7 +3259,7 @@ function startNewRun(monId) {
   state.kills = 0;
   state.caught = 0;
   state.score = 0;
-  state.inventory = { potions: 2, balls: 5, antidotes: 1, coins: 0, gems: 0 };
+  state.inventory = { potions: 2, coins: 0, gems: 0 };
   state.battleLocked = true;
   state.swapCooldown = 0;
   state.isBossWave = false;
@@ -3591,7 +3462,7 @@ function updateTopbar() {
   $("coin-display").textContent = state.inventory.coins;
   $("gem-display").textContent = state.inventory.gems;
   $("score-display").textContent = state.score;
-  $("balls-badge").textContent = state.inventory.balls;
+  if ($("potions-badge")) $("potions-badge").textContent = state.inventory.potions;
 }
 
 // ===== 메뉴 표시 =====
@@ -3776,14 +3647,14 @@ async function playerAttack(moveKey) {
 
   if (playerFirst) {
     await tryAttack(player, state.enemy, "player", "enemy", moveKey);
-    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { await handleEnemyFaint(); return; }
+    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { tickCooldowns(player); await handleEnemyFaint(); return; }
     await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
     if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
   } else {
     await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
     if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
     await tryAttack(player, state.enemy, "player", "enemy", moveKey);
-    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { await handleEnemyFaint(); return; }
+    if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { tickCooldowns(player); await handleEnemyFaint(); return; }
   }
 
   // 턴 끝: 화상/독 데미지 (양쪽 다 체크)
@@ -4130,100 +4001,6 @@ function getEnemyCenter() {
 }
 
 // 잡기도구 던지기 (적 위치에 등장)
-async function playBallThrow() {
-  const fxLayer = $("fx-layer");
-  const pos = getEnemyCenter();
-  const ball = document.createElement("div");
-  ball.className = "catch-ball thrown";
-  ball.id = "active-catch-ball";
-  ball.style.left = pos.x + "px";
-  ball.style.top = pos.y + "px";
-  fxLayer.appendChild(ball);
-  await sleep(550);
-}
-
-// 잡기도구 흔들림 (한 번)
-async function playBallShake() {
-  const ball = $("active-catch-ball");
-  if (!ball) return;
-  ball.classList.remove("shake");
-  void ball.offsetWidth;
-  ball.classList.add("shake");
-  await sleep(550);
-}
-
-// 잡기 실패 (잡기도구 깨지고 적 다시 나타남)
-async function playBallBreak() {
-  const ball = $("active-catch-ball");
-  if (ball) {
-    ball.classList.remove("shake");
-    ball.classList.add("broken");
-    setTimeout(() => ball.remove(), 500);
-  }
-  // 적 다시 나타나기 (captured 클래스 제거)
-  $("enemy-sprite").classList.remove("captured");
-  // 실패 X 표시
-  const pos = getEnemyCenter();
-  const fail = document.createElement("div");
-  fail.className = "catch-fail-x show";
-  fail.style.left = pos.x + "px";
-  fail.style.top = pos.y + "px";
-  fail.textContent = "✗";
-  $("fx-layer").appendChild(fail);
-  setTimeout(() => fail.remove(), 750);
-  await sleep(550);
-}
-
-// 잡기 성공 (별 폭발 + GET 배너)
-async function playBallSuccess(monName, isBoss) {
-  const ball = $("active-catch-ball");
-  if (ball) {
-    ball.classList.remove("shake");
-    ball.classList.add("success");
-    setTimeout(() => ball.remove(), 600);
-  }
-
-  // 화면 빛남
-  const field = $("battle-field");
-  field.classList.remove("catch-flash");
-  void field.offsetWidth;
-  field.classList.add("catch-flash");
-  setTimeout(() => field.classList.remove("catch-flash"), 700);
-
-  // 별 파티클 8방향
-  const pos = getEnemyCenter();
-  const fxLayer = $("fx-layer");
-  const dirs = [
-    [0, -80], [60, -60], [80, 0], [60, 60],
-    [0, 80], [-60, 60], [-80, 0], [-60, -60]
-  ];
-  dirs.forEach((d, i) => {
-    const sp = document.createElement("div");
-    sp.className = "catch-sparkle fly";
-    sp.style.left = pos.x + "px";
-    sp.style.top = pos.y + "px";
-    sp.style.setProperty("--dx", d[0] + "px");
-    sp.style.setProperty("--dy", d[1] + "px");
-    sp.textContent = isBoss ? "💎" : "✨";
-    fxLayer.appendChild(sp);
-    setTimeout(() => sp.remove(), 950);
-  });
-
-  // GET 배너
-  const banner = document.createElement("div");
-  banner.className = "catch-banner show";
-  banner.textContent = isBoss ? `${monName} GET! 💎` : `${monName} GET!`;
-  fxLayer.appendChild(banner);
-  setTimeout(() => banner.remove(), 1450);
-
-  await sleep(1400);
-}
-
-// 잡기도구 즉시 제거 (정리용)
-function clearCatchBall() {
-  const ball = $("active-catch-ball");
-  if (ball) ball.remove();
-}
 
 async function handleEnemyFaint() {
   // 적 봉황 패시브: 부활 (적은 쿨다운 무시, 한 배틀당 1회만 / 보스는 25%)
@@ -4262,16 +4039,7 @@ async function handleEnemyFaint() {
 
   await showMessage(`+${coinGain} 코인 · +${scoreGain} 점수`, 800);
 
-  // 경험치
-  const expGain = state.enemy.level * 36 * (wasBoss ? 2 : 1);
-  await grantExp(getActive(), expGain);
-
   updateTopbar();
-
-  // 보스 처치 → 자동 잡기 시도
-  if (wasBoss) {
-    await attemptBossCatch(fallenEnemy);
-  }
 
   state.isBossWave = false;
   $("battle-field").classList.remove("boss-mode");
@@ -4280,103 +4048,6 @@ async function handleEnemyFaint() {
 }
 
 // 보스 처치 후 자동 잡기 (5번, 40% 확률)
-async function attemptBossCatch(boss) {
-  await sleep(500);
-
-  // 파티 가득 차면 못 잡음
-  if (state.party.length >= PARTY_MAX) {
-    await showMessage(`파티가 가득 차서 ${boss.name}을(를) 잡을 수 없다...`, 1500);
-    state.inventory.gems += 1;
-    await showMessage(`💎 다이아 +1 (보스 처치 보상)`, 800);
-    updateTopbar();
-    return;
-  }
-
-  await showMessage(`💫 전설을 잡을 기회! 5번의 도전!`, 1200);
-
-  let caught = false;
-  for (let i = 1; i <= 5; i++) {
-    await showMessage(`잡기 시도 ${i}/5`, 500);
-
-    // 잡기도구 던지기
-    await playBallThrow();
-    // 보스가 빨려들어감
-    $("enemy-sprite").classList.add("captured");
-    await sleep(700);
-
-    const success = Math.random() < 0.40;
-
-    // 흔들림 3번 (긴장감)
-    for (let s = 0; s < 3; s++) {
-      await playBallShake();
-    }
-
-    if (success) {
-      caught = true;
-      break;
-    }
-    // 실패: 잡기도구 깨짐 + 적 다시 등장
-    await playBallBreak();
-    await showMessage(`...실패!`, 400);
-  }
-
-  if (caught) {
-    // 잡기 성공
-    const captured = boss;
-    captured.currentHp = Math.floor(captured.maxHp * 0.5);
-    captured.status = null;
-    captured.sleepTurns = 0;
-    captured.exp = 0;
-    captured.expToNext = 80 * captured.level;
-    state.party.push(captured);
-    state.caught += 1;
-    state.inventory.gems += 2;
-
-    await playBallSuccess(captured.name, true);
-    await showMessage(`🎉 전설 ${captured.name}을(를) 잡았다!`, 1500);
-    await showMessage(`💎 다이아 +2 (잡기 성공!)`, 800);
-    renderParty();
-  } else {
-    // 모두 실패
-    clearCatchBall();
-    state.inventory.gems += 1;
-    await showMessage(`😔 ${boss.name}이(가) 도망쳤다...`, 1200);
-    await showMessage(`💎 다이아 +1 (처치 보상)`, 800);
-  }
-  updateTopbar();
-}
-
-async function grantExp(mon, amount) {
-  mon.exp += amount;
-  await showMessage(`${mon.name} +${amount} EXP`, 600);
-  while (mon.exp >= mon.expToNext) {
-    mon.exp -= mon.expToNext;
-    mon.level += 1;
-    // 비율 보존 HP
-    const ratio = mon.currentHp / mon.maxHp;
-    mon.maxHp = Math.floor(mon.maxHp * 1.05);
-    mon.atk = Math.floor(mon.atk * 1.05);
-    mon.def = Math.floor(mon.def * 1.05);
-    mon.spd = Math.floor(mon.spd * 1.05);
-    mon.currentHp = Math.max(1, Math.floor(mon.maxHp * ratio));
-    mon.expToNext = 80 * mon.level;
-    await showMessage(`🎉 레벨 업! ${mon.name} Lv${mon.level}`, 800);
-
-    // 레벨업 보너스: HP 15% 회복
-    const heal = Math.floor(mon.maxHp * 0.15);
-    const before = mon.currentHp;
-    mon.currentHp = Math.min(mon.maxHp, mon.currentHp + heal);
-    const actual = mon.currentHp - before;
-    if (actual > 0) {
-      popHeal("player", actual);
-      updateHpBar("player", mon);
-      $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
-      await showMessage(`💚 ${mon.name}이(가) 활력을 되찾았다! +${actual} HP`, 600);
-    }
-  }
-  renderPlayer();
-  renderParty();
-}
 
 async function handlePlayerFaint() {
   const fallen = getActive();
@@ -4508,279 +4179,23 @@ async function swapTo(idx, forced) {
 }
 
 // ===== 잡기 시스템 =====
-async function attemptCatch() {
+
+
+function usePotionBattle() {
   if (state.battleLocked) return;
-  if (state.inventory.balls <= 0) {
-    flashMessage("잡기 도구가 없다! 상점에서 구매하세요");
-    return;
-  }
-  if (state.party.length >= PARTY_MAX) {
-    flashMessage("파티가 가득 찼다! (최대 3마리)");
-    return;
-  }
-
-  state.battleLocked = true;
-  hideAllMenus();
-  state.inventory.balls -= 1;
-  updateTopbar();
-
-  await showMessage(`잡기 도구를 던졌다!`, 600);
-
-  // 잡기도구 던지기
-  await playBallThrow();
-
-  // 적이 잡기도구에 빨려들어가는 효과
-  $("enemy-sprite").classList.add("captured");
-  await sleep(900);
-
-  // 성공률: HP가 낮을수록 높음
-  const hpRatio = state.enemy.currentHp / state.enemy.maxHp;
-  const successRate = Math.max(0.05, Math.min(0.95, 1 - hpRatio * 0.95));
-  const success = Math.random() < successRate;
-
-  // 흔들림 3번 (시각 효과)
-  for (let i = 0; i < 3; i++) {
-    await playBallShake();
-  }
-
-  if (success) {
-    // 잡기 성공
-    const captured = state.enemy;
-    captured.currentHp = Math.floor(captured.maxHp * 0.5);
-    captured.status = null;
-    captured.sleepTurns = 0;
-    captured.exp = 0;
-    captured.expToNext = 80 * captured.level;
-    state.party.push(captured);
-    state.caught += 1;
-
-    await playBallSuccess(captured.name, false);
-
-    await showCaptureModal(captured);
-    renderParty();
-    updateTopbar();
-
-    // 잡았으면 다음 웨이브로
-    state.wave += 1;
-    spawnNextEnemy();
-  } else {
-    // 잡기 실패 - 잡기도구 깨지고 적 다시 나타남
-    await playBallBreak();
-    await showMessage("앗! 빠져나왔다!", 700);
-    // 실패 시 적이 한 번 공격
-    await executeAttack(state.enemy, getActive(), "enemy", "player", pickRandom(state.enemy.moves));
-    if (getActive().currentHp <= 0) { await handlePlayerFaint(); return; }
-    state.battleLocked = false;
-    showActionMenu();
-  }
-}
-
-function showCaptureModal(mon) {
-  return new Promise(resolve => {
-    const modal = $("modal-content");
-    modal.innerHTML = `
-      <div class="capture-card">
-        <img src="${IMAGES[mon.id]}" alt="${mon.name}">
-        <div class="capture-name">${mon.name} 획득!</div>
-        <div class="capture-msg">Lv ${mon.level} · 파티에 추가되었습니다</div>
-      </div>
-      <button class="modal-close" id="capture-ok">확인</button>
-    `;
-    $("modal-bg").classList.add("show");
-    $("capture-ok").onclick = () => {
-      closeModal();
-      resolve();
-    };
-  });
-}
-
-// ===== 상점/인벤토리 =====
-let shopTab = "inventory";  // inventory | shop | gacha
-
-function showShop() {
-  if (state.battleLocked) return;
-  shopTab = "inventory";
-  renderShopModal();
-  $("modal-bg").classList.add("show");
-}
-
-function renderShopModal() {
-  const modal = $("modal-content");
-  let html = `<div class="modal-title">🎒 가방</div>`;
-  html += `<div class="shop-tab-row">
-    <button class="shop-tab ${shopTab==='inventory'?'active':''}" onclick="switchShopTab('inventory')">아이템</button>
-    <button class="shop-tab ${shopTab==='shop'?'active':''}" onclick="switchShopTab('shop')">🛒 상점</button>
-    <button class="shop-tab ${shopTab==='gacha'?'active':''}" onclick="switchShopTab('gacha')">🎰 뽑기</button>
-  </div>`;
-
-  html += `<div class="inventory-summary">
-    <div class="inv-pill"><div class="inv-pill-icon">🪙</div><div class="inv-pill-count">${state.inventory.coins}</div><div class="inv-pill-label">코인</div></div>
-    <div class="inv-pill"><div class="inv-pill-icon">💎</div><div class="inv-pill-count">${state.inventory.gems}</div><div class="inv-pill-label">다이아</div></div>
-    <div class="inv-pill"><div class="inv-pill-icon">💊</div><div class="inv-pill-count">${state.inventory.potions}</div><div class="inv-pill-label">회복약</div></div>
-    <div class="inv-pill"><div class="inv-pill-icon">🧪</div><div class="inv-pill-count">${state.inventory.antidotes}</div><div class="inv-pill-label">해독제</div></div>
-    <div class="inv-pill"><div class="inv-pill-icon">🎯</div><div class="inv-pill-count">${state.inventory.balls}</div><div class="inv-pill-label">잡기도구</div></div>
-  </div>`;
-
-  if (shopTab === "inventory") {
-    const activeMon = getActive();
-    const canHeal = state.inventory.potions > 0 && activeMon.currentHp < activeMon.maxHp;
-    const canCure = state.inventory.antidotes > 0 && activeMon.status !== null;
-    html += `<div class="shop-grid">
-      <div class="shop-row">
-        <div class="shop-icon">💊</div>
-        <div class="shop-info">
-          <div class="shop-name">회복약 (${state.inventory.potions})</div>
-          <div class="shop-desc">현재 몬스터의 HP를 50% 회복합니다.</div>
-        </div>
-        <button class="shop-buy" ${!canHeal ? 'disabled' : ''} onclick="usePotion()">사용</button>
-      </div>
-      <div class="shop-row">
-        <div class="shop-icon">🧪</div>
-        <div class="shop-info">
-          <div class="shop-name">해독제 (${state.inventory.antidotes})</div>
-          <div class="shop-desc">상태이상을 치료합니다.</div>
-        </div>
-        <button class="shop-buy" ${!canCure ? 'disabled' : ''} onclick="useAntidote()">사용</button>
-      </div>
-    </div>`;
-  } else if (shopTab === "shop") {
-    html += `<div class="shop-grid">
-      <div class="shop-row">
-        <div class="shop-icon">💊</div>
-        <div class="shop-info">
-          <div class="shop-name">회복약</div>
-          <div class="shop-desc">HP 50% 회복. 40코인</div>
-        </div>
-        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.potion ? 'disabled' : ''} onclick="buyItem('potion')">구매</button>
-      </div>
-      <div class="shop-row">
-        <div class="shop-icon">🧪</div>
-        <div class="shop-info">
-          <div class="shop-name">해독제</div>
-          <div class="shop-desc">상태이상 치료. 60코인</div>
-        </div>
-        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.antidote ? 'disabled' : ''} onclick="buyItem('antidote')">구매</button>
-      </div>
-      <div class="shop-row">
-        <div class="shop-icon">🎯</div>
-        <div class="shop-info">
-          <div class="shop-name">잡기 도구</div>
-          <div class="shop-desc">야생 몬스터 잡기에 사용. 35코인</div>
-        </div>
-        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.ball ? 'disabled' : ''} onclick="buyItem('ball')">구매</button>
-      </div>
-    </div>`;
-  } else if (shopTab === "gacha") {
-    html += `<div class="shop-grid">
-      <div class="shop-row">
-        <div class="shop-icon">🎰</div>
-        <div class="shop-info">
-          <div class="shop-name">아이템 뽑기</div>
-          <div class="shop-desc">100코인. 회복약 60% / 잡기도구 30% / 슈퍼회복(100%) 10%</div>
-        </div>
-        <button class="shop-buy" ${state.inventory.coins < SHOP_PRICES.gacha ? 'disabled' : ''} onclick="doGacha()">뽑기!</button>
-      </div>
-    </div>`;
-  }
-
-  html += `<button class="modal-close" onclick="closeModal()">닫기</button>`;
-  modal.innerHTML = html;
-}
-
-function switchShopTab(tab) {
-  shopTab = tab;
-  renderShopModal();
-}
-
-function buyItem(item) {
-  if (item === "potion") {
-    if (state.inventory.coins < SHOP_PRICES.potion) return;
-    state.inventory.coins -= SHOP_PRICES.potion;
-    state.inventory.potions += 1;
-  } else if (item === "ball") {
-    if (state.inventory.coins < SHOP_PRICES.ball) return;
-    state.inventory.coins -= SHOP_PRICES.ball;
-    state.inventory.balls += 1;
-  } else if (item === "antidote") {
-    if (state.inventory.coins < SHOP_PRICES.antidote) return;
-    state.inventory.coins -= SHOP_PRICES.antidote;
-    state.inventory.antidotes += 1;
-  }
-  updateTopbar();
-  renderShopModal();
-}
-
-function useAntidote() {
   const p = getActive();
-  if (state.inventory.antidotes <= 0 || !p.status) return;
-  state.inventory.antidotes -= 1;
-  const cured = STATUS_INFO[p.status].name;
-  p.status = null;
-  p.sleepTurns = 0;
-  // sprite 상태 클래스 제거
-  ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
-  renderMonStatus("player", p);
-  renderPlayer();
-  renderParty();
-  renderShopModal();
-  // 잠깐 메시지 (모달 닫지 않음)
-  flashMessage(`🧪 ${p.name}의 ${cured} 상태가 치료됐다!`);
-}
-
-function doGacha() {
-  if (state.inventory.coins < SHOP_PRICES.gacha) return;
-  state.inventory.coins -= SHOP_PRICES.gacha;
-
-  const r = Math.random();
-  let resultMsg, resultIcon;
-  if (r < 0.6) {
-    state.inventory.potions += 1;
-    resultMsg = "회복약 획득!"; resultIcon = "💊";
-  } else if (r < 0.9) {
-    state.inventory.balls += 1;
-    resultMsg = "잡기 도구 획득!"; resultIcon = "🎯";
-  } else {
-    // 슈퍼 회복: 활성 몬스터 풀회복 + 상태이상 치료
-    const p = getActive();
-    p.currentHp = p.maxHp;
-    p.status = null;
-    p.sleepTurns = 0;
-    ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
-    resultMsg = `슈퍼 회복! ${p.name} 완전 회복`; resultIcon = "✨";
-    renderPlayer();
-    renderParty();
-  }
-
-  // 결과 카드
-  const modal = $("modal-content");
-  modal.innerHTML = `
-    <div class="modal-title">🎰 뽑기 결과</div>
-    <div class="capture-card">
-      <div style="font-size:80px; margin-bottom:14px;">${resultIcon}</div>
-      <div class="capture-name">${resultMsg}</div>
-    </div>
-    <button class="modal-close" onclick="backToShop()">계속</button>
-  `;
-  updateTopbar();
-}
-
-function backToShop() {
-  shopTab = "inventory";
-  renderShopModal();
-}
-
-function usePotion() {
-  const p = getActive();
-  if (state.inventory.potions <= 0 || p.currentHp >= p.maxHp) return;
+  if (state.inventory.potions <= 0) { flashMessage("회복약이 없다!"); return; }
+  if (p.currentHp >= p.maxHp) { flashMessage("HP가 이미 최대야!"); return; }
   state.inventory.potions -= 1;
   const heal = Math.floor(p.maxHp * 0.5);
   const before = p.currentHp;
   p.currentHp = Math.min(p.maxHp, p.currentHp + heal);
-  const actualHeal = p.currentHp - before;
-  popHeal("player", actualHeal);
+  const actual = p.currentHp - before;
+  popHeal("player", actual);
+  if ($("potions-badge")) $("potions-badge").textContent = state.inventory.potions;
   renderPlayer();
   renderParty();
-  renderShopModal();
+  flashMessage(\`💊 \${p.name}의 HP +\${actual} 회복!  (남은 회복약: \${state.inventory.potions})\`);
 }
 
 function closeModal() {
@@ -4837,7 +4252,6 @@ function endGame() {
 
   $("final-wave").textContent = state.wave;
   $("final-kills").textContent = state.kills;
-  $("final-caught").textContent = state.caught;
   $("final-gems").textContent = state.inventory.gems;
   $("final-score").textContent = state.score;
   $("best-score").textContent = window._bestScore;
