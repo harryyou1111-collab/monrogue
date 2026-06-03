@@ -2839,9 +2839,9 @@ const PASSIVE_INFO = {
 // passive: 패시브 ID (전설/이스터에그 전용, 일반은 null)
 const MONSTERS = {
   // === 기존 11마리 ===
-  mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 320, def: 25, spd: 60 }, moves: ["blaze_fang", "flame_punch", "ember_flame"] },
-  mon_002: { id: "mon_002", name: "폭시루", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 1100, atk: 350, def: 20, spd: 65 }, moves: ["bite", "fire_tail", "mystic_burn"] },
-  mon_003: { id: "mon_003", name: "불레오",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 980, atk: 420, def: 20, spd: 65 }, moves: ["headbutt", "fire_mane", "flame_breath"] },
+  mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 320, def: 25, spd: 60 }, moves: ["blaze_fang", "heat_wave", "inferno"] },
+  mon_002: { id: "mon_002", name: "폭시루", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 1100, atk: 350, def: 20, spd: 65 }, moves: ["flame_punch", "blaze_fang", "fire_mark"] },
+  mon_003: { id: "mon_003", name: "불레오",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 980, atk: 420, def: 20, spd: 65 }, moves: ["blaze_fang", "meteor_flare", "inferno"] },
   mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1450, atk: 180, def: 30, spd: 55 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
   mon_005: { id: "mon_005", name: "물토리", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 330, def: 25, spd: 65 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
   mon_006: { id: "mon_006", name: "펭구리",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1020, atk: 360, def: 25, spd: 70 }, moves: ["peck", "ice_shard", "freeze_beam"] },
@@ -2852,7 +2852,7 @@ const MONSTERS = {
   // 청룡: 정령 → 물 전설
   mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 1720, atk: 450, def: 30, spd: 60 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
   // 봉황: 정령 → 불 전설
-  mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: null, facing: "left",  stats: { hp: 1680, atk: 460, def: 25, spd: 65 }, moves: ["phoenix_nova", "inferno", "meteor_flare", "flame_purify"] },
+  mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: null, facing: "left",  stats: { hp: 1680, atk: 460, def: 25, spd: 65 }, moves: ["blaze_fang", "inferno", "meteor_flare", "phoenix_nova"] },
 
   // === 신규 9마리 ===
   // 어둠 일반 3
@@ -2872,8 +2872,8 @@ const MONSTERS = {
 
   // === 신규 10마리 (단계 D) ===
   // 불 추가
-  mon_021: { id: "mon_021", name: "타이가르",   type: "fire",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1450, atk: 430, def: 25, spd: 60 }, moves: ["bite", "fire_mane", "flame_breath"] },
-  mon_022: { id: "mon_022", name: "버니콩",     type: "fire",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1430, atk: 210, def: 30, spd: 55 }, moves: ["kick", "ember", "fire_tail"] },
+  mon_021: { id: "mon_021", name: "타이가르",   type: "fire",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1450, atk: 430, def: 25, spd: 60 }, moves: ["flame_punch", "heat_wave", "burning_claw", "ember_flame"] },
+  mon_022: { id: "mon_022", name: "버니콩",     type: "fire",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1430, atk: 210, def: 30, spd: 55 }, moves: ["flame_punch", "ember_flame", "flame_purify"] },
   // 물 추가
   mon_023: { id: "mon_023", name: "설원가온",   type: "water",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1180, atk: 550, def: 25, spd: 65 }, moves: ["bite", "ice_shard", "freeze_beam"] },
   mon_024: { id: "mon_024", name: "버블레이",   type: "water",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1250, atk: 320, def: 25, spd: 55 }, moves: ["body_slam", "water_drop", "water_stream"] },
