@@ -2894,7 +2894,7 @@ function makeInstance(monId, level) {
 
 // 효과 적용: 스킬의 effects 배열을 시전자/대상에 적용
 // caster=시전자 인스턴스, target=상대 인스턴스
-function applyEffects(effectList, caster, target) {
+function applyEffects(effectList, caster, target, moveKey) {
   if (!effectList || effectList.length === 0) return [];
   const messages = [];
   effectList.forEach(e => {
@@ -2938,7 +2938,8 @@ function applyEffects(effectList, caster, target) {
       kind: e.kind,
       value: e.value,
       duration: e.duration,
-      sourceAtk: caster.atk
+      sourceAtk: caster.atk,
+      sourceMove: moveKey || null
     });
     const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
     messages.push(`${recipient.name} ${def.label}${sign}`);
@@ -2946,15 +2947,22 @@ function applyEffects(effectList, caster, target) {
   return messages;
 }
 
-// 종류별 1개만 유지 (이미 있으면 갱신)
+// 중첩 규칙:
+//   - duration 9999 (영구) → 절대 덮어쓰지 않음, 항상 보존
+//   - 같은 kind + 같은 sourceMove → 갱신 (리프레시)
+//   - 같은 kind + 다른 sourceMove → 중첩 추가
 function addOrRefreshEffect(mon, effect) {
   if (!mon.activeEffects) mon.activeEffects = [];
-  const existing = mon.activeEffects.find(e => e.kind === effect.kind);
-  if (existing) {
-    // 갱신: 값과 지속시간 새로 세팅
-    existing.value = effect.value;
-    existing.duration = effect.duration;
-    existing.sourceAtk = effect.sourceAtk;
+  // 영구 버프는 새 효과로 덮어쓰지 않음 (피닉스 부활 버프 보호)
+  // 단, 새 효과도 영구라면 그냥 추가
+  // 같은 sourceMove가 있으면 갱신
+  const sameSource = mon.activeEffects.find(
+    e => e.kind === effect.kind && e.sourceMove === effect.sourceMove && e.duration !== 9999
+  );
+  if (sameSource) {
+    sameSource.value = effect.value;
+    sameSource.duration = effect.duration;
+    sameSource.sourceAtk = effect.sourceAtk;
   } else {
     mon.activeEffects.push({ ...effect });
   }
@@ -3855,7 +3863,7 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   // === 새 effects 시스템 (2단계) ===
   // 스킬에 effects 배열이 있으면 적용. 기존 스킬은 영향 없음.
   if (r.move.effects && r.move.effects.length > 0) {
-    const msgs = applyEffects(r.move.effects, attacker, defender);
+    const msgs = applyEffects(r.move.effects, attacker, defender, moveKey);
     renderMonStatus(attackerSide, attacker);
     renderMonStatus(defenderSide, defender);
     updateAtkText(attackerSide, attacker);
