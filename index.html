@@ -4195,7 +4195,7 @@ function usePotionBattle() {
   if ($("potions-badge")) $("potions-badge").textContent = state.inventory.potions;
   renderPlayer();
   renderParty();
-  flashMessage(\`💊 \${p.name}의 HP +\${actual} 회복!  (남은 회복약: \${state.inventory.potions})\`);
+  flashMessage(`💊 ${p.name}의 HP +${actual} 회복!  (남은 회복약: ${state.inventory.potions})`);
 }
 
 function closeModal() {
