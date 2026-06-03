@@ -1014,15 +1014,15 @@
   }
   .info-card-name { font-family: 'Black Han Sans', sans-serif; font-size: 16px; color: #1a1a1a; }
   .info-card-lv { font-family: 'Jua', sans-serif; font-size: 12px; color: #555; }
-  .hp-bar-wrap { background: #2a2a2a; border-radius: 99px; height: 9px; overflow: hidden; }
-  .hp-bar { height: 100%; background: var(--hp-high); border-radius: 99px; transition: width 0.5s ease-out, background 0.3s; }
+  .hp-bar-wrap { background: #2a2a2a; border-radius: 99px; height: 9px; overflow: visible; position: relative; }
+  .hp-bar { height: 100%; background: var(--hp-high); border-radius: 99px; transition: width 0.5s ease-out, background 0.3s; overflow: hidden; }
   .hp-bar.mid { background: var(--hp-mid); }
   .hp-bar.low { background: var(--hp-low); }
   .hp-text { font-family: 'Jua', sans-serif; font-size: 11px; color: #444; text-align: right; margin-top: 2px; }
   .atk-text { font-family: 'Jua', sans-serif; font-size: 11px; color: #aaa; margin-top: 2px; }
   .atk-text.buffed { color: #4caf50; font-weight: bold; }
   .atk-text.nerfed { color: #f44336; font-weight: bold; }
-  .spd-badge { font-family: 'Jua', sans-serif; font-size: 10px; background: #ffe033; color: #333; border-radius: 4px; padding: 1px 5px; position: absolute; right: 0; top: -14px; display: none; }
+  .spd-badge { font-family: 'Jua', sans-serif; font-size: 10px; background: #ffe033; color: #333; border-radius: 4px; padding: 1px 5px; margin-left: 4px; display: none; vertical-align: middle; }
   .spd-badge.visible { display: inline; }
   /* 상태이상 표시 */
   .status-row { margin-top: 4px; min-height: 16px; }
@@ -2496,9 +2496,9 @@
               <span class="info-card-name" id="enemy-name"></span>
               <span class="type-badge" id="enemy-type"></span>
             </div>
-            <div class="info-card-lv" id="enemy-lv">Lv 1</div>
+            <div class="info-card-lv" id="enemy-lv">Lv 1</div><span class="spd-badge" id="enemy-spd-badge">⚡빠름</span>
           </div>
-          <div class="hp-bar-wrap" style="position:relative"><div class="hp-bar" id="enemy-hp-bar"></div><span class="spd-badge" id="enemy-spd-badge">⚡빠름</span></div>
+          <div class="hp-bar-wrap"><div class="hp-bar" id="enemy-hp-bar"></div></div>
           <div class="atk-text" id="enemy-atk-text"></div>
           <div class="status-row" id="enemy-status"></div>
         </div>
@@ -2515,9 +2515,9 @@
               <span class="info-card-name" id="player-name"></span>
               <span class="type-badge" id="player-type"></span>
             </div>
-            <div class="info-card-lv" id="player-lv">Lv 1</div>
+            <div class="info-card-lv" id="player-lv">Lv 1</div><span class="spd-badge" id="player-spd-badge">⚡빠름</span>
           </div>
-          <div class="hp-bar-wrap" style="position:relative"><div class="hp-bar" id="player-hp-bar"></div><span class="spd-badge" id="player-spd-badge">⚡빠름</span></div>
+          <div class="hp-bar-wrap"><div class="hp-bar" id="player-hp-bar"></div></div>
           <div class="hp-text" id="player-hp-text">100 / 100</div>
           <div class="atk-text" id="player-atk-text"></div>
           <div class="status-row" id="player-status"></div>
