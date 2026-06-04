@@ -655,9 +655,15 @@
 
   /* 공격 대시 */
   .sprite-wrap.attacking img { animation: dash-anim 0.5s ease-out; }
+  .sprite-wrap.attacking.enemy-attacker img { animation: dash-anim-left 0.5s ease-out; }
   @keyframes dash-anim {
     0%   { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
-    35%  { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(28px) scale(1.06); }
+    35%  { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(22px) scale(1.06); }
+    100% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
+  }
+  @keyframes dash-anim-left {
+    0%   { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
+    35%  { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(-22px) scale(1.06); }
     100% { transform: scaleX(var(--flip)) rotateY(-12deg) translateX(0); }
   }
 
@@ -3441,6 +3447,8 @@ function renderEnemy() {
   $("enemy-type").textContent = TYPES[state.enemy.type].name;
   $("enemy-type").className = `type-badge type-${state.enemy.type}`;
   $("enemy-lv").textContent = `Lv ${state.enemy.level}`;
+  // 배틀에서 적은 항상 왼쪽(플레이어 방향)을 봐야 함
+  // facing=right인 스프라이트는 반전해서 왼쪽으로
   $("enemy-sprite").classList.toggle("flipped", state.enemy.facing === "right");
   // 상태이상 sprite 클래스
   ["burn","paralyze","sleep","poison","fear"].forEach(s => $("enemy-sprite").classList.remove(`status-${s}`));
@@ -3458,6 +3466,8 @@ function renderPlayer() {
   $("player-type").textContent = TYPES[p.type].name;
   $("player-type").className = `type-badge type-${p.type}`;
   $("player-lv").textContent = `Lv ${p.level}`;
+  // 배틀에서 플레이어는 항상 오른쪽(적 방향)을 봐야 함
+  // facing=left인 스프라이트는 반전해서 오른쪽으로
   $("player-sprite").classList.toggle("flipped", p.facing === "left");
   // 상태이상 sprite 클래스
   ["burn","paralyze","sleep","poison","fear"].forEach(s => $("player-sprite").classList.remove(`status-${s}`));
@@ -3880,11 +3890,12 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   const defSprite = $(`${defenderSide}-sprite`);
 
   attSprite.classList.add("attacking");
+  if (attackerSide === "enemy") attSprite.classList.add("enemy-attacker");
   await sleep(150);
 
   await playSkillEffect(moveKey, r.move.type, attackerSide, defenderSide);
 
-  attSprite.classList.remove("attacking");
+  attSprite.classList.remove("attacking", "enemy-attacker");
 
   // 데미지 처리 (위력 0 기술은 데미지 없음)
   if (r.damage > 0) {
@@ -4137,25 +4148,28 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
     }
 
     case "inferno": {
-      // 불 브레스 빔
-      const bw = Math.abs(dx - ax) + 20;
-      const beam = mkEl("div", { height:"22px", width:"0px",
-        background:"linear-gradient(90deg, #ff3d00, #ffab40, #fff3a0, #ffab40, #ff3d00)",
-        borderRadius:"11px", filter:"drop-shadow(0 0 10px #ff5722) drop-shadow(0 0 20px #ff9800)",
-        position:"absolute", transformOrigin:"left center",
-        top: (ay - 11)+"px", left: ax+"px", transform:"none",
-        transition:`width 0.45s cubic-bezier(0.1,0,0.4,1), opacity 0.45s` });
-      beam.className = "";
-      beam.style.position = "absolute";
-      beam.style.zIndex = "5";
-      beam.style.pointerEvents = "none";
+      // 불 브레스 빔 - 대각으로 ax,ay → dx,dy
+      const bDist = Math.hypot(dx-ax, dy-ay);
+      const bAngle = Math.atan2(dy-ay, dx-ax) * 180 / Math.PI;
+      const beam = document.createElement("div");
+      beam.style.cssText = `
+        position:absolute; z-index:5; pointer-events:none;
+        height:20px; width:0px;
+        background:linear-gradient(90deg,#ff3d00,#ffab40,#fff3a0,#ffab40,#ff3d00);
+        border-radius:10px;
+        filter:drop-shadow(0 0 10px #ff5722) drop-shadow(0 0 20px #ff9800);
+        transform-origin:left center;
+        left:${ax}px; top:${ay-10}px;
+        transform:rotate(${bAngle}deg);
+        transition:width 0.42s cubic-bezier(0.1,0,0.4,1), opacity 0.3s;
+      `;
       fxLayer.appendChild(beam);
       await sleep(20);
-      beam.style.width = bw + "px";
-      await sleep(450);
+      beam.style.width = bDist + "px";
+      await sleep(430);
       beam.style.opacity = "0";
       autoRemove(beam, 300);
-      await sleep(400);
+      await sleep(380);
       break;
     }
 
@@ -4242,21 +4256,24 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
       pos(wrap, ax, ay);
       autoRemove(wrap, 500);
       await sleep(400);
-      // 빔
-      const bh = Math.abs(dy - ay) + 20;
-      const pbeam = mkEl("div", { width:"28px", height:"0px",
-        background:"linear-gradient(180deg,#fff3a0,#ff8a3d,#ff3d00)",
-        borderRadius:"14px", filter:"drop-shadow(0 0 14px #ff5722) drop-shadow(0 0 28px #ff9800)",
-        position:"absolute", left:(ax-14)+"px", top:ay+"px",
-        transformOrigin:"top center",
-        transition:`height 0.4s cubic-bezier(0.1,0,0.3,1), opacity 0.3s` });
-      pbeam.className = "";
-      pbeam.style.position = "absolute";
-      pbeam.style.zIndex = "5";
-      pbeam.style.pointerEvents = "none";
+      // 빔 - 대각
+      const pbDist = Math.hypot(dx-ax, dy-ay);
+      const pbAngle = Math.atan2(dy-ay, dx-ax) * 180 / Math.PI;
+      const pbeam = document.createElement("div");
+      pbeam.style.cssText = `
+        position:absolute; z-index:5; pointer-events:none;
+        height:26px; width:0px;
+        background:linear-gradient(90deg,#fff3a0,#ff8a3d,#ff3d00,#ff8a3d,#fff3a0);
+        border-radius:13px;
+        filter:drop-shadow(0 0 14px #ff5722) drop-shadow(0 0 28px #ff9800);
+        transform-origin:left center;
+        left:${ax}px; top:${ay-13}px;
+        transform:rotate(${pbAngle}deg);
+        transition:width 0.4s cubic-bezier(0.1,0,0.3,1), opacity 0.3s;
+      `;
       fxLayer.appendChild(pbeam);
       await sleep(20);
-      pbeam.style.height = bh+"px";
+      pbeam.style.width = pbDist+"px";
       shakeScreen();
       await sleep(400);
       pbeam.style.opacity = "0";
@@ -4382,10 +4399,10 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
       pillar.style.transform = "none";
       pillar.style.left = ax+"px";
       pillar.style.top = (ay-50)+"px";
-      pillar.className = "";
       pillar.style.position = "absolute";
       pillar.style.zIndex = "5";
       pillar.style.pointerEvents = "none";
+      pillar.style.transform = "none";
       fxLayer.appendChild(pillar);
       // 물방울들
       for (let i = 0; i < 5; i++) {
@@ -4457,15 +4474,15 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
 
     case "deep_blue": {
       // 위에서 물이 낙하 + 터짐
-      const deluge = mkEl("div", { width:"80px", height:"0px",
-        background:"linear-gradient(180deg, #e3f2fd, #1565c0)",
-        borderRadius:"10px", filter:"drop-shadow(0 0 14px #1976d2)",
-        position:"absolute", left:(dx-40)+"px", top:(dy-80)+"px",
-        transformOrigin:"top", transition:"height 0.35s ease-in, opacity 0.3s" });
-      deluge.className = "";
-      deluge.style.position = "absolute";
-      deluge.style.zIndex = "5";
-      deluge.style.pointerEvents = "none";
+      const deluge = document.createElement("div");
+      deluge.style.cssText = `
+        position:absolute; z-index:5; pointer-events:none;
+        width:80px; height:0px;
+        background:linear-gradient(180deg,#e3f2fd,#1565c0);
+        border-radius:10px; filter:drop-shadow(0 0 14px #1976d2);
+        left:${dx-40}px; top:${dy-80}px;
+        transform-origin:top; transition:height 0.35s ease-in, opacity 0.3s;
+      `;
       fxLayer.appendChild(deluge);
       await sleep(20);
       deluge.style.height = "80px";
