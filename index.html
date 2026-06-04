@@ -2849,15 +2849,15 @@ const MONSTERS = {
   mon_001: { id: "mon_001", name: "샐러맨더", type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 320, def: 25, spd: 60 }, moves: ["blaze_fang", "heat_wave", "inferno"] },
   mon_002: { id: "mon_002", name: "폭시루", type: "fire",  rarity: "common",    passive: null, facing: "right", stats: { hp: 1100, atk: 350, def: 20, spd: 65 }, moves: ["flame_punch", "blaze_fang", "fire_mark"] },
   mon_003: { id: "mon_003", name: "불레오",   type: "fire",  rarity: "common",    passive: null, facing: "left",  stats: { hp: 980, atk: 420, def: 20, spd: 65 }, moves: ["blaze_fang", "meteor_flare", "inferno"] },
-  mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1450, atk: 180, def: 30, spd: 55 }, moves: ["body_slam", "water_drop", "freeze_beam"] },
-  mon_005: { id: "mon_005", name: "물토리", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 330, def: 25, spd: 65 }, moves: ["scratch_claw", "water_stream", "thunder_punch"] },
-  mon_006: { id: "mon_006", name: "펭구리",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1020, atk: 360, def: 25, spd: 70 }, moves: ["peck", "ice_shard", "freeze_beam"] },
+  mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1450, atk: 180, def: 30, spd: 55 }, moves: ["water_dash", "azure_slash", "tidal_wave"] },
+  mon_005: { id: "mon_005", name: "물토리", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 330, def: 25, spd: 65 }, moves: ["water_dash", "water_slash", "overflow"] },
+  mon_006: { id: "mon_006", name: "펭구리",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1020, atk: 360, def: 25, spd: 70 }, moves: ["water_dash", "wave_strike", "tidal_wave"] },
   mon_007: { id: "mon_007", name: "버니풀", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 300, def: 30, spd: 55 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
   mon_008: { id: "mon_008", name: "도토리", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 350, def: 20, spd: 60 }, moves: ["tackle", "spore_shot", "poison_powder"] },
   mon_009: { id: "mon_009", name: "입새짹", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1080, atk: 350, def: 25, spd: 65 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
 
   // 청룡: 정령 → 물 전설
-  mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 1720, atk: 450, def: 30, spd: 60 }, moves: ["mystic_strike", "azure_pulse", "freeze_beam"] },
+  mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 1720, atk: 450, def: 30, spd: 60 }, moves: ["wave_strike", "life_spring", "deep_blue", "sea_king"] },
   // 봉황: 정령 → 불 전설
   mon_011: { id: "mon_011", name: "솔피닉스",   type: "fire",  rarity: "legendary", passive: null, facing: "left",  stats: { hp: 1680, atk: 460, def: 25, spd: 65 }, moves: ["blaze_fang", "inferno", "meteor_flare", "phoenix_nova"] },
 
@@ -2882,8 +2882,8 @@ const MONSTERS = {
   mon_021: { id: "mon_021", name: "타이가르",   type: "fire",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1450, atk: 430, def: 25, spd: 60 }, moves: ["flame_punch", "heat_wave", "burning_claw", "ember_flame"] },
   mon_022: { id: "mon_022", name: "버니콩",     type: "fire",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1430, atk: 210, def: 30, spd: 55 }, moves: ["flame_punch", "ember_flame", "flame_purify"] },
   // 물 추가
-  mon_023: { id: "mon_023", name: "설원가온",   type: "water",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1180, atk: 550, def: 25, spd: 65 }, moves: ["bite", "ice_shard", "freeze_beam"] },
-  mon_024: { id: "mon_024", name: "버블레이",   type: "water",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1250, atk: 320, def: 25, spd: 55 }, moves: ["body_slam", "water_drop", "water_stream"] },
+  mon_023: { id: "mon_023", name: "설원가온",   type: "water",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1180, atk: 550, def: 25, spd: 65 }, moves: ["wave_strike", "aqua_regen", "azure_slash", "overflow"] },
+  mon_024: { id: "mon_024", name: "버블레이",   type: "water",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1250, atk: 320, def: 25, spd: 55 }, moves: ["water_dash", "water_slash", "deep_blue"] },
   // 풀 추가
   mon_025: { id: "mon_025", name: "아르보디어", type: "grass",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1460, atk: 350, def: 30, spd: 60 }, moves: ["headbutt", "leaf_blade", "spore_shot"] },
   mon_026: { id: "mon_026", name: "리프자드",   type: "grass",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1350, atk: 230, def: 30, spd: 55 }, moves: ["scratch", "leaf_blade", "poison_powder"] },
