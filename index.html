@@ -2609,6 +2609,135 @@ const MOVES = {
       { kind: "phoenix_revive", target: "self" }
     ]
   },
+
+  // ===== 물 타입 스킬 =====
+  water_slash: {
+    name: "물살 베기",
+    type: "water",
+    multiplier: 1.0,
+    cooldown: 1,
+    priority: 1,
+    icon: "skill_water_slash.png",
+    desc: "빠른 물살로 베어내며 공격력을 끌어올린다.",
+    effects: [
+      { kind: "atk_up", target: "self", value: 20, duration: 2 }
+    ]
+  },
+  water_dash: {
+    name: "워터 대시",
+    type: "water",
+    multiplier: 0.5,
+    cooldown: 0,
+    priority: 1,
+    icon: "skill_water_dash.png",
+    desc: "물을 타고 전광석화로 돌진. 속도가 크게 오른다.",
+    effects: [
+      { kind: "spd_up", target: "self", value: 30, duration: 2 }
+    ]
+  },
+  wave_strike: {
+    name: "파도 섬격",
+    type: "water",
+    multiplier: 1.0,
+    cooldown: 0,
+    priority: 0,
+    icon: "skill_wave_strike.png",
+    desc: "거대한 파도로 적을 강타. 상대의 속도를 크게 떨어뜨린다.",
+    effects: [
+      { kind: "spd_down", target: "enemy", value: 50, duration: 2 }
+    ]
+  },
+  tidal_wave: {
+    name: "거센 물결",
+    type: "water",
+    multiplier: 1.5,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_tidal_wave.png",
+    desc: "격렬한 물결로 적을 압도. 공격력과 속도를 동시에 끌어내린다.",
+    effects: [
+      { kind: "atk_down", target: "enemy", value: 35, duration: 1 },
+      { kind: "spd_down", target: "enemy", value: 35, duration: 1 }
+    ]
+  },
+  azure_slash: {
+    name: "청수참",
+    type: "water",
+    multiplier: 1.5,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_azure_slash.png",
+    desc: "맑은 물의 기운을 담아 베어낸다. 공격력과 방어력이 모두 오른다.",
+    effects: [
+      { kind: "atk_up", target: "self", value: 10, duration: 3 },
+      { kind: "def_up", target: "self", value: 10, duration: 3 }
+    ]
+  },
+  life_spring: {
+    name: "생명의 샘",
+    type: "water",
+    multiplier: 0,
+    cooldown: 3,
+    priority: 1,
+    icon: "skill_life_spring.png",
+    desc: "신성한 샘물로 상태이상을 씻어내고 체력을 회복. 4턴간 매턴 재생.",
+    effects: [
+      { kind: "cleanse", target: "self" },
+      { kind: "heal",    target: "self", value: 40, duration: 0 },
+      { kind: "regen",   target: "self", value: 8,  duration: 4 }
+    ]
+  },
+  aqua_regen: {
+    name: "아쿠아 리젠",
+    type: "water",
+    multiplier: 1.0,
+    cooldown: 3,
+    priority: 0,
+    icon: "skill_aqua_regen.png",
+    desc: "물의 재생력으로 공격하며 점점 강해지는 회복 효과를 얻는다.",
+    effects: [
+      { kind: "regen",   target: "self", value: 0, duration: 3, schedule: [10, 20, 40] },
+      { kind: "atk_up",  target: "self", value: 0, duration: 3, schedule: [10, 20, 40] }
+    ]
+  },
+  overflow: {
+    name: "오버플로우",
+    type: "water",
+    multiplier: 2.0,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_overflow.png",
+    desc: "넘쳐흐르는 물의 힘을 폭발적으로 방출. 반동으로 속도가 떨어진다.",
+    effects: [
+      { kind: "spd_down", target: "self", value: 20, duration: 2 }
+    ]
+  },
+  deep_blue: {
+    name: "딥 블루",
+    type: "water",
+    multiplier: 2.0,
+    cooldown: 3,
+    priority: 0,
+    icon: "skill_deep_blue.png",
+    desc: "심해의 압력을 담은 일격. 방어력이 크게 오른다.",
+    effects: [
+      { kind: "def_up", target: "self", value: 35, duration: 2 }
+    ]
+  },
+  sea_king: {
+    name: "해왕 강림",
+    type: "water",
+    multiplier: 2.5,
+    cooldown: 0,
+    onceBattle: true,
+    priority: 1,
+    icon: "skill_sea_king.png",
+    desc: "해왕의 힘이 깃든 전용기. 방어막이 끝나면 완전 회복. 공격력도 급등.",
+    effects: [
+      { kind: "def_up",  target: "self", value: 80, duration: 3, onExpire: "full_heal" },
+      { kind: "atk_up",  target: "self", value: 30, duration: 2 }
+    ]
+  },
   // === 구 시스템 스킬 ===
   scratch:        { name: "긁기",       power: 35, type: "normal" },
   ember:          { name: "불꽃세례",   power: 40, type: "fire" },
@@ -2686,7 +2815,8 @@ const EFFECT_DEFS = {
   // burn: 대상 최대HP 기준 N%, 매 턴
   burn:     { label: "화상",        stat: null, isBuff: false, defaultValue: 10, defaultDuration: 2, icon: "🔥", color: "#ff5722" },
   // trapped: 교체 불가 (디버프 취급)
-  trapped:  { label: "교체불가",    stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🚫", color: "#7c2d12" }
+  trapped:  { label: "교체불가",    stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🚫", color: "#7c2d12" },
+  regen:    { label: "체력 회복",   stat: null, isBuff: true,  defaultValue: 10, defaultDuration: 3, icon: "💧", color: "#4fc3f7" }
 };
 
 // 효과 객체를 만드는 헬퍼 (스킬 정의에서 사용)
@@ -2934,13 +3064,18 @@ function applyEffects(effectList, caster, target, moveKey) {
     // === 지속 효과 ===
     const def = EFFECT_DEFS[e.kind];
     if (!def) return;
-    addOrRefreshEffect(recipient, {
+    const effectObj = {
       kind: e.kind,
       value: e.value,
       duration: e.duration,
       sourceAtk: caster.atk,
       sourceMove: moveKey || null
-    });
+    };
+    // schedule 배열 있으면 복사 (아쿠아 리젠 등)
+    if (e.schedule) effectObj.schedule = [...e.schedule];
+    // onExpire 콜백 있으면 복사 (해왕 강림 등)
+    if (e.onExpire) effectObj.onExpire = e.onExpire;
+    addOrRefreshEffect(recipient, effectObj);
     const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
     messages.push(`${recipient.name} ${def.label}${sign}`);
   });
@@ -2963,8 +3098,11 @@ function addOrRefreshEffect(mon, effect) {
     sameSource.value = effect.value;
     sameSource.duration = effect.duration;
     sameSource.sourceAtk = effect.sourceAtk;
+    if (effect.schedule) sameSource.schedule = [...effect.schedule];
+    if (effect.onExpire) sameSource.onExpire = effect.onExpire;
+    sameSource.turnIndex = 0; // 리프레시 시 turnIndex 리셋
   } else {
-    mon.activeEffects.push({ ...effect });
+    mon.activeEffects.push({ ...effect, schedule: effect.schedule ? [...effect.schedule] : undefined });
   }
 }
 
@@ -2976,30 +3114,65 @@ function getStatMultiplier(mon, stat) {
   mon.activeEffects.forEach(e => {
     const def = EFFECT_DEFS[e.kind];
     if (def && def.stat === stat) {
-      mult *= (1 + def.sign * e.value / 100);
+      // schedule 있는 effect는 현재 turnIndex 기준 value 사용
+      let val = e.value;
+      if (e.schedule && e.schedule.length > 0) {
+        const idx = Math.min((e.turnIndex || 0), e.schedule.length - 1);
+        val = e.schedule[idx];
+      }
+      mult *= (1 + def.sign * val / 100);
     }
   });
   return mult;
 }
 
-// 매 턴 효과 처리: 지속피해 적용, 지속시간 감소, 만료 제거
+// 매 턴 효과 처리: 지속피해/지속회복 적용, 지속시간 감소, 만료 제거
 // 반환: 화면에 표시할 메시지 배열
 function tickEffects(mon) {
   if (!mon.activeEffects || mon.activeEffects.length === 0) return [];
   const messages = [];
   const survivors = [];
+  const expiredCallbacks = [];
   mon.activeEffects.forEach(e => {
-    // 지속피해 - 대상 최대HP 비례 (시전자 공격 기준 아님)
+    // 화상 - 매턴 고정 피해
     if (e.kind === "burn") {
       const dmg = Math.floor(mon.maxHp * e.value / 100);
       mon.currentHp = Math.max(0, mon.currentHp - dmg);
       messages.push(`${mon.name} 화상 피해 ${dmg}!`);
     }
+    // regen - 매턴 HP 회복 (schedule 있으면 턴별 다른 값, 없으면 고정 value)
+    if (e.kind === "regen") {
+      if (!e.turnIndex) e.turnIndex = 0;
+      let pct;
+      if (e.schedule && e.schedule.length > 0) {
+        pct = e.schedule[Math.min(e.turnIndex, e.schedule.length - 1)];
+      } else {
+        pct = e.value;
+      }
+      e.turnIndex++;
+      const healAmt = Math.floor(mon.maxHp * pct / 100);
+      const before = mon.currentHp;
+      mon.currentHp = Math.min(mon.maxHp, mon.currentHp + healAmt);
+      const actual = mon.currentHp - before;
+      if (actual > 0) messages.push(`${mon.name} 재생 회복 +${actual}!`);
+    }
     // 지속시간 감소
     e.duration -= 1;
-    if (e.duration > 0) survivors.push(e);
+    if (e.duration > 0) {
+      survivors.push(e);
+    } else {
+      // 만료 콜백 (onExpire) 수집
+      if (e.onExpire) expiredCallbacks.push(e.onExpire);
+    }
   });
   mon.activeEffects = survivors;
+  // 만료 콜백 실행
+  expiredCallbacks.forEach(cb => {
+    if (cb === "full_heal") {
+      mon.currentHp = mon.maxHp;
+      messages.push(`${mon.name} 완전 회복!`);
+    }
+  });
   return messages;
 }
 
