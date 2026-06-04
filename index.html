@@ -730,148 +730,54 @@
     z-index: 4;
     overflow: visible;
   }
-  .projectile {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    transform: translate(-50%, -50%);
-    will-change: transform, left, top, opacity;
-  }
-  .projectile.fire {
-    background: radial-gradient(circle at 35% 35%, #fff3a0 0%, #ffb84d 30%, #ff5722 60%, transparent 75%);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 12px #ff8a3d) blur(0.3px);
-    animation: spin-fast 0.4s linear infinite;
-  }
-  .projectile.water {
-    background: radial-gradient(ellipse at 35% 30%, #e3f2fd 0%, #64b5f6 30%, #1976d2 65%, transparent 80%);
-    border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%;
-    filter: drop-shadow(0 0 10px #2196f3);
-    animation: spin-slow 0.6s linear infinite;
-  }
-  .projectile.normal {
-    width: 70px;
-    height: 30px;
-    background: linear-gradient(90deg, transparent 0%, #fff 30%, #fff 70%, transparent 100%);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 8px #fff);
-  }
-  .projectile.grass {
-    background: radial-gradient(ellipse at 35% 30%, #d4f5b3 0%, #7fc34a 35%, #3d8b1f 70%, transparent 85%);
-    border-radius: 60% 30% 60% 30% / 50% 60% 40% 50%;
-    filter: drop-shadow(0 0 10px #7fc34a);
-    animation: spin-slow 0.6s linear infinite;
-  }
-  .projectile.spirit {
-    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e1b3ff 25%, #9c27b0 55%, transparent 80%);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 14px #d580ff) blur(0.4px);
-    animation: spin-fast 0.3s linear infinite;
-  }
-  .projectile.electric {
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle at 50% 50%, #fff9c4 0%, #ffeb3b 30%, #fbbf24 60%, transparent 78%);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 14px #fbbf24) drop-shadow(0 0 6px #fff);
-    animation: spin-fast 0.25s linear infinite, electric-flicker 0.15s ease-in-out infinite;
-  }
-  @keyframes electric-flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-  .projectile.dark {
-    width: 55px;
-    height: 55px;
-    background: radial-gradient(circle at 35% 35%, #6a4c93 0%, #4a148c 40%, #1a0033 70%, transparent 85%);
-    border-radius: 50%;
-    filter: drop-shadow(0 0 12px #4a148c) blur(0.5px);
-    animation: spin-slow 0.7s linear infinite;
-  }
-  @keyframes spin-fast { to { transform: translate(-50%, -50%) rotate(360deg); } }
-  @keyframes spin-slow { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+  /* ===== 스킬 이펙트 CSS ===== */
+  .fx-el { position: absolute; pointer-events: none; z-index: 5; transform: translate(-50%, -50%); }
 
-  /* 명중 폭발 */
-  .impact {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 5;
-  }
-  .impact.fire {
-    width: 100px; height: 100px;
-    background: radial-gradient(circle, #fff3a0 0%, #ff8a3d 30%, #ff3030 55%, transparent 70%);
-    border-radius: 50%;
-    animation: impact-pop 0.5s forwards;
-    filter: drop-shadow(0 0 15px #ff5722);
-  }
-  .impact.water {
-    width: 110px; height: 110px;
-    background: radial-gradient(circle, #e3f2fd 0%, #64b5f6 35%, #1565c0 60%, transparent 75%);
-    border-radius: 50%;
-    animation: impact-pop 0.5s forwards;
-    filter: drop-shadow(0 0 15px #2196f3);
-  }
-  .impact.normal {
-    width: 90px; height: 90px;
-    background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.4) 40%, transparent 65%);
-    border-radius: 50%;
-    animation: impact-pop 0.4s forwards;
-  }
-  .impact.grass {
-    width: 110px; height: 110px;
-    background: radial-gradient(circle, #d4f5b3 0%, #7fc34a 35%, #3d8b1f 60%, transparent 75%);
-    border-radius: 50%;
-    animation: impact-pop 0.5s forwards;
-    filter: drop-shadow(0 0 15px #7fc34a);
-  }
-  .impact.spirit {
-    width: 120px; height: 120px;
-    background: radial-gradient(circle, #ffffff 0%, #e1b3ff 30%, #9c27b0 55%, transparent 75%);
-    border-radius: 50%;
-    animation: impact-pop 0.55s forwards;
-    filter: drop-shadow(0 0 20px #d580ff);
-  }
-  .impact.electric {
-    width: 110px; height: 110px;
-    background: radial-gradient(circle, #fff9c4 0%, #ffeb3b 30%, #fbbf24 55%, transparent 75%);
-    border-radius: 50%;
-    animation: impact-pop 0.5s forwards;
-    filter: drop-shadow(0 0 18px #fbbf24);
-  }
-  .impact.dark {
-    width: 115px; height: 115px;
-    background: radial-gradient(circle, #6a4c93 0%, #4a148c 40%, #1a0033 65%, transparent 80%);
-    border-radius: 50%;
-    animation: impact-pop 0.6s forwards;
-    filter: drop-shadow(0 0 20px #4a148c);
-  }
-  @keyframes impact-pop {
-    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-    35%  { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
-  }
+  /* 슬래시 공통 */
+  @keyframes slash-sw { 0%{opacity:0;transform:translate(-50%,-50%) rotate(-40deg) scaleX(0)} 25%{opacity:1;transform:translate(-50%,-50%) rotate(-40deg) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) rotate(-40deg) scaleX(1.3)} }
+  @keyframes slash-claw1 { 0%{opacity:0;transform:translate(-50%,-50%) rotate(-50deg) scaleX(0)} 25%{opacity:1;transform:translate(-50%,-50%) rotate(-50deg) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) rotate(-50deg) scaleX(1.2)} }
+  @keyframes slash-claw2 { 0%{opacity:0;transform:translate(-50%,-50%) rotate(-35deg) scaleX(0)} 25%{opacity:1;transform:translate(-50%,-50%) rotate(-35deg) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) rotate(-35deg) scaleX(1.2)} }
+  @keyframes slash-claw3 { 0%{opacity:0;transform:translate(-50%,-50%) rotate(-20deg) scaleX(0)} 25%{opacity:1;transform:translate(-50%,-50%) rotate(-20deg) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) rotate(-20deg) scaleX(1.2)} }
 
-  /* 슬래시 (노말 기술 전용 추가) */
-  .slash {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 100px;
-    height: 8px;
-    background: linear-gradient(90deg, transparent 0%, #fff 50%, transparent 100%);
-    border-radius: 4px;
-    filter: drop-shadow(0 0 6px #fff);
-    pointer-events: none;
-    z-index: 5;
-    animation: slash-anim 0.4s forwards;
-  }
-  @keyframes slash-anim {
-    0% { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scaleX(0); }
-    30% { opacity: 1; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.2); }
-  }
+  /* 발사체 공통 */
+  @keyframes spin-fast { to { transform: translate(-50%,-50%) rotate(360deg); } }
+  @keyframes spin-slow { to { transform: translate(-50%,-50%) rotate(-360deg); } }
+  @keyframes proj-grow { 0%{transform:translate(-50%,-50%) scale(0.3);opacity:0} 40%{opacity:1;transform:translate(-50%,-50%) scale(1)} 100%{transform:translate(-50%,-50%) scale(0.7);opacity:0.6} }
+  @keyframes impact-pop { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.2)} 35%{opacity:1;transform:translate(-50%,-50%) scale(1.2)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)} }
+  @keyframes ring-expand { 0%{opacity:0.9;transform:translate(-50%,-50%) scale(0.1)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1)} }
+
+  /* 화면 흔들림 */
+  @keyframes screen-shake { 0%,100%{transform:translate(0,0)} 15%{transform:translate(-6px,4px)} 30%{transform:translate(6px,-4px)} 45%{transform:translate(-5px,3px)} 60%{transform:translate(5px,-3px)} 75%{transform:translate(-3px,2px)} 90%{transform:translate(3px,-2px)} }
+  .battle-field.shaking { animation: screen-shake 0.45s ease; }
+
+  /* 불 공통 */
+  @keyframes fire-pulse { 0%,100%{filter:drop-shadow(0 0 8px #ff5722) brightness(1)} 50%{filter:drop-shadow(0 0 18px #ff9800) brightness(1.3)} }
+  @keyframes fist-hit { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.4) rotate(-20deg)} 30%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(5deg)} 70%{opacity:0.8;transform:translate(-50%,-50%) scale(0.9) rotate(0deg)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.3)} }
+  @keyframes whirl { 0%{transform:translate(-50%,-50%) rotate(0deg) scale(0.5);opacity:0} 20%{opacity:1;transform:translate(-50%,-50%) rotate(120deg) scale(1.2)} 100%{transform:translate(-50%,-50%) rotate(720deg) scale(2.5);opacity:0} }
+  @keyframes meteor-fall { 0%{opacity:0;transform:translate(-50%,-150%) scale(0.3) rotate(-30deg)} 30%{opacity:1} 100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-30deg)} }
+  @keyframes meteor-impact { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.2)} 20%{opacity:1;transform:translate(-50%,-50%) scale(1.4)} 100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)} }
+  @keyframes beam-fire { 0%{opacity:0;width:0;transform:translateY(-50%)} 15%{opacity:1} 80%{opacity:1} 100%{opacity:0;width:var(--beam-w)} }
+  @keyframes aura-wrap { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)} 40%{opacity:0.9;transform:translate(-50%,-50%) scale(1.1)} 70%{opacity:0.7} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)} }
+  @keyframes magic-circle { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.2) rotate(0deg)} 30%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(90deg)} 80%{opacity:0.8} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.2) rotate(180deg)} }
+  @keyframes phoenix-beam { 0%{opacity:0;height:0;transform:translateX(-50%)} 10%{opacity:1} 85%{opacity:1} 100%{opacity:0;height:var(--beam-h)} }
+  @keyframes cinder-float { 0%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0.3)} }
+
+  /* 물 공통 */
+  @keyframes water-slash-anim { 0%{opacity:0;transform:translate(-50%,-50%) rotate(-50deg) scaleX(0)} 20%{opacity:1;transform:translate(-50%,-50%) rotate(-50deg) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) rotate(-50deg) scaleX(1.4)} }
+  @keyframes water-cut { 0%{opacity:0;transform:translate(-50%,-50%) scaleX(0)} 30%{opacity:1;transform:translate(-50%,-50%) scaleX(1)} 100%{opacity:0;transform:translate(-50%,-50%) scaleX(1.3)} }
+  @keyframes dolphin-swim { 0%{transform:translate(-50%,-50%) scaleX(1)} 50%{transform:translate(-50%,-60%) scaleX(1.05)} 100%{transform:translate(-50%,-50%) scaleX(1)} }
+  @keyframes splash { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.2)} 30%{opacity:1;transform:translate(-50%,-50%) scale(1.1)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.8)} }
+  @keyframes wave-slide { 0%{opacity:0;transform:translateY(-50%) scaleX(0)} 25%{opacity:1;transform:translateY(-50%) scaleX(1)} 100%{opacity:0.2;transform:translateY(-50%) translateX(60px) scaleX(0.5)} }
+  @keyframes sword-up { 0%{opacity:0;transform:translate(-50%,30%) scaleY(0)} 30%{opacity:1;transform:translate(-50%,-80%) scaleY(1)} 100%{opacity:0;transform:translate(-50%,-110%) scaleY(1.2)} }
+  @keyframes sword-down { 0%{opacity:1;transform:translate(-50%,-80%) rotate(0deg)} 100%{opacity:0;transform:translate(-50%,40%) rotate(30deg) scaleY(1.3)} }
+  @keyframes waterpillar { 0%{opacity:0;transform:translateX(-50%) scaleY(0);transform-origin:bottom} 25%{opacity:1;transform:translateX(-50%) scaleY(1);transform-origin:bottom} 75%{opacity:0.8} 100%{opacity:0;transform:translateX(-50%) scaleY(1.3);transform-origin:bottom} }
+  @keyframes drop-gather { 0%{opacity:0;transform:translate(var(--gdx),var(--gdy)) scale(0.3)} 60%{opacity:1;transform:translate(0,0) scale(1)} 100%{opacity:1;transform:translate(0,0) scale(1)} }
+  @keyframes droplet-burst { 0%{opacity:1;transform:translate(-50%,-50%) scale(1)} 100%{opacity:0;transform:translate(calc(-50% + var(--bdx)),calc(-50% + var(--bdy))) scale(0.2)} }
+  @keyframes serpent-swim { 0%{transform:translate(-50%,-50%) rotate(0deg) scale(0.8);opacity:0} 15%{opacity:1} 50%{transform:translate(-50%,-60%) rotate(20deg) scale(1.1)} 100%{transform:translate(-50%,-50%) rotate(360deg) scale(0.8);opacity:0} }
+  @keyframes pillar-coil { 0%{opacity:0;transform:translate(-50%,-50%) scaleY(0) rotate(0deg);transform-origin:bottom} 20%{opacity:1;transform:translate(-50%,-50%) scaleY(1) rotate(0deg);transform-origin:bottom} 60%{transform:translate(-50%,-55%) scaleY(1.1) rotate(15deg)} 100%{opacity:0;transform:translate(-50%,-50%) scaleY(1.3) rotate(30deg)} }
+  @keyframes deluge-fall { 0%{opacity:0;transform:translateX(-50%) scaleY(0);transform-origin:top} 20%{opacity:1;transform:translateX(-50%) scaleY(1);transform-origin:top} 80%{opacity:1} 100%{opacity:0;transform:translateX(-50%) scaleY(1.5);transform-origin:top} }
+  @keyframes deluge-burst { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.3)} 25%{opacity:1;transform:translate(-50%,-50%) scale(1.3)} 100%{opacity:0;transform:translate(-50%,-50%) scale(2.2)} }
+  @keyframes sea-dragon { 0%{opacity:0;transform:translate(-50%,-50%) scale(0.4) rotate(-20deg)} 20%{opacity:1;transform:translate(-50%,-70%) scale(1.1) rotate(10deg)} 60%{transform:translate(-50%,-50%) scale(1) rotate(-5deg)} 100%{opacity:0;transform:translate(-50%,-50%) scale(1.5) rotate(20deg)} }
 
   .info-card {
     flex: 1;
@@ -3976,7 +3882,7 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   attSprite.classList.add("attacking");
   await sleep(150);
 
-  await playSkillEffect(r.move.type, attackerSide, defenderSide);
+  await playSkillEffect(moveKey, r.move.type, attackerSide, defenderSide);
 
   attSprite.classList.remove("attacking");
 
@@ -4096,56 +4002,559 @@ function renderMonStatus(side, mon) {
   wrap.classList.toggle("active", !!(mon.passive || mon.status || (mon.activeEffects && mon.activeEffects.length)));
 }
 
-// 스킬 효과 (타입별 발사체)
-async function playSkillEffect(moveType, attackerSide, defenderSide) {
+// ===== 스킬별 고유 이펙트 =====
+function shakeScreen() {
+  const f = $("battle-field");
+  f.classList.remove("shaking");
+  void f.offsetWidth;
+  f.classList.add("shaking");
+  setTimeout(() => f.classList.remove("shaking"), 450);
+}
+function mkEl(tag, css, parent) {
+  const el = document.createElement(tag || "div");
+  el.className = "fx-el";
+  Object.assign(el.style, css || {});
+  (parent || $("fx-layer")).appendChild(el);
+  return el;
+}
+function pos(el, x, y) { el.style.left = x + "px"; el.style.top = y + "px"; }
+function autoRemove(el, ms) { setTimeout(() => el.remove(), ms); }
+
+async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
   const field = $("battle-field");
   const fxLayer = $("fx-layer");
-  const attSprite = $(`${attackerSide}-sprite`);
-  const defSprite = $(`${defenderSide}-sprite`);
-
-  // 발사 시작점 / 도착점 (fxLayer 기준)
   const fieldRect = field.getBoundingClientRect();
-  const attRect = attSprite.getBoundingClientRect();
-  const defRect = defSprite.getBoundingClientRect();
+  const attRect = $(`${attackerSide}-sprite`).getBoundingClientRect();
+  const defRect = $(`${defenderSide}-sprite`).getBoundingClientRect();
+  const ax = attRect.left + attRect.width/2 - fieldRect.left;
+  const ay = attRect.top  + attRect.height/2 - fieldRect.top;
+  const dx = defRect.left + defRect.width/2  - fieldRect.left;
+  const dy = defRect.top  + defRect.height/2 - fieldRect.top;
 
-  const startX = attRect.left + attRect.width / 2 - fieldRect.left;
-  const startY = attRect.top  + attRect.height / 2 - fieldRect.top;
-  const endX   = defRect.left + defRect.width / 2 - fieldRect.left;
-  const endY   = defRect.top  + defRect.height / 2 - fieldRect.top;
+  // ── 헬퍼: 발사체 이동 ──
+  async function flyProj(el, duration=380) {
+    el.style.transition = `left ${duration}ms cubic-bezier(0.3,0,0.7,1), top ${duration}ms cubic-bezier(0.3,0,0.7,1)`;
+    await sleep(20);
+    pos(el, dx, dy);
+    await sleep(duration);
+  }
 
-  if (moveType === "normal") {
-    // 노말: 슬래시
-    const slash = document.createElement("div");
-    slash.className = "slash";
-    slash.style.left = endX + "px";
-    slash.style.top = endY + "px";
-    fxLayer.appendChild(slash);
-    setTimeout(() => slash.remove(), 400);
-    await sleep(280);
-  } else {
-    // fire / water / grass / spirit: 발사체
-    const proj = document.createElement("div");
-    proj.className = `projectile ${moveType}`;
-    proj.style.left = startX + "px";
-    proj.style.top = startY + "px";
-    proj.style.transition = "left 0.4s cubic-bezier(0.4, 0, 0.6, 1), top 0.4s cubic-bezier(0.4, 0, 0.6, 1)";
-    fxLayer.appendChild(proj);
+  // ── 헬퍼: 슬래시 라인 ──
+  function mkSlash(x, y, color, w, rot, animName, dur) {
+    const el = mkEl("div", { width: w+"px", height:"6px",
+      background:`linear-gradient(90deg,transparent 0%,${color} 40%,#fff 60%,transparent 100%)`,
+      borderRadius:"3px", filter:`drop-shadow(0 0 6px ${color})`,
+      animation:`${animName} ${dur}ms forwards` });
+    pos(el, x, y);
+    autoRemove(el, dur);
+    return el;
+  }
 
-    requestAnimationFrame(() => {
-      proj.style.left = endX + "px";
-      proj.style.top = endY + "px";
-    });
+  switch(moveKey) {
 
-    await sleep(400);
+    // ════════ 불 타입 ════════
 
-    const impact = document.createElement("div");
-    impact.className = `impact ${moveType}`;
-    impact.style.left = endX + "px";
-    impact.style.top = endY + "px";
-    fxLayer.appendChild(impact);
+    case "blaze_fang": {
+      mkSlash(dx, dy, "#ff6a00", 110, -40, "slash-sw", 420);
+      await sleep(300);
+      break;
+    }
 
-    proj.remove();
-    setTimeout(() => impact.remove(), 550);
+    case "flame_punch": {
+      // 불 주먹 - 발사체 이동 후 펀치 폭발
+      const fist = mkEl("div", { width:"44px", height:"44px",
+        background:"radial-gradient(circle at 40% 40%, #fff3a0 0%, #ff8c00 40%, #ff3d00 70%, transparent 85%)",
+        borderRadius:"30% 50% 40% 50%", filter:"drop-shadow(0 0 12px #ff8c00)",
+        animation:"fire-pulse 0.15s ease infinite" });
+      pos(fist, ax, ay);
+      await flyProj(fist, 280);
+      fist.remove();
+      const punch = mkEl("div", { width:"80px", height:"80px",
+        background:"radial-gradient(circle, #fff5a0 0%, #ff7c00 35%, #ff3d00 60%, transparent 78%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #ff8c00)",
+        animation:"fist-hit 0.45s forwards" });
+      pos(punch, dx, dy);
+      autoRemove(punch, 450);
+      await sleep(380);
+      break;
+    }
+
+    case "heat_wave": {
+      // 불 회오리 + 화면 흔들림
+      for (let i = 0; i < 3; i++) {
+        const w = mkEl("div", { width:"70px", height:"70px",
+          background:`conic-gradient(from ${i*120}deg, #ff3d00, #ff9800, #ff3d00 60%, transparent)`,
+          borderRadius:"50%", filter:"drop-shadow(0 0 14px #ff5722)",
+          animation:"whirl 0.7s forwards", opacity:"0" });
+        pos(w, dx + (i-1)*18, dy + (i-1)*12);
+        autoRemove(w, 700);
+        await sleep(80);
+      }
+      shakeScreen();
+      await sleep(650);
+      break;
+    }
+
+    case "meteor_flare": {
+      // 메테오 3번 낙하
+      shakeScreen();
+      for (let i = 0; i < 3; i++) {
+        const ox = (i-1)*28;
+        const meteor = mkEl("div", { width:"46px", height:"46px",
+          background:"radial-gradient(circle at 35% 35%, #fff3a0 0%, #ff8a3d 35%, #ff3d00 65%, transparent 80%)",
+          borderRadius:"50% 40% 50% 30%", filter:"drop-shadow(0 0 14px #ff6a00)",
+          animation:"meteor-fall 0.38s forwards" });
+        pos(meteor, dx+ox, dy);
+        await sleep(20);
+        autoRemove(meteor, 380);
+        await sleep(160);
+        const imp = mkEl("div", { width:"90px", height:"90px",
+          background:"radial-gradient(circle, #fff3a0 0%, #ff6a00 40%, transparent 70%)",
+          borderRadius:"50%", filter:"drop-shadow(0 0 18px #ff6a00)",
+          animation:"meteor-impact 0.5s forwards" });
+        pos(imp, dx+ox, dy);
+        autoRemove(imp, 500);
+        await sleep(180);
+      }
+      shakeScreen();
+      await sleep(200);
+      break;
+    }
+
+    case "burning_claw": {
+      // 슬래시 3줄 (발톱)
+      [-18, 0, 18].forEach((off, i) => {
+        const anims = ["slash-claw1","slash-claw2","slash-claw3"];
+        const el = mkEl("div", { width:"100px", height:"5px",
+          background:`linear-gradient(90deg,transparent,#ff6a00,#fff,transparent)`,
+          borderRadius:"3px", filter:"drop-shadow(0 0 5px #ff6a00)",
+          animation:`${anims[i]} 0.42s forwards` });
+        pos(el, dx, dy+off);
+        autoRemove(el, 450);
+      });
+      await sleep(320);
+      break;
+    }
+
+    case "inferno": {
+      // 불 브레스 빔
+      const bw = Math.abs(dx - ax) + 20;
+      const beam = mkEl("div", { height:"22px", width:"0px",
+        background:"linear-gradient(90deg, #ff3d00, #ffab40, #fff3a0, #ffab40, #ff3d00)",
+        borderRadius:"11px", filter:"drop-shadow(0 0 10px #ff5722) drop-shadow(0 0 20px #ff9800)",
+        position:"absolute", transformOrigin:"left center",
+        top: (ay - 11)+"px", left: ax+"px", transform:"none",
+        transition:`width 0.45s cubic-bezier(0.1,0,0.4,1), opacity 0.45s` });
+      beam.className = "";
+      beam.style.position = "absolute";
+      beam.style.zIndex = "5";
+      beam.style.pointerEvents = "none";
+      fxLayer.appendChild(beam);
+      await sleep(20);
+      beam.style.width = bw + "px";
+      await sleep(450);
+      beam.style.opacity = "0";
+      autoRemove(beam, 300);
+      await sleep(400);
+      break;
+    }
+
+    case "flame_purify": {
+      // 자신 주위 불이 감싸며 회복
+      const aura = mkEl("div", { width:"110px", height:"110px",
+        background:"radial-gradient(circle, rgba(255,200,80,0.3) 0%, rgba(255,100,0,0.7) 50%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 18px #ff8a3d)",
+        animation:"aura-wrap 0.8s forwards" });
+      pos(aura, ax, ay);
+      autoRemove(aura, 800);
+      // 불꽃 파티클
+      for (let i = 0; i < 6; i++) {
+        const angle = (i/6)*Math.PI*2;
+        const p = mkEl("div", { width:"10px", height:"10px",
+          background:"#ff8a3d", borderRadius:"50%",
+          filter:"drop-shadow(0 0 4px #ff5722)" });
+        p.style.setProperty("--dx", Math.cos(angle)*50+"px");
+        p.style.setProperty("--dy", Math.sin(angle)*50+"px");
+        p.style.animation = "cinder-float 0.8s forwards";
+        pos(p, ax, ay);
+        autoRemove(p, 800);
+      }
+      await sleep(700);
+      break;
+    }
+
+    case "ember_flame": {
+      // 재 상태: 회색 파편 폭풍 / 불꽃 상태: 날카로운 불 공격
+      // HP 기준으로 상태 추정 (단순화: 항상 불꽃 버전으로)
+      const isAsh = Math.random() < 0.5; // 실제론 HP체크 가능하나 단순화
+      if (isAsh) {
+        for (let i = 0; i < 8; i++) {
+          const angle = (i/8)*Math.PI*2;
+          const p = mkEl("div", { width:"14px", height:"14px",
+            background:`rgba(${140+Math.random()*50|0},${130+Math.random()*30|0},${120+Math.random()*20|0},0.9)`,
+            borderRadius:"3px", filter:"blur(0.5px)" });
+          p.style.setProperty("--dx", Math.cos(angle)*70+"px");
+          p.style.setProperty("--dy", Math.sin(angle)*70+"px");
+          p.style.animation = "cinder-float 0.7s forwards";
+          pos(p, dx, dy);
+          autoRemove(p, 700);
+        }
+      } else {
+        mkSlash(dx, dy, "#ff6a00", 120, -35, "slash-sw", 400);
+        await sleep(50);
+        mkSlash(dx, dy, "#ffab40", 90, -20, "slash-claw2", 400);
+      }
+      // 회복 이펙트 자신에게
+      const heal = mkEl("div", { width:"70px", height:"70px",
+        background:"radial-gradient(circle, rgba(255,200,80,0.4) 0%, rgba(255,100,0,0.6) 60%, transparent 80%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 12px #ff8a3d)",
+        animation:"aura-wrap 0.7s forwards" });
+      pos(heal, ax, ay);
+      autoRemove(heal, 700);
+      await sleep(550);
+      break;
+    }
+
+    case "fire_mark": {
+      // 상대한테 불 마법진
+      const ring1 = mkEl("div", { width:"100px", height:"100px",
+        border:"3px solid #ff6a00", borderRadius:"50%",
+        filter:"drop-shadow(0 0 10px #ff6a00)",
+        animation:"magic-circle 0.8s forwards" });
+      pos(ring1, dx, dy);
+      autoRemove(ring1, 800);
+      const ring2 = mkEl("div", { width:"70px", height:"70px",
+        border:"2px solid #ffab40", borderRadius:"50%",
+        filter:"drop-shadow(0 0 8px #ffab40)",
+        animation:"magic-circle 0.8s 0.1s forwards", opacity:"0" });
+      pos(ring2, dx, dy);
+      autoRemove(ring2, 900);
+      await sleep(700);
+      break;
+    }
+
+    case "phoenix_nova": {
+      // 불이 자신을 휘감고 강력한 빔 발사
+      const wrap = mkEl("div", { width:"130px", height:"130px",
+        background:"radial-gradient(circle, rgba(255,220,80,0.5) 0%, rgba(255,80,0,0.8) 45%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 24px #ff8a3d)",
+        animation:"aura-wrap 0.5s forwards" });
+      pos(wrap, ax, ay);
+      autoRemove(wrap, 500);
+      await sleep(400);
+      // 빔
+      const bh = Math.abs(dy - ay) + 20;
+      const pbeam = mkEl("div", { width:"28px", height:"0px",
+        background:"linear-gradient(180deg,#fff3a0,#ff8a3d,#ff3d00)",
+        borderRadius:"14px", filter:"drop-shadow(0 0 14px #ff5722) drop-shadow(0 0 28px #ff9800)",
+        position:"absolute", left:(ax-14)+"px", top:ay+"px",
+        transformOrigin:"top center",
+        transition:`height 0.4s cubic-bezier(0.1,0,0.3,1), opacity 0.3s` });
+      pbeam.className = "";
+      pbeam.style.position = "absolute";
+      pbeam.style.zIndex = "5";
+      pbeam.style.pointerEvents = "none";
+      fxLayer.appendChild(pbeam);
+      await sleep(20);
+      pbeam.style.height = bh+"px";
+      shakeScreen();
+      await sleep(400);
+      pbeam.style.opacity = "0";
+      autoRemove(pbeam, 300);
+      // 임팩트
+      const pimp = mkEl("div", { width:"120px", height:"120px",
+        background:"radial-gradient(circle, #fff3a0 0%, #ff6a00 40%, transparent 68%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 22px #ff5722)",
+        animation:"meteor-impact 0.6s forwards" });
+      pos(pimp, dx, dy);
+      autoRemove(pimp, 600);
+      shakeScreen();
+      await sleep(500);
+      break;
+    }
+
+    // ════════ 물 타입 ════════
+
+    case "water_slash": {
+      // 물 슬래시 + 베어진 자국
+      mkSlash(dx, dy, "#64b5f6", 120, -45, "water-slash-anim", 450);
+      await sleep(80);
+      // 베어진 자국 (가로)
+      const cut = mkEl("div", { width:"90px", height:"3px",
+        background:"linear-gradient(90deg,transparent,#e3f2fd,#64b5f6,#e3f2fd,transparent)",
+        filter:"drop-shadow(0 0 5px #2196f3)",
+        animation:"water-cut 0.5s 0.15s forwards", opacity:"0" });
+      pos(cut, dx, dy+10);
+      autoRemove(cut, 650);
+      await sleep(380);
+      break;
+    }
+
+    case "water_dash": {
+      // 물 정령 돌진 + 물 튀김
+      const dolphin = mkEl("div", { width:"55px", height:"30px",
+        background:"linear-gradient(135deg, #e3f2fd 0%, #42a5f5 40%, #1565c0 80%)",
+        borderRadius:"50% 20% 50% 20%",
+        filter:"drop-shadow(0 0 10px #2196f3)",
+        animation:"dolphin-swim 0.3s ease-in-out infinite" });
+      pos(dolphin, ax, ay);
+      await flyProj(dolphin, 360);
+      dolphin.remove();
+      // 물 튀김
+      for (let i = 0; i < 7; i++) {
+        const angle = (i/7)*Math.PI*2;
+        const sp = mkEl("div", { width:"12px", height:"12px",
+          background:"#64b5f6", borderRadius:"50%",
+          filter:"drop-shadow(0 0 4px #2196f3)" });
+        sp.style.setProperty("--dx", Math.cos(angle)*55+"px");
+        sp.style.setProperty("--dy", Math.sin(angle)*55+"px");
+        sp.style.animation = "cinder-float 0.5s forwards";
+        pos(sp, dx, dy);
+        autoRemove(sp, 500);
+      }
+      await sleep(400);
+      break;
+    }
+
+    case "wave_strike": {
+      // 작은 파도 3번
+      for (let i = 0; i < 3; i++) {
+        const wave = mkEl("div", { width:"80px", height:"28px",
+          background:"linear-gradient(90deg, transparent 0%, #64b5f6 30%, #1976d2 60%, transparent 100%)",
+          borderRadius:"50% 50% 0 0 / 100% 100% 0 0",
+          filter:"drop-shadow(0 0 8px #2196f3)",
+          animation:"wave-slide 0.45s forwards" });
+        pos(wave, dx, dy + (i-1)*18);
+        autoRemove(wave, 450);
+        await sleep(130);
+      }
+      await sleep(350);
+      break;
+    }
+
+    case "tidal_wave": {
+      // 큰 파도 2번 + 화면 흔들림
+      for (let i = 0; i < 2; i++) {
+        const wave = mkEl("div", { width:"130px", height:"55px",
+          background:"linear-gradient(90deg, transparent 0%, #42a5f5 25%, #1565c0 55%, transparent 100%)",
+          borderRadius:"50% 50% 0 0 / 100% 100% 0 0",
+          filter:"drop-shadow(0 0 14px #1976d2)",
+          animation:"wave-slide 0.55s forwards" });
+        pos(wave, dx, dy + (i-0.5)*30);
+        autoRemove(wave, 550);
+        if (i===0) shakeScreen();
+        await sleep(220);
+      }
+      shakeScreen();
+      await sleep(400);
+      break;
+    }
+
+    case "azure_slash": {
+      // 물 검이 위로 올라갔다 크게 베어버림
+      const sword = mkEl("div", { width:"14px", height:"110px",
+        background:"linear-gradient(180deg, #e3f2fd 0%, #42a5f5 40%, #1565c0 80%)",
+        borderRadius:"7px 7px 3px 3px",
+        filter:"drop-shadow(0 0 12px #2196f3)",
+        animation:"sword-up 0.4s forwards" });
+      pos(sword, dx, dy);
+      await sleep(380);
+      sword.style.animation = "sword-down 0.35s forwards";
+      autoRemove(sword, 350);
+      // 충격 링
+      const ring = mkEl("div", { width:"120px", height:"120px",
+        border:"3px solid #42a5f5", borderRadius:"50%",
+        filter:"drop-shadow(0 0 12px #2196f3)",
+        animation:"ring-expand 0.5s forwards" });
+      pos(ring, dx, dy);
+      autoRemove(ring, 500);
+      await sleep(500);
+      break;
+    }
+
+    case "life_spring": {
+      // 자신한테 물기둥 솟아오름 + 회복
+      const pillar = mkEl("div", { width:"30px", height:"100px",
+        background:"linear-gradient(180deg, #e3f2fd 0%, #42a5f5 50%, #1565c0 100%)",
+        borderRadius:"15px",
+        filter:"drop-shadow(0 0 14px #2196f3)",
+        animation:"waterpillar 0.8s forwards" });
+      pillar.style.transform = "none";
+      pillar.style.left = ax+"px";
+      pillar.style.top = (ay-50)+"px";
+      pillar.className = "";
+      pillar.style.position = "absolute";
+      pillar.style.zIndex = "5";
+      pillar.style.pointerEvents = "none";
+      fxLayer.appendChild(pillar);
+      // 물방울들
+      for (let i = 0; i < 5; i++) {
+        const angle = (i/5)*Math.PI*2;
+        const d = mkEl("div", { width:"10px", height:"10px",
+          background:"#64b5f6", borderRadius:"50%",
+          filter:"drop-shadow(0 0 4px #2196f3)" });
+        d.style.setProperty("--dx", Math.cos(angle)*45+"px");
+        d.style.setProperty("--dy", Math.sin(angle)*45+"px");
+        d.style.animation = "cinder-float 0.9s 0.3s forwards";
+        pos(d, ax, ay);
+        autoRemove(d, 1200);
+      }
+      autoRemove(pillar, 800);
+      await sleep(700);
+      break;
+    }
+
+    case "aqua_regen": {
+      // 물방울 모였다가 한번에 공격
+      const drops = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = (i/8)*Math.PI*2;
+        const r = 65;
+        const d = mkEl("div", { width:"14px", height:"14px",
+          background:"radial-gradient(circle at 35% 35%, #e3f2fd, #42a5f5)",
+          borderRadius:"50% 40% 50% 40%",
+          filter:"drop-shadow(0 0 5px #2196f3)" });
+        d.style.setProperty("--gdx", Math.cos(angle)*r+"px");
+        d.style.setProperty("--gdy", Math.sin(angle)*r+"px");
+        d.style.animation = "drop-gather 0.5s forwards";
+        pos(d, dx, dy);
+        drops.push(d);
+        autoRemove(d, 500);
+      }
+      await sleep(500);
+      // 한번에 터지는 임팩트
+      const burst = mkEl("div", { width:"100px", height:"100px",
+        background:"radial-gradient(circle, #e3f2fd 0%, #42a5f5 40%, transparent 70%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #1976d2)",
+        animation:"impact-pop 0.5s forwards" });
+      pos(burst, dx, dy);
+      autoRemove(burst, 500);
+      // 회복 이펙트
+      const hr = mkEl("div", { width:"70px", height:"70px",
+        background:"radial-gradient(circle, rgba(100,181,246,0.5) 0%, transparent 70%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 10px #42a5f5)",
+        animation:"aura-wrap 0.6s forwards" });
+      pos(hr, ax, ay);
+      autoRemove(hr, 600);
+      await sleep(450);
+      break;
+    }
+
+    case "overflow": {
+      // 물기둥 3개가 용처럼 꼬이며 공격
+      for (let i = 0; i < 3; i++) {
+        const off = (i-1)*22;
+        const col = mkEl("div", { width:"18px", height:"90px",
+          background:`linear-gradient(180deg, #e3f2fd, #42a5f5, #1565c0)`,
+          borderRadius:"9px", filter:"drop-shadow(0 0 10px #2196f3)",
+          animation:`pillar-coil 0.7s ${i*0.08}s forwards`, opacity:"0" });
+        pos(col, dx+off, dy);
+        autoRemove(col, 780);
+      }
+      await sleep(650);
+      break;
+    }
+
+    case "deep_blue": {
+      // 위에서 물이 낙하 + 터짐
+      const deluge = mkEl("div", { width:"80px", height:"0px",
+        background:"linear-gradient(180deg, #e3f2fd, #1565c0)",
+        borderRadius:"10px", filter:"drop-shadow(0 0 14px #1976d2)",
+        position:"absolute", left:(dx-40)+"px", top:(dy-80)+"px",
+        transformOrigin:"top", transition:"height 0.35s ease-in, opacity 0.3s" });
+      deluge.className = "";
+      deluge.style.position = "absolute";
+      deluge.style.zIndex = "5";
+      deluge.style.pointerEvents = "none";
+      fxLayer.appendChild(deluge);
+      await sleep(20);
+      deluge.style.height = "80px";
+      await sleep(350);
+      deluge.style.opacity = "0";
+      autoRemove(deluge, 300);
+      // 터짐
+      for (let i = 0; i < 8; i++) {
+        const angle = (i/8)*Math.PI*2;
+        const sp = mkEl("div", { width:"15px", height:"15px",
+          background:"#42a5f5", borderRadius:"50%",
+          filter:"drop-shadow(0 0 5px #1976d2)" });
+        sp.style.setProperty("--bdx", Math.cos(angle)*60+"px");
+        sp.style.setProperty("--bdy", Math.sin(angle)*60+"px");
+        sp.style.animation = "droplet-burst 0.5s forwards";
+        pos(sp, dx, dy);
+        autoRemove(sp, 500);
+      }
+      const imp = mkEl("div", { width:"110px", height:"110px",
+        background:"radial-gradient(circle, #e3f2fd 0%, #1976d2 50%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 18px #1565c0)",
+        animation:"deluge-burst 0.55s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 550);
+      await sleep(500);
+      break;
+    }
+
+    case "sea_king": {
+      // 청해룡이 자신 감싸고 상대한테 충격 + 화면 흔들림
+      const dragon = mkEl("div", { width:"100px", height:"100px",
+        background:"radial-gradient(ellipse at 40% 40%, #e3f2fd 0%, #42a5f5 35%, #1565c0 65%, transparent 82%)",
+        borderRadius:"60% 40% 50% 50% / 50% 60% 40% 50%",
+        filter:"drop-shadow(0 0 20px #1976d2)",
+        animation:"sea-dragon 0.6s forwards" });
+      pos(dragon, ax, ay);
+      await sleep(500);
+      dragon.style.transition = `left 0.45s cubic-bezier(0.3,0,0.7,1), top 0.45s cubic-bezier(0.3,0,0.7,1)`;
+      pos(dragon, dx, dy);
+      await sleep(450);
+      dragon.remove();
+      // 충격
+      const impact = mkEl("div", { width:"130px", height:"130px",
+        background:"radial-gradient(circle, #e3f2fd 0%, #42a5f5 35%, #1565c0 60%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 24px #1976d2)",
+        animation:"deluge-burst 0.6s forwards" });
+      pos(impact, dx, dy);
+      autoRemove(impact, 600);
+      shakeScreen();
+      // 충격 링들
+      for (let i = 0; i < 3; i++) {
+        const r = mkEl("div", { width:(80+i*40)+"px", height:(80+i*40)+"px",
+          border:"2px solid #42a5f5", borderRadius:"50%",
+          filter:"drop-shadow(0 0 8px #1976d2)",
+          animation:`ring-expand 0.6s ${i*0.1}s forwards`, opacity:"0" });
+        pos(r, dx, dy);
+        autoRemove(r, 700);
+      }
+      shakeScreen();
+      await sleep(550);
+      break;
+    }
+
+    default: {
+      // 기본 타입별 폴백
+      if (moveType === "normal") {
+        mkSlash(dx, dy, "#fff", 100, -40, "slash-sw", 400);
+        await sleep(280);
+      } else {
+        const proj = mkEl("div", { width:"44px", height:"44px",
+          background: moveType==="fire" ? "radial-gradient(circle,#fff3a0,#ff8a3d,#ff3d00)" :
+                      moveType==="water" ? "radial-gradient(circle,#e3f2fd,#42a5f5,#1565c0)" :
+                      moveType==="grass" ? "radial-gradient(circle,#f1f8e9,#7fc34a,#3d8b1f)" :
+                      "radial-gradient(circle,#e1b3ff,#9c27b0,#4a148c)",
+          borderRadius:"50%",
+          filter:`drop-shadow(0 0 10px ${moveType==="fire"?"#ff8a3d":moveType==="water"?"#2196f3":"#7fc34a"})`,
+          animation:"spin-fast 0.3s linear infinite" });
+        pos(proj, ax, ay);
+        await flyProj(proj, 380);
+        proj.remove();
+        const imp = mkEl("div", { width:"90px", height:"90px",
+          background: moveType==="fire" ? "radial-gradient(circle,#fff3a0,#ff8a3d,transparent)" :
+                      "radial-gradient(circle,#e3f2fd,#42a5f5,transparent)",
+          borderRadius:"50%", animation:"impact-pop 0.5s forwards" });
+        pos(imp, dx, dy);
+        autoRemove(imp, 500);
+        await sleep(380);
+      }
+    }
   }
 }
 
