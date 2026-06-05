@@ -2650,6 +2650,139 @@ const MOVES = {
       { kind: "atk_up",  target: "self", value: 30, duration: 2 }
     ]
   },
+
+  // ===== 풀 타입 스킬 =====
+  vine_whip: {
+    name: "덩쿨채찍",
+    type: "grass",
+    multiplier: 0.5,
+    cooldown: 1,
+    priority: 0,
+    icon: "skill_vine_whip.png",
+    desc: "덩굴로 적을 휘감아 도망치지 못하게 한다.",
+    effects: [
+      { kind: "trapped", target: "enemy", value: 0, duration: 2 }
+    ]
+  },
+  leaf_slash: {
+    name: "풀잎 베기",
+    type: "grass",
+    multiplier: 1.0,
+    cooldown: 0,
+    priority: 1,
+    icon: "skill_leaf_slash.png",
+    desc: "날카로운 잎날로 빠르게 벤다.",
+    effects: []
+  },
+  thorn_shot: {
+    name: "가시탄",
+    type: "grass",
+    multiplier: 0.5,
+    cooldown: 0,
+    priority: 0,
+    icon: "skill_thorn_shot.png",
+    multiHit: "hp_diff",
+    desc: "가시를 발사. 상대가 강할수록 더 많이 맞고 회복을 방해한다.",
+    effects: [
+      { kind: "heal_block", target: "enemy", value: 30, duration: 2 }
+    ]
+  },
+  thorn_hell: {
+    name: "가시지옥",
+    type: "grass",
+    multiplier: 1.0,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_thorn_hell.png",
+    desc: "가시 덤불로 적을 가두고 약화시킨다.",
+    effects: [
+      { kind: "trapped",  target: "enemy", value: 0,  duration: 2 },
+      { kind: "atk_down", target: "enemy", value: 15, duration: 2 }
+    ]
+  },
+  thousand_bloom: {
+    name: "천수개화",
+    type: "grass",
+    multiplier: 1.0,
+    cooldown: 2,
+    priority: 0,
+    icon: "skill_thousand_bloom.png",
+    desc: "수천 꽃잎으로 적의 필살기를 봉인하고 힘을 끌어올린다.",
+    effects: [
+      { kind: "skill_lock", target: "enemy", value: 2, duration: 2 },
+      { kind: "atk_up",     target: "self",  value: 20, duration: 2 }
+    ]
+  },
+  natures_blessing_skill: {
+    name: "자연의 축복",
+    type: "grass",
+    multiplier: 0,
+    cooldown: 3,
+    priority: 1,
+    icon: "skill_natures_blessing.png",
+    desc: "자연의 기운으로 모든 능력을 끌어올리고 체력을 회복한다.",
+    effects: [
+      { kind: "heal",   target: "self", value: 30, duration: 0 },
+      { kind: "atk_up", target: "self", value: 10, duration: 3 },
+      { kind: "spd_up", target: "self", value: 10, duration: 3 },
+      { kind: "def_up", target: "self", value: 10, duration: 3 }
+    ]
+  },
+  battle_bloom: {
+    name: "전장의 개화",
+    type: "grass",
+    multiplier: 1.5,
+    cooldown: 3,
+    priority: 1,
+    icon: "skill_battle_bloom.png",
+    desc: "전장에 꽃을 피워 서로를 묶는다. 적이 쓰러지면 완전 회복.",
+    effects: [
+      { kind: "trapped",  target: "enemy", value: 0,  duration: 3 },
+      { kind: "trapped",  target: "self",  value: 0,  duration: 3 },
+      { kind: "atk_down", target: "enemy", value: 15, duration: 3, onEnemyDeath: "full_heal" }
+    ]
+  },
+  everbloom: {
+    name: "에버블룸",
+    type: "grass",
+    multiplier: 2.0,
+    cooldown: 3,
+    priority: 0,
+    icon: "skill_everbloom.png",
+    desc: "끝없이 피는 꽃으로 자신을 지키고 적의 회복을 강하게 막는다.",
+    effects: [
+      { kind: "def_up",     target: "self",  value: 25, duration: 3 },
+      { kind: "heal_block", target: "enemy", value: 50, duration: 3 }
+    ]
+  },
+  full_bloom: {
+    name: "만개",
+    type: "grass",
+    multiplier: 2.0,
+    cooldown: 3,
+    priority: 0,
+    icon: "skill_full_bloom.png",
+    desc: "활짝 피어나 모든 상태이상을 씻고 체력과 속도를 끌어올린다.",
+    effects: [
+      { kind: "cleanse", target: "self" },
+      { kind: "heal",    target: "self", value: 50, duration: 0 },
+      { kind: "spd_up",  target: "self", value: 30, duration: 3 }
+    ]
+  },
+  moonflower: {
+    name: "월화난무",
+    type: "grass",
+    multiplier: 2.0,
+    cooldown: 0,
+    onceBattle: true,
+    priority: 1,
+    icon: "skill_moonflower.png",
+    desc: "월화랑의 전용기. 아군 전체를 완전 회복하고 적을 묶는다. 쓰러지면 아군에게 축복을.",
+    effects: [
+      { kind: "heal",    target: "self", value: 100 },
+      { kind: "trapped",    target: "enemy", value: 0, duration: 999, untilDeath: true, onSelfDeath: "moonflower_blessing" }
+    ]
+  },
   // === 구 시스템 스킬 ===
   scratch:        { name: "긁기",       power: 35, type: "normal" },
   ember:          { name: "불꽃세례",   power: 40, type: "fire" },
@@ -2728,7 +2861,9 @@ const EFFECT_DEFS = {
   burn:     { label: "화상",        stat: null, isBuff: false, defaultValue: 10, defaultDuration: 2, icon: "🔥", color: "#ff5722" },
   // trapped: 교체 불가 (디버프 취급)
   trapped:  { label: "교체불가",    stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🚫", color: "#7c2d12" },
-  regen:    { label: "체력 회복",   stat: null, isBuff: true,  defaultValue: 10, defaultDuration: 3, icon: "💧", color: "#4fc3f7" }
+  regen:    { label: "체력 회복",   stat: null, isBuff: true,  defaultValue: 10, defaultDuration: 3, icon: "💧", color: "#4fc3f7" },
+  heal_block: { label: "회복 방해", stat: null, isBuff: false, defaultValue: 30, defaultDuration: 2, icon: "💔", color: "#ad1457" },
+  skill_lock: { label: "스킬 봉인", stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🔒", color: "#6a1b9a" }
 };
 
 // 효과 객체를 만드는 헬퍼 (스킬 정의에서 사용)
@@ -2764,9 +2899,9 @@ const MONSTERS = {
   mon_004: { id: "mon_004", name: "꼬북치", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1450, atk: 180, def: 30, spd: 55 }, moves: ["water_dash", "azure_slash", "tidal_wave"] },
   mon_005: { id: "mon_005", name: "물토리", type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 330, def: 25, spd: 65 }, moves: ["water_dash", "water_slash", "overflow"] },
   mon_006: { id: "mon_006", name: "펭구리",   type: "water", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1020, atk: 360, def: 25, spd: 70 }, moves: ["water_dash", "wave_strike", "tidal_wave"] },
-  mon_007: { id: "mon_007", name: "버니풀", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 300, def: 30, spd: 55 }, moves: ["kick", "leaf_blade", "sleep_spore"] },
-  mon_008: { id: "mon_008", name: "도토리", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 350, def: 20, spd: 60 }, moves: ["tackle", "spore_shot", "poison_powder"] },
-  mon_009: { id: "mon_009", name: "입새짹", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1080, atk: 350, def: 25, spd: 65 }, moves: ["peck", "leaf_blade", "sleep_spore"] },
+  mon_007: { id: "mon_007", name: "버니풀", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1150, atk: 300, def: 30, spd: 55 }, moves: ["leaf_slash", "thorn_shot", "full_bloom"] },
+  mon_008: { id: "mon_008", name: "도토리", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1200, atk: 350, def: 20, spd: 60 }, moves: ["thorn_shot", "thorn_hell", "everbloom"] },
+  mon_009: { id: "mon_009", name: "입새짹", type: "grass", rarity: "common",    passive: null, facing: "left",  stats: { hp: 1080, atk: 350, def: 25, spd: 65 }, moves: ["thorn_shot", "vine_whip", "thousand_bloom"] },
 
   // 청룡: 정령 → 물 전설
   mon_010: { id: "mon_010", name: "청해룡",   type: "water", rarity: "legendary", passive: "azure_blessing", facing: "right", stats: { hp: 1720, atk: 450, def: 30, spd: 60 }, moves: ["wave_strike", "life_spring", "deep_blue", "sea_king"] },
@@ -2781,7 +2916,7 @@ const MONSTERS = {
   // 어둠 전설
   mon_015: { id: "mon_015", name: "데스페리온",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 1630, atk: 440, def: 25, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
   // 풀 전설
-  mon_016: { id: "mon_016", name: "월화랑",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 1820, atk: 380, def: 25, spd: 60 }, moves: ["bite", "leaf_blade", "spore_shot"] },
+  mon_016: { id: "mon_016", name: "월화랑",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 1820, atk: 380, def: 25, spd: 60 }, moves: ["leaf_slash", "natures_blessing_skill", "full_bloom", "moonflower"] },
   // 전기 전설 (이스터에그)
   mon_017: { id: "mon_017", name: "스타링",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 1710, atk: 490, def: 20, spd: 70 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
   // 전기 일반 3 (전기뱀장어는 레어)
@@ -2797,8 +2932,8 @@ const MONSTERS = {
   mon_023: { id: "mon_023", name: "설원가온",   type: "water",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1180, atk: 550, def: 25, spd: 65 }, moves: ["wave_strike", "aqua_regen", "azure_slash", "overflow"] },
   mon_024: { id: "mon_024", name: "버블레이",   type: "water",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1250, atk: 320, def: 25, spd: 55 }, moves: ["water_dash", "water_slash", "deep_blue"] },
   // 풀 추가
-  mon_025: { id: "mon_025", name: "아르보디어", type: "grass",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1460, atk: 350, def: 30, spd: 60 }, moves: ["headbutt", "leaf_blade", "spore_shot"] },
-  mon_026: { id: "mon_026", name: "리프자드",   type: "grass",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1350, atk: 230, def: 30, spd: 55 }, moves: ["scratch", "leaf_blade", "poison_powder"] },
+  mon_025: { id: "mon_025", name: "아르보디어", type: "grass",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1460, atk: 350, def: 30, spd: 60 }, moves: ["leaf_slash", "thousand_bloom", "battle_bloom", "everbloom"] },
+  mon_026: { id: "mon_026", name: "리프자드",   type: "grass",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1350, atk: 230, def: 30, spd: 55 }, moves: ["leaf_slash", "thousand_bloom", "natures_blessing_skill"] },
   // 전기 추가
   mon_027: { id: "mon_027", name: "라이트닝쿤", type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1220, atk: 360, def: 20, spd: 60 }, moves: ["scratch", "spark", "thunder_shock"] },
   mon_028: { id: "mon_028", name: "볼툼비",     type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1200, atk: 220, def: 40, spd: 60 }, moves: ["body_slam", "spark", "thunder_punch"] },
@@ -2934,6 +3069,16 @@ function makeInstance(monId, level) {
 // === 효과 적용/계산 시스템 (2단계) ===
 // ============================================================
 
+// 회복 방해 배율 반환 (heal_block 효과 중 최대값 적용)
+function getHealBlockMult(mon) {
+  if (!mon.activeEffects) return 1.0;
+  let maxBlock = 0;
+  mon.activeEffects.forEach(e => {
+    if (e.kind === "heal_block") maxBlock = Math.max(maxBlock, e.value);
+  });
+  return 1 - maxBlock / 100;
+}
+
 // 효과 적용: 스킬의 effects 배열을 시전자/대상에 적용
 // caster=시전자 인스턴스, target=상대 인스턴스
 function applyEffects(effectList, caster, target, moveKey) {
@@ -2967,9 +3112,17 @@ function applyEffects(effectList, caster, target, moveKey) {
       return;
     }
     if (e.kind === "heal") {
-      const healAmt = Math.floor(recipient.maxHp * e.value / 100);
+      const blockMult = getHealBlockMult(recipient);
+      const healAmt = Math.floor(recipient.maxHp * e.value / 100 * blockMult);
       recipient.currentHp = Math.min(recipient.maxHp, recipient.currentHp + healAmt);
-      messages.push(`${recipient.name} HP ${healAmt} 회복!`);
+      if (blockMult < 1) messages.push(`${recipient.name} HP ${healAmt} 회복! (회복 방해)`);
+      else messages.push(`${recipient.name} HP ${healAmt} 회복!`);
+      return;
+    }
+    if (e.kind === "heal_party") {
+      // 아군 전체 완전 회복 (월화난무)
+      state.party.forEach(m => { if (m.currentHp > 0) m.currentHp = m.maxHp; });
+      messages.push(`아군 전체가 완전히 회복했다!`);
       return;
     }
 
@@ -2987,6 +3140,10 @@ function applyEffects(effectList, caster, target, moveKey) {
     if (e.schedule) effectObj.schedule = [...e.schedule];
     // onExpire 콜백 있으면 복사 (해왕 강림 등)
     if (e.onExpire) effectObj.onExpire = e.onExpire;
+    // 사망 트리거 / 무한지속 메타데이터 (풀 스킬)
+    if (e.onEnemyDeath) effectObj.onEnemyDeath = e.onEnemyDeath;
+    if (e.onSelfDeath) effectObj.onSelfDeath = e.onSelfDeath;
+    if (e.untilDeath) effectObj.untilDeath = e.untilDeath;
     addOrRefreshEffect(recipient, effectObj);
     const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
     messages.push(`${recipient.name} ${def.label}${sign}`);
@@ -3062,19 +3219,23 @@ function tickEffects(mon) {
         pct = e.value;
       }
       e.turnIndex++;
-      const healAmt = Math.floor(mon.maxHp * pct / 100);
+      const healAmt = Math.floor(mon.maxHp * pct / 100 * getHealBlockMult(mon));
       const before = mon.currentHp;
       mon.currentHp = Math.min(mon.maxHp, mon.currentHp + healAmt);
       const actual = mon.currentHp - before;
       if (actual > 0) messages.push(`${mon.name} 재생 회복 +${actual}!`);
     }
-    // 지속시간 감소
-    e.duration -= 1;
-    if (e.duration > 0) {
+    // 지속시간 감소 (untilDeath는 영구 유지)
+    if (e.untilDeath) {
       survivors.push(e);
     } else {
-      // 만료 콜백 (onExpire) 수집
-      if (e.onExpire) expiredCallbacks.push(e.onExpire);
+      e.duration -= 1;
+      if (e.duration > 0) {
+        survivors.push(e);
+      } else {
+        // 만료 콜백 (onExpire) 수집
+        if (e.onExpire) expiredCallbacks.push(e.onExpire);
+      }
     }
   });
   mon.activeEffects = survivors;
@@ -3118,8 +3279,17 @@ function isMoveAvailable(mon, moveKey) {
   if (move && move.onceBattle) {
     if (mon.battleUsed && mon.battleUsed[moveKey]) return false;
   }
+  // 스킬 봉인 체크: skill_lock 효과가 있으면 해당 슬롯 잠금
+  if (isMoveLocked(mon, moveKey)) return false;
   if (!mon.cooldowns) return true;
   return !mon.cooldowns[moveKey] || mon.cooldowns[moveKey] <= 0;
+}
+// 특정 스킬이 봉인됐는지 (skill_lock의 value = 잠글 슬롯 인덱스)
+function isMoveLocked(mon, moveKey) {
+  if (!mon.activeEffects) return false;
+  const slotIdx = mon.moves ? mon.moves.indexOf(moveKey) : -1;
+  if (slotIdx < 0) return false;
+  return mon.activeEffects.some(e => e.kind === "skill_lock" && e.value === slotIdx);
 }
 // 남은 쿨다운 (0이면 사용 가능)
 function getCooldown(mon, moveKey) {
@@ -3237,14 +3407,12 @@ function calcDamage(attacker, defender, moveKey) {
     return { damage: 0, typeMult: 1, isCrit: false, move };
   }
 
-  const typeMult = TYPE_CHART[move.type]?.[defender.type] ?? 1.0;
+  const typeMult = 1.0; // 상성 임시 비활성화
   const stab = (move.type === attacker.type) ? 1.5 : 1.0;
   const randMult = rand(0.92, 1.0);  // 변동폭 약간 축소 (큰 숫자 시대)
 
-  // 크리 확률 (별정령 패시브: 2배)
-  let critChance = 0.0625;
-  if (attacker.passive === "stars_grace") critChance *= 2;
-  const crit = (Math.random() < critChance) ? 1.5 : 1.0;
+  // 크리 확률 (임시 비활성화)
+  const crit = 1.0;
 
   // 화상 시 공격력 50% 다운 (기존 상태이상, 새 burn 효과와는 다름)
   const burnMod = (attacker.status === "burn") ? 0.5 : 1.0;
@@ -3277,7 +3445,17 @@ function calcDamage(attacker, defender, moveKey) {
   const defBuffMult = 1 / Math.max(0.5, getStatMultiplier(defender, "def"));
 
   const damage = Math.floor(base * typeMult * stab * randMult * crit * fearMod * darkReignMod * defBuffMult);
-  return { damage: Math.max(1, damage), typeMult, isCrit: crit > 1, move };
+
+  // 멀티히트 (가시탄: HP 차이 기반 1~3히트)
+  let hits = 1;
+  if (move.multiHit === "hp_diff") {
+    const diff = defender.maxHp - attacker.maxHp;
+    if (diff >= 200) hits = 3;
+    else if (diff >= 100) hits = 2;
+    else hits = 1;
+  }
+
+  return { damage: Math.max(1, damage) * hits, typeMult, isCrit: crit > 1, move, hits };
 }
 
 // 스피드 계산 (마비 50% 디버프 + 속도 버프/디버프 반영)
@@ -3602,9 +3780,14 @@ function showMoves() {
     // 쿨다운/판당1회 체크
     const cd = getCooldown(active, moveKey);
     const usedOnce = move.onceBattle && active.battleUsed && active.battleUsed[moveKey];
+    const locked = isMoveLocked(active, moveKey);
     if (cd > 0 || usedOnce) {
       btn.classList.add("cooling");
       btn.dataset.cd = usedOnce ? "✖" : cd;
+    }
+    if (locked) {
+      btn.classList.add("cooling");
+      btn.dataset.cd = "🔒";
     }
 
     // 아이콘
@@ -3652,7 +3835,7 @@ function showMoves() {
         ${cdLabel}
       </div>
     `;
-    btn.onclick = () => playerAttack(moveKey);
+    btn.onclick = () => { if (isMoveLocked(active, moveKey)) { flashMessage("봉인된 스킬이다!"); return; } playerAttack(moveKey); };
 
     // 롱프레스 (500ms) → 상세 모달
     let pressTimer = null;
@@ -4546,6 +4729,274 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
       break;
     }
 
+    // ════════ 풀 타입 ════════
+
+    case "vine_whip": {
+      // 덩굴이 위에서 내려침
+      const vine = document.createElement("div");
+      vine.style.cssText = `
+        position:absolute; z-index:5; pointer-events:none;
+        width:16px; height:0px;
+        background:linear-gradient(180deg,#aed581,#558b2f);
+        border-radius:8px; filter:drop-shadow(0 0 8px #7cb342);
+        left:${dx-8}px; top:${dy-90}px;
+        transform-origin:top; transition:height 0.25s ease-in;
+      `;
+      fxLayer.appendChild(vine);
+      await sleep(20);
+      vine.style.height = "90px";
+      await sleep(230);
+      // 잎 파편
+      for (let i = 0; i < 5; i++) {
+        const angle = (i/5)*Math.PI*2;
+        const lf = mkEl("div", { width:"12px", height:"8px",
+          background:"#7cb342", borderRadius:"0 60% 0 60%",
+          filter:"drop-shadow(0 0 4px #558b2f)" });
+        lf.style.setProperty("--dx", Math.cos(angle)*45+"px");
+        lf.style.setProperty("--dy", Math.sin(angle)*45+"px");
+        lf.style.animation = "cinder-float 0.5s forwards";
+        pos(lf, dx, dy);
+        autoRemove(lf, 500);
+      }
+      vine.style.opacity = "0";
+      vine.style.transition = "opacity 0.3s";
+      autoRemove(vine, 300);
+      await sleep(350);
+      break;
+    }
+
+    case "leaf_slash": {
+      // 슬래시 + 풀 파티클
+      mkSlash(dx, dy, "#7cb342", 115, -42, "slash-sw", 420);
+      await sleep(120);
+      for (let i = 0; i < 6; i++) {
+        const angle = (i/6)*Math.PI*2;
+        const lf = mkEl("div", { width:"11px", height:"7px",
+          background:"#9ccc65", borderRadius:"0 60% 0 60%",
+          filter:"drop-shadow(0 0 4px #558b2f)" });
+        lf.style.setProperty("--dx", Math.cos(angle)*42+"px");
+        lf.style.setProperty("--dy", Math.sin(angle)*42+"px");
+        lf.style.animation = "cinder-float 0.45s forwards";
+        pos(lf, dx, dy);
+        autoRemove(lf, 450);
+      }
+      await sleep(300);
+      break;
+    }
+
+    case "thorn_shot": {
+      // 가시탄 N발 (calcDamage hits 못 받으니 시각상 3발 고정)
+      const shots = 3;
+      for (let i = 0; i < shots; i++) {
+        const thorn = mkEl("div", { width:"22px", height:"22px",
+          background:"radial-gradient(circle at 40% 40%, #c5e1a5, #558b2f)",
+          borderRadius:"50% 0 50% 50%",
+          filter:"drop-shadow(0 0 6px #7cb342)",
+          transform:"translate(-50%,-50%) rotate(45deg)" });
+        pos(thorn, ax, ay);
+        thorn.style.transition = "left 0.25s ease-out, top 0.25s ease-out";
+        await sleep(20);
+        pos(thorn, dx + (Math.random()*30-15), dy + (Math.random()*30-15));
+        autoRemove(thorn, 350);
+        await sleep(130);
+      }
+      const imp = mkEl("div", { width:"80px", height:"80px",
+        background:"radial-gradient(circle, #c5e1a5 0%, #7cb342 45%, transparent 70%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 12px #558b2f)",
+        animation:"impact-pop 0.4s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 400);
+      await sleep(300);
+      break;
+    }
+
+    case "thorn_hell": {
+      // 상대 발밑 가시덩굴 솟음 + 땅 흔들림
+      shakeScreen();
+      for (let i = 0; i < 5; i++) {
+        const ox = (i-2)*20;
+        const thorn = document.createElement("div");
+        thorn.style.cssText = `
+          position:absolute; z-index:5; pointer-events:none;
+          width:0; height:0;
+          border-left:11px solid transparent; border-right:11px solid transparent;
+          border-bottom:${50+Math.random()*30}px solid #558b2f;
+          filter:drop-shadow(0 0 6px #7cb342);
+          left:${dx+ox-11}px; top:${dy+40}px;
+          transform-origin:bottom; transform:scaleY(0);
+          transition:transform 0.25s ease-out;
+        `;
+        fxLayer.appendChild(thorn);
+        await sleep(20);
+        thorn.style.transform = "scaleY(1)";
+        autoRemove(thorn, 600);
+        await sleep(60);
+      }
+      shakeScreen();
+      await sleep(400);
+      break;
+    }
+
+    case "thousand_bloom": {
+      // 꽃 뿌리들이 달려듦 + 화면 흔들림
+      for (let i = 0; i < 6; i++) {
+        const angle = (i/6)*Math.PI*2;
+        const root = document.createElement("div");
+        const len = 70;
+        root.style.cssText = `
+          position:absolute; z-index:5; pointer-events:none;
+          width:${len}px; height:6px;
+          background:linear-gradient(90deg, transparent, #7cb342, #558b2f);
+          border-radius:3px; filter:drop-shadow(0 0 5px #7cb342);
+          left:${dx}px; top:${dy}px;
+          transform-origin:left center;
+          transform:rotate(${angle*180/Math.PI}deg) scaleX(0);
+          transition:transform 0.3s ease-out;
+        `;
+        fxLayer.appendChild(root);
+        await sleep(15);
+        root.style.transform = `rotate(${angle*180/Math.PI}deg) scaleX(1)`;
+        autoRemove(root, 600);
+      }
+      shakeScreen();
+      // 중앙 꽃
+      const flower = mkEl("div", { width:"60px", height:"60px",
+        background:"radial-gradient(circle, #fff59d 0%, #9ccc65 50%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 14px #7cb342)",
+        animation:"impact-pop 0.5s forwards" });
+      pos(flower, dx, dy);
+      autoRemove(flower, 500);
+      await sleep(450);
+      break;
+    }
+
+    case "natures_blessing_skill": {
+      // 자신 주위 꽃가루 + 회복
+      const aura = mkEl("div", { width:"110px", height:"110px",
+        background:"radial-gradient(circle, rgba(197,225,165,0.4) 0%, rgba(124,179,66,0.6) 50%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #9ccc65)",
+        animation:"aura-wrap 0.8s forwards" });
+      pos(aura, ax, ay);
+      autoRemove(aura, 800);
+      for (let i = 0; i < 10; i++) {
+        const angle = (i/10)*Math.PI*2;
+        const pollen = mkEl("div", { width:"7px", height:"7px",
+          background:"#fff59d", borderRadius:"50%",
+          filter:"drop-shadow(0 0 4px #c5e1a5)" });
+        pollen.style.setProperty("--dx", Math.cos(angle)*55+"px");
+        pollen.style.setProperty("--dy", (Math.sin(angle)*55 - 20)+"px");
+        pollen.style.animation = `cinder-float ${0.7+Math.random()*0.3}s forwards`;
+        pos(pollen, ax, ay);
+        autoRemove(pollen, 1000);
+      }
+      await sleep(700);
+      break;
+    }
+
+    case "battle_bloom": {
+      // 양쪽 덩굴 휘감김 + 땅 흔들림
+      [[ax,ay],[dx,dy]].forEach(([x,y], idx) => {
+        for (let i = 0; i < 3; i++) {
+          const vine = mkEl("div", { width:"90px", height:"8px",
+            background:"linear-gradient(90deg,transparent,#7cb342,#558b2f,#7cb342,transparent)",
+            borderRadius:"4px", filter:"drop-shadow(0 0 5px #7cb342)",
+            animation:`whirl ${0.7+i*0.1}s forwards`, opacity:"0" });
+          pos(vine, x, y);
+          autoRemove(vine, 850);
+        }
+      });
+      shakeScreen();
+      await sleep(650);
+      break;
+    }
+
+    case "everbloom": {
+      // 꽃에서 레이저 + 화면 흔들림
+      const flower = mkEl("div", { width:"50px", height:"50px",
+        background:"radial-gradient(circle, #fff59d 0%, #9ccc65 55%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 14px #7cb342)",
+        animation:"aura-wrap 0.4s forwards" });
+      pos(flower, ax, ay);
+      autoRemove(flower, 400);
+      await sleep(300);
+      // 레이저
+      const lzDist = Math.hypot(dx-ax, dy-ay);
+      const lzAngle = Math.atan2(dy-ay, dx-ax) * 180 / Math.PI;
+      const laser = document.createElement("div");
+      laser.style.cssText = `
+        position:absolute; z-index:5; pointer-events:none;
+        height:18px; width:0px;
+        background:linear-gradient(90deg,#fff59d,#9ccc65,#558b2f,#9ccc65,#fff59d);
+        border-radius:9px;
+        filter:drop-shadow(0 0 12px #7cb342) drop-shadow(0 0 22px #9ccc65);
+        transform-origin:left center;
+        left:${ax}px; top:${ay-9}px;
+        transform:rotate(${lzAngle}deg);
+        transition:width 0.35s cubic-bezier(0.1,0,0.3,1), opacity 0.3s;
+      `;
+      fxLayer.appendChild(laser);
+      await sleep(20);
+      laser.style.width = lzDist + "px";
+      shakeScreen();
+      await sleep(380);
+      laser.style.opacity = "0";
+      autoRemove(laser, 300);
+      const imp = mkEl("div", { width:"100px", height:"100px",
+        background:"radial-gradient(circle, #fff59d 0%, #7cb342 45%, transparent 70%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 18px #558b2f)",
+        animation:"meteor-impact 0.5s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 500);
+      await sleep(400);
+      break;
+    }
+
+    case "full_bloom": {
+      // 상대 주위 꽃 만개
+      for (let i = 0; i < 8; i++) {
+        const angle = (i/8)*Math.PI*2;
+        const r = 50;
+        const flower = mkEl("div", { width:"26px", height:"26px",
+          background:"radial-gradient(circle, #fff59d 0%, #9ccc65 50%, #7cb342 80%)",
+          borderRadius:"50% 0 50% 50%",
+          filter:"drop-shadow(0 0 6px #9ccc65)",
+          animation:"impact-pop 0.6s forwards", opacity:"0" });
+        flower.style.animationDelay = (i*0.05)+"s";
+        pos(flower, dx + Math.cos(angle)*r, dy + Math.sin(angle)*r);
+        autoRemove(flower, 800);
+      }
+      const center = mkEl("div", { width:"50px", height:"50px",
+        background:"radial-gradient(circle, #fff 0%, #fff59d 40%, #9ccc65 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 14px #c5e1a5)",
+        animation:"impact-pop 0.6s forwards" });
+      pos(center, dx, dy);
+      autoRemove(center, 600);
+      await sleep(550);
+      break;
+    }
+
+    case "moonflower": {
+      // 풀이 자신을 감싸며 회복
+      const wrap = mkEl("div", { width:"130px", height:"130px",
+        background:"radial-gradient(circle, rgba(197,225,165,0.5) 0%, rgba(85,139,47,0.7) 45%, transparent 73%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 22px #9ccc65)",
+        animation:"aura-wrap 0.9s forwards" });
+      pos(wrap, ax, ay);
+      autoRemove(wrap, 900);
+      // 휘감는 잎
+      for (let i = 0; i < 12; i++) {
+        const angle = (i/12)*Math.PI*2;
+        const lf = mkEl("div", { width:"16px", height:"10px",
+          background:"#9ccc65", borderRadius:"0 70% 0 70%",
+          filter:"drop-shadow(0 0 5px #558b2f)",
+          animation:`whirl ${0.8+Math.random()*0.3}s forwards`, opacity:"0" });
+        pos(lf, ax + Math.cos(angle)*20, ay + Math.sin(angle)*20);
+        autoRemove(lf, 1100);
+      }
+      await sleep(750);
+      break;
+    }
+
     default: {
       // 기본 타입별 폴백
       if (moveType === "normal") {
@@ -4630,6 +5081,22 @@ async function handleEnemyFaint() {
   const fallenEnemy = state.enemy;
   const fallenName = state.enemy.name;
 
+  // === 사망 트리거: 플레이어가 onEnemyDeath 효과 보유 시 (전장의 개화) ===
+  const pActive = getActive();
+  if (pActive && pActive.activeEffects) {
+    const trigger = pActive.activeEffects.find(e => e.onEnemyDeath === "full_heal");
+    if (trigger) {
+      pActive.currentHp = pActive.maxHp;
+      await showMessage(`🌸 ${pActive.name}이(가) 전장의 꽃으로 완전 회복했다!`, 1100);
+      renderPlayer();
+      renderParty();
+    }
+  }
+  // untilDeath trapped 효과 해제 (적이 죽었으므로)
+  if (pActive && pActive.activeEffects) {
+    pActive.activeEffects = pActive.activeEffects.filter(e => !e.untilDeath);
+  }
+
   if (wasBoss) {
     await showMessage(`⚔️ 보스 ${fallenName}(이)가 쓰러졌다! ⚔️`, 1200);
   } else {
@@ -4677,6 +5144,28 @@ async function handlePlayerFaint() {
 
   $("player-sprite").classList.add("faint");
   await showMessage(`${fallen.name}(이)가 쓰러졌다...`, 1200);
+
+  // === 사망 트리거: onSelfDeath (월화난무) ===
+  if (fallen.activeEffects) {
+    const trigger = fallen.activeEffects.find(e => e.onSelfDeath === "moonflower_blessing");
+    if (trigger) {
+      // 남은 아군 전체에게 5턴간 최대체력+800, 공격력+50
+      state.party.forEach(m => {
+        if (m !== fallen && m.currentHp > 0) {
+          m.maxHp += 800;
+          m.currentHp += 800;
+          m.atk += 50;
+          if (!m.activeEffects) m.activeEffects = [];
+          m.activeEffects.push({ kind: "atk_up", value: 0, duration: 5, sourceMove: "moonflower_blessing", _blessing: true });
+        }
+      });
+      await showMessage(`🌙 월화랑의 마지막 축복! 아군이 강해졌다!`, 1300);
+    }
+  }
+  // untilDeath trapped 효과를 가진 적도 해제 (월화랑이 죽었으므로)
+  if (state.enemy && state.enemy.activeEffects) {
+    state.enemy.activeEffects = state.enemy.activeEffects.filter(e => !e.untilDeath);
+  }
 
   // 죽은 몬스터를 파티에서 제거
   const fallenIdx = state.activeIdx;
