@@ -2783,6 +2783,81 @@ const MOVES = {
       { kind: "trapped",    target: "enemy", value: 0, duration: 999, untilDeath: true, onSelfDeath: "moonflower_blessing" }
     ]
   },
+
+  // ===== 전기 타입 스킬 =====
+  flash_pierce: {
+    name: "전광참", type: "electric", multiplier: 1.0, cooldown: 1, priority: 1,
+    icon: "skill_flash_pierce.png", desc: "번개를 두른 검으로 빠르게 벤다.",
+    effects: [ { kind: "spd_up", target: "self", value: 20, duration: 2 } ]
+  },
+  flash_strike: {
+    name: "섬광격", type: "electric", multiplier: 0.5, cooldown: 0, priority: 0,
+    icon: "skill_flash_strike.png", desc: "강한 섬광으로 적의 속도와 공격을 떨어뜨린다.",
+    effects: [
+      { kind: "spd_down", target: "enemy", value: 15, duration: 2 },
+      { kind: "atk_down", target: "enemy", value: 15, duration: 2 }
+    ]
+  },
+  lightning_bolt: {
+    name: "낙뢰", type: "electric", multiplier: 1.0, cooldown: 0, priority: 0,
+    icon: "skill_lightning_bolt.png", desc: "하늘에서 번개를 내리꽂는다.",
+    effects: []
+  },
+  thunder_dash: {
+    name: "썬더대시", type: "electric", multiplier: 1.0, cooldown: 2, priority: 1,
+    icon: "skill_thunder_dash.png", desc: "전광석화로 돌진해 적을 스턴시킨다.",
+    effects: [ { kind: "stun", target: "enemy", value: 0, duration: 1 } ]
+  },
+  chain_lightning: {
+    name: "전광연격", type: "electric", multiplier: 1.5, cooldown: 2, priority: 1,
+    icon: "skill_chain_lightning.png", desc: "연속 번개로 몰아치며 자신을 강화한다.",
+    effects: [
+      { kind: "spd_up", target: "self", value: 20, duration: 2 },
+      { kind: "atk_up", target: "self", value: 20, duration: 2 }
+    ]
+  },
+  power_supply: {
+    name: "전력 공급", type: "electric", multiplier: 0, cooldown: 3, priority: 1,
+    icon: "skill_power_supply.png", desc: "전기를 흡수해 체력과 상태를 회복하고 힘을 얻는다.",
+    effects: [
+      { kind: "heal",    target: "self", value: 40, duration: 0 },
+      { kind: "cleanse", target: "self" },
+      { kind: "atk_up",  target: "self", value: 10, duration: 2 }
+    ]
+  },
+  tempest_volt: {
+    name: "템페스트 볼트", type: "electric", multiplier: 2.0, cooldown: 4, priority: 0,
+    icon: "skill_tempest_volt.png", desc: "거대한 번개 두 줄기가 충돌해 폭발한다.",
+    effects: [ { kind: "atk_down", target: "enemy", value: 50, duration: 2 } ]
+  },
+  thunder_annihilation: {
+    name: "전광멸진", type: "electric", multiplier: 2.0, cooldown: 3, priority: 1,
+    icon: "skill_thunder_annihilation.png", desc: "십자 번개가 하늘을 가르며 적을 멸한다.",
+    effects: [
+      { kind: "spd_up", target: "self", value: 30, duration: 2 },
+      { kind: "atk_up", target: "self", value: 30, duration: 2 }
+    ]
+  },
+  overload: {
+    name: "전력 과부하", type: "electric", multiplier: 0, cooldown: 4, priority: 0,
+    icon: "skill_overload.png", desc: "과부하된 전류를 모았다가 3턴째 폭발시킨다. 그동안 자신은 스턴되지만 단단해진다.",
+    effects: [
+      { kind: "trapped", target: "enemy", value: 0,  duration: 3 },
+      { kind: "stun",    target: "self",  value: 0,  duration: 2 },
+      { kind: "def_up",  target: "self",  value: 50, duration: 3 },
+      { kind: "delayed_bolt", target: "enemy", value: 250, duration: 3 }
+    ]
+  },
+  star_burst: {
+    name: "스타 버스트", type: "electric", multiplier: 2.5, cooldown: 0, onceBattle: true, priority: 1,
+    icon: "skill_star_burst.png", desc: "스타링의 전용기. 별이 깨지며 파편이 적을 강타. 한 번은 쓰러지지 않는다.",
+    effects: [
+      { kind: "atk_up", target: "self", value: 25, duration: 5 },
+      { kind: "def_up", target: "self", value: 25, duration: 5 },
+      { kind: "spd_up", target: "self", value: 25, duration: 5 },
+      { kind: "endure", target: "self", value: 0, duration: 999, onEndure: "star_counter" }
+    ]
+  },
   // === 구 시스템 스킬 ===
   scratch:        { name: "긁기",       power: 35, type: "normal" },
   ember:          { name: "불꽃세례",   power: 40, type: "fire" },
@@ -2863,7 +2938,11 @@ const EFFECT_DEFS = {
   trapped:  { label: "교체불가",    stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🚫", color: "#7c2d12" },
   regen:    { label: "체력 회복",   stat: null, isBuff: true,  defaultValue: 10, defaultDuration: 3, icon: "💧", color: "#4fc3f7" },
   heal_block: { label: "회복 방해", stat: null, isBuff: false, defaultValue: 30, defaultDuration: 2, icon: "💔", color: "#ad1457" },
-  skill_lock: { label: "스킬 봉인", stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🔒", color: "#6a1b9a" }
+  skill_lock: { label: "스킬 봉인", stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "🔒", color: "#6a1b9a" },
+  stun:     { label: "스턴",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 1, icon: "💫", color: "#fdd835" },
+  charge:   { label: "전류",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 99, icon: "⚡", color: "#ffeb3b" },
+  delayed_bolt: { label: "과부하",  stat: null, isBuff: false, defaultValue: 0, defaultDuration: 3, icon: "🌩️", color: "#f57f17" },
+  endure:   { label: "불굴",       stat: null, isBuff: true,  defaultValue: 0,  defaultDuration: 99, icon: "✨", color: "#ffd54f" }
 };
 
 // 효과 객체를 만드는 헬퍼 (스킬 정의에서 사용)
@@ -2918,11 +2997,11 @@ const MONSTERS = {
   // 풀 전설
   mon_016: { id: "mon_016", name: "월화랑",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 1820, atk: 380, def: 25, spd: 60 }, moves: ["leaf_slash", "natures_blessing_skill", "full_bloom", "moonflower"] },
   // 전기 전설 (이스터에그)
-  mon_017: { id: "mon_017", name: "스타링",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 1710, atk: 490, def: 20, spd: 70 }, moves: ["thunder_shock", "star_blast", "thunderbolt"] },
+  mon_017: { id: "mon_017", name: "스타링",     type: "electric", rarity: "legendary", passive: "stars_grace", facing: "left", stats: { hp: 1710, atk: 490, def: 20, spd: 70 }, moves: ["flash_strike", "thunder_dash", "power_supply", "star_burst"] },
   // 전기 일반 3 (전기뱀장어는 레어)
-  mon_018: { id: "mon_018", name: "스퍼키", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 1050, atk: 320, def: 25, spd: 75 }, moves: ["bite", "spark", "thunder_shock"] },
-  mon_019: { id: "mon_019", name: "찌리짹", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 1280, atk: 300, def: 25, spd: 55 }, moves: ["peck", "spark", "thunder_shock"] },
-  mon_020: { id: "mon_020", name: "썬더릴", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 1420, atk: 410, def: 25, spd: 65 }, moves: ["thunder_shock", "thunderbolt", "volt_tackle"] },
+  mon_018: { id: "mon_018", name: "스퍼키", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 1050, atk: 320, def: 25, spd: 75 }, moves: ["flash_strike", "thunder_dash", "thunder_annihilation"] },
+  mon_019: { id: "mon_019", name: "찌리짹", type: "electric", rarity: "common", passive: null, facing: "left", stats: { hp: 1280, atk: 300, def: 25, spd: 55 }, moves: ["lightning_bolt", "flash_pierce", "chain_lightning"] },
+  mon_020: { id: "mon_020", name: "썬더릴", type: "electric", rarity: "rare",   passive: null, facing: "left", stats: { hp: 1420, atk: 410, def: 25, spd: 65 }, moves: ["flash_strike", "flash_pierce", "thunder_annihilation", "overload"] },
 
   // === 신규 10마리 (단계 D) ===
   // 불 추가
@@ -2935,8 +3014,8 @@ const MONSTERS = {
   mon_025: { id: "mon_025", name: "아르보디어", type: "grass",    rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1460, atk: 350, def: 30, spd: 60 }, moves: ["leaf_slash", "thousand_bloom", "battle_bloom", "everbloom"] },
   mon_026: { id: "mon_026", name: "리프자드",   type: "grass",    rarity: "common", passive: null, facing: "left",  stats: { hp: 1350, atk: 230, def: 30, spd: 55 }, moves: ["leaf_slash", "thousand_bloom", "natures_blessing_skill"] },
   // 전기 추가
-  mon_027: { id: "mon_027", name: "라이트닝쿤", type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1220, atk: 360, def: 20, spd: 60 }, moves: ["scratch", "spark", "thunder_shock"] },
-  mon_028: { id: "mon_028", name: "볼툼비",     type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1200, atk: 220, def: 40, spd: 60 }, moves: ["body_slam", "spark", "thunder_punch"] },
+  mon_027: { id: "mon_027", name: "라이트닝쿤", type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1220, atk: 360, def: 20, spd: 60 }, moves: ["flash_strike", "flash_pierce", "tempest_volt"] },
+  mon_028: { id: "mon_028", name: "볼툼비",     type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1200, atk: 220, def: 40, spd: 60 }, moves: ["lightning_bolt", "power_supply", "tempest_volt"] },
   // 어둠 추가
   mon_029: { id: "mon_029", name: "팬타르",     type: "dark",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1120, atk: 580, def: 25, spd: 70 }, moves: ["bite", "shadow_claw", "night_slash"] },
   mon_030: { id: "mon_030", name: "루나냥",     type: "dark",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1320, atk: 310, def: 25, spd: 60 }, moves: ["scratch", "shadow_claw", "dark_bite"] }
@@ -3144,6 +3223,7 @@ function applyEffects(effectList, caster, target, moveKey) {
     if (e.onEnemyDeath) effectObj.onEnemyDeath = e.onEnemyDeath;
     if (e.onSelfDeath) effectObj.onSelfDeath = e.onSelfDeath;
     if (e.untilDeath) effectObj.untilDeath = e.untilDeath;
+    if (e.onEndure) effectObj.onEndure = e.onEndure;
     addOrRefreshEffect(recipient, effectObj);
     const sign = def.sign > 0 ? "↑" : (def.sign < 0 ? "↓" : "");
     messages.push(`${recipient.name} ${def.label}${sign}`);
@@ -3235,6 +3315,12 @@ function tickEffects(mon) {
       } else {
         // 만료 콜백 (onExpire) 수집
         if (e.onExpire) expiredCallbacks.push(e.onExpire);
+        // 지연 폭발 (전력 과부하) - 시전자 공격력 × 2.5
+        if (e.kind === "delayed_bolt") {
+          const boltDmg = Math.max(1, Math.floor((e.sourceAtk || mon.atk) * 2.5));
+          mon.currentHp = Math.max(0, mon.currentHp - boltDmg);
+          messages.push(`🌩️ 과부하 폭발! ${mon.name}에게 ${boltDmg} 피해!`);
+        }
       }
     }
   });
@@ -3279,6 +3365,8 @@ function isMoveAvailable(mon, moveKey) {
   if (move && move.onceBattle) {
     if (mon.battleUsed && mon.battleUsed[moveKey]) return false;
   }
+  // 스턴 체크: 스턴 상태면 모든 스킬 사용 불가
+  if (isStunned(mon)) return false;
   // 스킬 봉인 체크: skill_lock 효과가 있으면 해당 슬롯 잠금
   if (isMoveLocked(mon, moveKey)) return false;
   if (!mon.cooldowns) return true;
@@ -3290,6 +3378,10 @@ function isMoveLocked(mon, moveKey) {
   const slotIdx = mon.moves ? mon.moves.indexOf(moveKey) : -1;
   if (slotIdx < 0) return false;
   return mon.activeEffects.some(e => e.kind === "skill_lock" && e.value === slotIdx);
+}
+// 스턴 상태 여부 (스킬 사용 불가, 교체는 가능)
+function isStunned(mon) {
+  return mon.activeEffects ? mon.activeEffects.some(e => e.kind === "stun") : false;
 }
 // 남은 쿨다운 (0이면 사용 가능)
 function getCooldown(mon, moveKey) {
@@ -3349,6 +3441,39 @@ function chooseEnemyMove(enemy, player) {
 // 사망 직전 호출. 부활 표식이 있으면 부활시키고 true 반환.
 async function tryPhoenixRevive(mon, side) {
   if (!mon || mon.currentHp > 0) return false;
+  // === 불굴(endure) - 스타버스트: HP1로 버티고 상대에게 카운터딜 ===
+  if (mon.activeEffects) {
+    const endureEff = mon.activeEffects.find(e => e.kind === "endure");
+    if (endureEff) {
+      // 불굴 소모
+      mon.activeEffects = mon.activeEffects.filter(e => e.kind !== "endure");
+      mon.currentHp = 1;
+      updateHpBar(side, mon);
+      if (side === "player") {
+        $("player-hp-text").textContent = `${mon.currentHp} / ${mon.maxHp}`;
+        renderParty();
+      }
+      renderMonStatus(side, mon);
+      await showMessage(`✨ ${mon.name}이(가) 불굴의 의지로 버텼다! (HP 1)`, 1000);
+      // 카운터딜: 상대에게 자기 공격력 ×2
+      if (endureEff.onEndure === "star_counter") {
+        const opp = (side === "player") ? state.enemy : getActive();
+        const oppSide = (side === "player") ? "enemy" : "player";
+        if (opp && opp.currentHp > 0) {
+          const counterDmg = Math.max(1, Math.floor(mon.atk * 2));
+          opp.currentHp = Math.max(0, opp.currentHp - counterDmg);
+          popDamage(oppSide, counterDmg, false, 1, `-${counterDmg}`);
+          updateHpBar(oppSide, opp);
+          if (oppSide === "player") {
+            $("player-hp-text").textContent = `${opp.currentHp} / ${opp.maxHp}`;
+            renderParty();
+          }
+          await showMessage(`💥 별의 반격! ${opp.name}에게 ${counterDmg} 피해!`, 1000);
+        }
+      }
+      return true;
+    }
+  }
   if (!mon.phoenixRevivePending) return false;
   mon.phoenixRevivePending = false;
   mon.currentHp = Math.floor(mon.maxHp * 0.5);
@@ -3767,6 +3892,11 @@ function showActionMenu() {
 
 function showMoves() {
   if (state.battleLocked) return;
+  // 스턴 상태면 스킬 못 쓰고 턴 자동 진행
+  if (isStunned(getActive())) {
+    stunnedPass();
+    return;
+  }
   hideAllMenus();
   const grid = $("moves-grid");
   grid.innerHTML = "";
@@ -3876,11 +4006,18 @@ function showMoves() {
 }
 
 // ===== 배틀 진행 =====
+// 스턴 상태로 플레이어가 턴을 넘김
+async function stunnedPass() {
+  await showMessage(`💫 ${getActive().name}은(는) 스턴 상태! 움직일 수 없다!`, 900);
+  await playerAttack(null);
+}
+
 async function playerAttack(moveKey) {
   if (state.battleLocked) return;
   const player = getActive();
+  const stunnedTurn = (moveKey === null); // 스턴으로 인한 빈 턴
   // 쿨다운 체크 (이미 UI에서도 막지만 안전망)
-  if (!isMoveAvailable(player, moveKey)) {
+  if (!stunnedTurn && !isMoveAvailable(player, moveKey)) {
     await showMessage("아직 사용할 수 없다!", 600);
     return;
   }
@@ -3895,6 +4032,12 @@ async function playerAttack(moveKey) {
 
   // 행동 시도 (상태이상으로 못할 수도)
   async function tryAttack(attacker, defender, attackerSide, defenderSide, mKey) {
+    // 스턴 처리 (스킬 사용 불가)
+    if (isStunned(attacker)) {
+      const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
+      await showMessage(`💫 ${label}은(는) 스턴 상태라 움직일 수 없다!`, 800);
+      return "blocked";
+    }
     // 잠 처리
     if (attacker.status === "sleep") {
       if (attacker.sleepTurns > 0) {
@@ -3925,7 +4068,11 @@ async function playerAttack(moveKey) {
     return "ok";
   }
 
-  if (playerFirst) {
+  if (stunnedTurn) {
+    // 플레이어 스턴: 적만 행동
+    await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
+    if (player.currentHp <= 0 && !(await tryPhoenixRevive(player, "player"))) { await handlePlayerFaint(); return; }
+  } else if (playerFirst) {
     await tryAttack(player, state.enemy, "player", "enemy", moveKey);
     if (state.enemy.currentHp <= 0 && !(await tryPhoenixRevive(state.enemy, "enemy"))) { tickCooldowns(player); await handleEnemyFaint(); return; }
     await tryAttack(state.enemy, player, "enemy", "player", enemyMoveKey);
@@ -4153,6 +4300,29 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   }
   // 쿨다운 등록 (새 시스템)
   setCooldown(attacker, moveKey);
+
+  // === 전기 전류 시스템 ===
+  // 전기 타입 스킬에 맞으면 상대에게 전류 1p 누적, 3p 도달 시 자해딜 + 속도감소
+  if (r.move.type === "electric" && defender.currentHp > 0) {
+    defender.charge = (defender.charge || 0) + 1;
+    renderMonStatus(defenderSide, defender);
+    if (defender.charge >= 3) {
+      defender.charge = 0;
+      const overDmg = Math.max(1, Math.floor(defender.atk * 0.5));
+      defender.currentHp = Math.max(0, defender.currentHp - overDmg);
+      popDamage(defenderSide, overDmg, false, 1, `-${overDmg}`);
+      updateHpBar(defenderSide, defender);
+      if (defenderSide === "player") {
+        $("player-hp-text").textContent = `${defender.currentHp} / ${defender.maxHp}`;
+        renderParty();
+      }
+      // 속도 -30% 2턴
+      applyEffects([{ kind: "spd_down", target: "self", value: 30, duration: 2 }], defender, defender, "charge_burst");
+      renderMonStatus(defenderSide, defender);
+      updateSpdBadges();
+      await showMessage(`⚡ 전류 과부하 폭발! ${defender.name}이(가) 감전됐다!`, 900);
+    }
+  }
 }
 
 // 상태이상 적용
@@ -4192,8 +4362,12 @@ function renderMonStatus(side, mon) {
       html += `<span class="effect-pill" style="border-color:${def.color}" title="${def.label} (${e.duration}턴)">${def.icon}${sign}<span class="effect-turns">${e.duration}</span></span>`;
     });
   }
+  // 전류 스택 (전기 시스템)
+  if (mon.charge && mon.charge > 0) {
+    html += `<span class="effect-pill" style="border-color:#ffeb3b" title="전류 ${mon.charge}/3">⚡<span class="effect-turns">${mon.charge}</span></span>`;
+  }
   wrap.innerHTML = html;
-  wrap.classList.toggle("active", !!(mon.passive || mon.status || (mon.activeEffects && mon.activeEffects.length)));
+  wrap.classList.toggle("active", !!(mon.passive || mon.status || mon.charge || (mon.activeEffects && mon.activeEffects.length)));
 }
 
 // ===== 스킬별 고유 이펙트 =====
@@ -4994,6 +5168,308 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
         autoRemove(lf, 1100);
       }
       await sleep(750);
+      break;
+    }
+
+    // ════════ 전기 타입 ════════
+
+    case "flash_pierce": {
+      // 번개 두른 검 휘두름
+      mkSlash(dx, dy, "#ffeb3b", 115, -42, "slash-sw", 380);
+      await sleep(60);
+      mkSlash(dx, dy, "#fff", 90, -42, "slash-claw2", 380);
+      // 전기 스파크
+      for (let i = 0; i < 5; i++) {
+        const angle = (i/5)*Math.PI*2;
+        const sp = mkEl("div", { width:"4px", height:"16px",
+          background:"#fff176", borderRadius:"2px",
+          filter:"drop-shadow(0 0 5px #ffeb3b)",
+          transform:`translate(-50%,-50%) rotate(${angle}rad)` });
+        sp.style.setProperty("--dx", Math.cos(angle)*40+"px");
+        sp.style.setProperty("--dy", Math.sin(angle)*40+"px");
+        sp.style.animation = "cinder-float 0.4s forwards";
+        pos(sp, dx, dy);
+        autoRemove(sp, 400);
+      }
+      await sleep(320);
+      break;
+    }
+
+    case "flash_strike": {
+      // 강한 백색 섬광, 화면 하얘짐
+      const flash = document.createElement("div");
+      flash.style.cssText = `position:absolute; inset:0; z-index:6; pointer-events:none;
+        background:#fff; opacity:0; transition:opacity 0.12s;`;
+      fxLayer.appendChild(flash);
+      await sleep(20);
+      flash.style.opacity = "0.9";
+      const bolt = mkEl("div", { width:"70px", height:"70px",
+        background:"radial-gradient(circle, #fff 0%, #fff176 50%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 20px #ffeb3b)",
+        animation:"impact-pop 0.4s forwards" });
+      pos(bolt, dx, dy);
+      autoRemove(bolt, 400);
+      await sleep(120);
+      flash.style.opacity = "0";
+      autoRemove(flash, 200);
+      await sleep(300);
+      break;
+    }
+
+    case "lightning_bolt": {
+      // 하늘에서 낙뢰 여러번 + 화면 흔들림
+      shakeScreen();
+      for (let i = 0; i < 3; i++) {
+        const ox = (i-1)*30 + (Math.random()*20-10);
+        const bolt = document.createElement("div");
+        bolt.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:8px; height:0px;
+          background:linear-gradient(180deg,#fff,#fff176,#fbc02d);
+          filter:drop-shadow(0 0 8px #ffeb3b);
+          left:${dx+ox-4}px; top:${dy-90}px;
+          clip-path:polygon(40% 0,60% 0,45% 45%,65% 45%,30% 100%,40% 55%,25% 55%);
+          transform-origin:top; transition:height 0.1s;`;
+        fxLayer.appendChild(bolt);
+        await sleep(15);
+        bolt.style.height = "90px";
+        autoRemove(bolt, 350);
+        const imp = mkEl("div", { width:"60px", height:"60px",
+          background:"radial-gradient(circle, #fff 0%, #fff176 50%, transparent 72%)",
+          borderRadius:"50%", filter:"drop-shadow(0 0 14px #ffeb3b)",
+          animation:"meteor-impact 0.4s forwards" });
+        pos(imp, dx+ox, dy);
+        autoRemove(imp, 400);
+        await sleep(130);
+      }
+      shakeScreen();
+      await sleep(250);
+      break;
+    }
+
+    case "thunder_dash": {
+      // 스파크 강렬 돌진 + 충격 흔들림
+      const spark = mkEl("div", { width:"60px", height:"30px",
+        background:"linear-gradient(90deg, transparent, #fff176, #fff)",
+        borderRadius:"50% 10% 50% 10%",
+        filter:"drop-shadow(0 0 14px #ffeb3b)" });
+      pos(spark, ax, ay);
+      await flyProj(spark, 250);
+      spark.remove();
+      shakeScreen();
+      const imp = mkEl("div", { width:"100px", height:"100px",
+        background:"radial-gradient(circle, #fff 0%, #fff176 40%, transparent 70%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 20px #ffeb3b)",
+        animation:"impact-pop 0.5s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 500);
+      // 스파크 파편
+      for (let i = 0; i < 8; i++) {
+        const angle = (i/8)*Math.PI*2;
+        const sp = mkEl("div", { width:"4px", height:"14px",
+          background:"#fff176", borderRadius:"2px",
+          filter:"drop-shadow(0 0 4px #ffeb3b)",
+          transform:`translate(-50%,-50%) rotate(${angle}rad)` });
+        sp.style.setProperty("--dx", Math.cos(angle)*55+"px");
+        sp.style.setProperty("--dy", Math.sin(angle)*55+"px");
+        sp.style.animation = "cinder-float 0.5s forwards";
+        pos(sp, dx, dy);
+        autoRemove(sp, 500);
+      }
+      await sleep(400);
+      break;
+    }
+
+    case "chain_lightning": {
+      // 번개 여러번 + 감전 흔들림
+      for (let i = 0; i < 4; i++) {
+        const bolt = document.createElement("div");
+        const segAngle = Math.atan2(dy-ay, dx-ax) * 180/Math.PI + (Math.random()*30-15);
+        const dist = Math.hypot(dx-ax, dy-ay);
+        bolt.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          height:6px; width:${dist}px;
+          background:linear-gradient(90deg,#fff,#fff176,#fbc02d);
+          filter:drop-shadow(0 0 8px #ffeb3b);
+          left:${ax}px; top:${ay-3}px;
+          transform-origin:left center; transform:rotate(${segAngle}deg) scaleX(0);
+          transition:transform 0.12s;`;
+        fxLayer.appendChild(bolt);
+        await sleep(15);
+        bolt.style.transform = `rotate(${segAngle}deg) scaleX(1)`;
+        autoRemove(bolt, 250);
+        shakeScreen();
+        await sleep(110);
+      }
+      const imp = mkEl("div", { width:"85px", height:"85px",
+        background:"radial-gradient(circle, #fff 0%, #fff176 45%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #ffeb3b)",
+        animation:"impact-pop 0.4s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 400);
+      await sleep(300);
+      break;
+    }
+
+    case "power_supply": {
+      // 자신한테 전기 뿜으며 회복
+      const aura = mkEl("div", { width:"110px", height:"110px",
+        background:"radial-gradient(circle, rgba(255,241,118,0.4) 0%, rgba(251,192,45,0.6) 50%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 18px #ffeb3b)",
+        animation:"aura-wrap 0.8s forwards" });
+      pos(aura, ax, ay);
+      autoRemove(aura, 800);
+      for (let i = 0; i < 8; i++) {
+        const angle = (i/8)*Math.PI*2;
+        const sp = mkEl("div", { width:"4px", height:"16px",
+          background:"#fff176", borderRadius:"2px",
+          filter:"drop-shadow(0 0 5px #ffeb3b)",
+          transform:`translate(-50%,-50%) rotate(${angle}rad)` });
+        sp.style.setProperty("--dx", Math.cos(angle)*50+"px");
+        sp.style.setProperty("--dy", Math.sin(angle)*50+"px");
+        sp.style.animation = `cinder-float 0.7s forwards`;
+        pos(sp, ax, ay);
+        autoRemove(sp, 800);
+      }
+      await sleep(700);
+      break;
+    }
+
+    case "tempest_volt": {
+      // 거대한 번개 두 줄기 충돌 폭발 + 흔들림
+      const midX = (ax+dx)/2, midY = (ay+dy)/2;
+      [[ax,ay],[dx,dy]].forEach(([sx,sy]) => {
+        const bolt = document.createElement("div");
+        const ang = Math.atan2(midY-sy, midX-sx)*180/Math.PI;
+        const d = Math.hypot(midX-sx, midY-sy);
+        bolt.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          height:14px; width:${d}px;
+          background:linear-gradient(90deg,transparent,#fff176,#fff);
+          filter:drop-shadow(0 0 12px #ffeb3b);
+          left:${sx}px; top:${sy-7}px;
+          transform-origin:left center; transform:rotate(${ang}deg) scaleX(0);
+          transition:transform 0.25s ease-in;`;
+        fxLayer.appendChild(bolt);
+        requestAnimationFrame(()=>{ bolt.style.transform = `rotate(${ang}deg) scaleX(1)`; });
+        autoRemove(bolt, 500);
+      });
+      await sleep(280);
+      shakeScreen();
+      const blast = mkEl("div", { width:"130px", height:"130px",
+        background:"radial-gradient(circle, #fff 0%, #fff176 35%, #fbc02d 60%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 26px #ffeb3b)",
+        animation:"meteor-impact 0.6s forwards" });
+      pos(blast, midX, midY);
+      autoRemove(blast, 600);
+      shakeScreen();
+      await sleep(500);
+      break;
+    }
+
+    case "thunder_annihilation": {
+      // 십자 번개 하늘 가르며 + 하얘짐 충격
+      const flash = document.createElement("div");
+      flash.style.cssText = `position:absolute; inset:0; z-index:6; pointer-events:none;
+        background:#fff; opacity:0; transition:opacity 0.15s;`;
+      fxLayer.appendChild(flash);
+      // 십자 번개
+      [0, 90, 45, 135].forEach((deg, i) => {
+        setTimeout(() => {
+          const bolt = mkEl("div", { width:"160px", height:"8px",
+            background:"linear-gradient(90deg,transparent,#fff,#fff176,#fff,transparent)",
+            filter:"drop-shadow(0 0 12px #ffeb3b)",
+            transform:`translate(-50%,-50%) rotate(${deg}deg)`,
+            animation:"impact-pop 0.4s forwards" });
+          pos(bolt, dx, dy);
+          autoRemove(bolt, 400);
+        }, i*70);
+      });
+      await sleep(200);
+      flash.style.opacity = "0.85";
+      shakeScreen();
+      await sleep(130);
+      flash.style.opacity = "0";
+      autoRemove(flash, 200);
+      await sleep(350);
+      break;
+    }
+
+    case "overload": {
+      // 자신,상대에게 번개 휘감고 폭발 충격파
+      [[ax,ay],[dx,dy]].forEach(([x,y]) => {
+        for (let i = 0; i < 6; i++) {
+          const angle = (i/6)*Math.PI*2;
+          const sp = mkEl("div", { width:"5px", height:"20px",
+            background:"#fff176", borderRadius:"2px",
+            filter:"drop-shadow(0 0 6px #ffeb3b)",
+            transform:`translate(-50%,-50%) rotate(${angle}rad)`,
+            animation:`whirl 0.7s forwards`, opacity:"0" });
+          pos(sp, x, y);
+          autoRemove(sp, 750);
+        }
+      });
+      await sleep(400);
+      shakeScreen();
+      const blast = mkEl("div", { width:"120px", height:"120px",
+        background:"radial-gradient(circle, #fff 0%, #fff176 40%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 22px #ffeb3b)",
+        animation:"deluge-burst 0.6s forwards" });
+      pos(blast, dx, dy);
+      autoRemove(blast, 600);
+      shakeScreen();
+      await sleep(450);
+      break;
+    }
+
+    case "star_burst": {
+      // 자신한테 번개기둥, 상대한테 별 깨지며 파편 강타 + 흔들림
+      const pillar = document.createElement("div");
+      pillar.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+        width:34px; height:0px;
+        background:linear-gradient(180deg,#fff,#fff176,#fbc02d);
+        border-radius:17px; filter:drop-shadow(0 0 18px #ffeb3b);
+        left:${ax-17}px; top:${ay-60}px;
+        transform-origin:bottom; transition:height 0.3s ease-out;`;
+      fxLayer.appendChild(pillar);
+      await sleep(20);
+      pillar.style.height = "120px";
+      await sleep(350);
+      pillar.style.opacity = "0";
+      pillar.style.transition = "opacity 0.3s";
+      autoRemove(pillar, 300);
+      // 별
+      const star = mkEl("div", { width:"70px", height:"70px",
+        background:"radial-gradient(circle, #fff 0%, #fff59d 50%, #ffd54f 80%)",
+        filter:"drop-shadow(0 0 20px #ffeb3b)",
+        clipPath:"polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)",
+        transform:"translate(-50%,-50%) scale(0)",
+        transition:"transform 0.25s ease-out" });
+      star.className = "fx-el";
+      pos(star, dx, dy);
+      await sleep(20);
+      star.style.transform = "translate(-50%,-50%) scale(1.3)";
+      await sleep(250);
+      star.remove();
+      shakeScreen();
+      // 파편 강타
+      for (let i = 0; i < 12; i++) {
+        const angle = (i/12)*Math.PI*2;
+        const frag = mkEl("div", { width:"14px", height:"14px",
+          background:"#fff59d",
+          clipPath:"polygon(50% 0,100% 50%,50% 100%,0 50%)",
+          filter:"drop-shadow(0 0 6px #ffeb3b)" });
+        frag.style.setProperty("--dx", Math.cos(angle)*70+"px");
+        frag.style.setProperty("--dy", Math.sin(angle)*70+"px");
+        frag.style.animation = "cinder-float 0.6s forwards";
+        pos(frag, dx, dy);
+        autoRemove(frag, 600);
+      }
+      const blast = mkEl("div", { width:"120px", height:"120px",
+        background:"radial-gradient(circle, #fff 0%, #fff59d 40%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 24px #ffeb3b)",
+        animation:"meteor-impact 0.6s forwards" });
+      pos(blast, dx, dy);
+      autoRemove(blast, 600);
+      shakeScreen();
+      await sleep(500);
       break;
     }
 
