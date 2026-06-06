@@ -3250,8 +3250,9 @@ function addOrRefreshEffect(mon, effect) {
     if (effect.schedule) sameSource.schedule = [...effect.schedule];
     if (effect.onExpire) sameSource.onExpire = effect.onExpire;
     sameSource.turnIndex = 0; // 리프레시 시 turnIndex 리셋
+    sameSource.justApplied = true;
   } else {
-    mon.activeEffects.push({ ...effect, schedule: effect.schedule ? [...effect.schedule] : undefined });
+    mon.activeEffects.push({ ...effect, justApplied: true, schedule: effect.schedule ? [...effect.schedule] : undefined });
   }
 }
 
@@ -3283,6 +3284,14 @@ function tickEffects(mon) {
   const survivors = [];
   const expiredCallbacks = [];
   mon.activeEffects.forEach(e => {
+    // 방금 적용된 일부 효과는 이번 턴 tick 건너뜀 (적용 턴에 깎이는 버그 방지)
+    // delayed_bolt(지연폭발), stun(스턴)만 해당 — 기존 버프 밸런스 유지
+    if (e.justApplied && (e.kind === "delayed_bolt" || e.kind === "stun")) {
+      e.justApplied = false;
+      survivors.push(e);
+      return;
+    }
+    e.justApplied = false;
     // 화상 - 매턴 고정 피해
     if (e.kind === "burn") {
       const dmg = Math.floor(mon.maxHp * e.value / 100);
