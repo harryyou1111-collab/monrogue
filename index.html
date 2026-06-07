@@ -2840,12 +2840,12 @@ const MOVES = {
   },
   overload: {
     name: "전력 과부하", type: "electric", multiplier: 0, cooldown: 4, priority: 0,
-    icon: "skill_overload.png", desc: "과부하된 전류를 모았다가 3턴째 폭발시킨다. 그동안 자신은 스턴되지만 단단해진다.",
+    icon: "skill_overload.png", desc: "과부하된 전류를 모았다가 2턴째 폭발시킨다. 그동안 자신은 스턴되지만 단단해진다.",
     effects: [
       { kind: "trapped", target: "enemy", value: 0,  duration: 3 },
       { kind: "stun",    target: "self",  value: 0,  duration: 2 },
-      { kind: "def_up",  target: "self",  value: 50, duration: 3 },
-      { kind: "delayed_bolt", target: "enemy", value: 250, duration: 3 }
+      { kind: "def_up",  target: "self",  value: 70, duration: 3 },
+      { kind: "delayed_bolt", target: "enemy", value: 250, duration: 2 }
     ]
   },
   star_burst: {
