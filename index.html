@@ -2858,6 +2858,78 @@ const MOVES = {
       { kind: "endure", target: "self", value: 0, duration: 999, onEndure: "star_counter" }
     ]
   },
+
+  // ===== 어둠 타입 스킬 =====
+  dark_moon: {
+    name: "흑월참", type: "dark", multiplier: 1.0, cooldown: 1, priority: 0,
+    icon: "skill_dark_moon.png", desc: "어둠의 칼날로 적의 공격력을 깎는다.",
+    effects: [ { kind: "atk_down", target: "enemy", value: 20, duration: 2 } ]
+  },
+  ambush: {
+    name: "암습", type: "dark", multiplier: 0.5, cooldown: 0, priority: 1,
+    icon: "skill_ambush.png", desc: "기습으로 30% 확률로 적을 암흑에 빠뜨린다.",
+    effects: [ { kind: "blind", target: "enemy", value: 0, duration: 1, chance: 0.30 } ]
+  },
+  shadow_raid: {
+    name: "그림자 습격", type: "dark", multiplier: 1.0, cooldown: 0, priority: 0,
+    icon: "skill_shadow_raid.png", desc: "그림자에서 덮치며 자신을 강화한다.",
+    effects: [ { kind: "atk_up", target: "self", value: 10, duration: 2 } ]
+  },
+  black_flash: {
+    name: "흑섬", type: "dark", multiplier: 1.5, cooldown: 2, priority: 0,
+    icon: "skill_black_flash.png", desc: "검은 섬광으로 적의 속도를 꺾고 회복을 막는다.",
+    effects: [
+      { kind: "spd_down",   target: "enemy", value: 30, duration: 2 },
+      { kind: "heal_block", target: "enemy", value: 30, duration: 2 }
+    ]
+  },
+  abyss_fear: {
+    name: "심연의 공포", type: "dark", multiplier: 1.0, cooldown: 2, priority: 0,
+    icon: "skill_abyss_fear.png", desc: "심연의 공포로 적을 옭아맨다.",
+    effects: [ { kind: "fear", target: "enemy", value: 0, duration: 2 } ]
+  },
+  blackout: {
+    name: "블랙아웃", type: "dark", multiplier: 1.0, cooldown: 2, priority: 1,
+    icon: "skill_blackout.png", desc: "50% 확률로 적을 암흑에 빠뜨리고 자신은 빨라진다.",
+    effects: [
+      { kind: "blind",  target: "enemy", value: 0,  duration: 1, chance: 0.50 },
+      { kind: "spd_up", target: "self",  value: 30, duration: 2 }
+    ]
+  },
+  soul_drain: {
+    name: "영혼 흡수", type: "dark", multiplier: 0.5, cooldown: 4, priority: 1,
+    icon: "skill_soul_drain.png", desc: "적의 영혼을 흡수해 체력을 채우고 흡혈 상태가 된다.",
+    effects: [
+      { kind: "heal",      target: "self", value: 20, duration: 0 },
+      { kind: "lifesteal", target: "self", value: 30, duration: 3 }
+    ]
+  },
+  nightmare: {
+    name: "나이트메어", type: "dark", multiplier: 1.5, cooldown: 3, priority: 0,
+    icon: "skill_nightmare.png", desc: "악몽으로 적을 공포에 빠뜨리고 약화시킨다.",
+    effects: [
+      { kind: "fear",     target: "enemy", value: 0,  duration: 2 },
+      { kind: "atk_down", target: "enemy", value: 25, duration: 2 }
+    ]
+  },
+  dark_annihilation: {
+    name: "흑천멸격", type: "dark", multiplier: 2.0, cooldown: 3, priority: 0,
+    icon: "skill_dark_annihilation.png", desc: "흑천의 힘으로 적을 멸하고 자신을 회복·강화한다.",
+    effects: [
+      { kind: "heal",   target: "self", value: 35, duration: 0 },
+      { kind: "atk_up", target: "self", value: 30, duration: 2 }
+    ]
+  },
+  doom_lord: {
+    name: "파멸의 군주", type: "dark", multiplier: 2.0, cooldown: 0, onceBattle: true, priority: 1,
+    icon: "skill_doom_lord.png", desc: "파멸의 군주가 강림. 적에게 확정 공포·암흑을 걸고 4턴간 흡혈하며 공포를 흩뿌린다.",
+    effects: [
+      { kind: "fear",      target: "enemy", value: 0,  duration: 4 },
+      { kind: "blind",     target: "enemy", value: 0,  duration: 1 },
+      { kind: "lifesteal", target: "self",  value: 50, duration: 4 },
+      { kind: "doom_aura", target: "self",  value: 0,  duration: 4 }
+    ]
+  },
   // === 구 시스템 스킬 ===
   scratch:        { name: "긁기",       power: 35, type: "normal" },
   ember:          { name: "불꽃세례",   power: 40, type: "fire" },
@@ -2942,7 +3014,11 @@ const EFFECT_DEFS = {
   stun:     { label: "스턴",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 1, icon: "💫", color: "#fdd835" },
   charge:   { label: "전류",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 99, icon: "⚡", color: "#ffeb3b" },
   delayed_bolt: { label: "과부하",  stat: null, isBuff: false, defaultValue: 0, defaultDuration: 3, icon: "🌩️", color: "#f57f17" },
-  endure:   { label: "불굴",       stat: null, isBuff: true,  defaultValue: 0,  defaultDuration: 99, icon: "✨", color: "#ffd54f" }
+  endure:   { label: "불굴",       stat: null, isBuff: true,  defaultValue: 0,  defaultDuration: 99, icon: "✨", color: "#ffd54f" },
+  fear:     { label: "공포",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 2, icon: "😱", color: "#4a148c" },
+  blind:    { label: "암흑",       stat: null, isBuff: false, defaultValue: 0,  defaultDuration: 1, icon: "🌑", color: "#212121" },
+  lifesteal:{ label: "흡혈",       stat: null, isBuff: true,  defaultValue: 30, defaultDuration: 3, icon: "🩸", color: "#b71c1c" },
+  doom_aura:{ label: "파멸의 기운", stat: null, isBuff: true,  defaultValue: 0,  defaultDuration: 4, icon: "👑", color: "#4a148c" }
 };
 
 // 효과 객체를 만드는 헬퍼 (스킬 정의에서 사용)
@@ -2989,11 +3065,11 @@ const MONSTERS = {
 
   // === 신규 9마리 ===
   // 어둠 일반 3
-  mon_012: { id: "mon_012", name: "쉐도우팽", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 890, atk: 480, def: 20, spd: 70 }, moves: ["bite", "shadow_claw", "dark_bite"] },
-  mon_013: { id: "mon_013", name: "크로윙",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 1050, atk: 400, def: 25, spd: 65 }, moves: ["scratch", "shadow_claw", "dark_bite"] },
-  mon_014: { id: "mon_014", name: "까밍",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 1250, atk: 350, def: 25, spd: 60 }, moves: ["peck", "night_slash", "shadow_ball"] },
+  mon_012: { id: "mon_012", name: "쉐도우팽", type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 890, atk: 480, def: 20, spd: 70 }, moves: ["shadow_raid", "dark_moon", "dark_annihilation"] },
+  mon_013: { id: "mon_013", name: "크로윙",   type: "dark", rarity: "common", passive: null, facing: "left",  stats: { hp: 1050, atk: 400, def: 25, spd: 65 }, moves: ["ambush", "black_flash", "blackout"] },
+  mon_014: { id: "mon_014", name: "까밍",     type: "dark", rarity: "common", passive: null, facing: "right", stats: { hp: 1250, atk: 350, def: 25, spd: 60 }, moves: ["ambush", "abyss_fear", "nightmare"] },
   // 어둠 전설
-  mon_015: { id: "mon_015", name: "데스페리온",       type: "dark", rarity: "legendary", passive: "dark_reign", facing: "left",  stats: { hp: 1630, atk: 440, def: 25, spd: 65 }, moves: ["dark_bite", "dark_pulse", "shadow_ball"] },
+  mon_015: { id: "mon_015", name: "데스페리온",       type: "dark", rarity: "legendary", passive: null, facing: "left",  stats: { hp: 1630, atk: 440, def: 25, spd: 65 }, moves: ["shadow_raid", "blackout", "nightmare", "doom_lord"] },
   // 풀 전설
   mon_016: { id: "mon_016", name: "월화랑",     type: "grass", rarity: "legendary", passive: "natures_blessing", facing: "right", stats: { hp: 1820, atk: 380, def: 25, spd: 60 }, moves: ["leaf_slash", "natures_blessing_skill", "full_bloom", "moonflower"] },
   // 전기 전설 (이스터에그)
@@ -3017,8 +3093,8 @@ const MONSTERS = {
   mon_027: { id: "mon_027", name: "라이트닝쿤", type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1220, atk: 360, def: 20, spd: 60 }, moves: ["flash_strike", "flash_pierce", "tempest_volt"] },
   mon_028: { id: "mon_028", name: "볼툼비",     type: "electric", rarity: "common", passive: null, facing: "left",  stats: { hp: 1200, atk: 220, def: 40, spd: 60 }, moves: ["lightning_bolt", "power_supply", "tempest_volt"] },
   // 어둠 추가
-  mon_029: { id: "mon_029", name: "팬타르",     type: "dark",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1120, atk: 580, def: 25, spd: 70 }, moves: ["bite", "shadow_claw", "night_slash"] },
-  mon_030: { id: "mon_030", name: "루나냥",     type: "dark",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1320, atk: 310, def: 25, spd: 60 }, moves: ["scratch", "shadow_claw", "dark_bite"] }
+  mon_029: { id: "mon_029", name: "팬타르",     type: "dark",     rarity: "rare",   passive: null, facing: "left",  stats: { hp: 1120, atk: 580, def: 25, spd: 70 }, moves: ["shadow_raid", "dark_moon", "soul_drain", "dark_annihilation"] },
+  mon_030: { id: "mon_030", name: "루나냥",     type: "dark",     rarity: "common", passive: null, facing: "left",  stats: { hp: 1320, atk: 310, def: 25, spd: 60 }, moves: ["ambush", "black_flash", "soul_drain"] }
 };
 const ALL_MON_IDS = Object.keys(MONSTERS);
 // 이제 ALL_MON_IDS가 존재하므로 IMAGES 채우기 (mon_001 ~ mon_030 모두 자동)
@@ -3123,7 +3199,7 @@ function makeInstance(monId, level) {
     name: base.name,
     type: base.type,
     rarity: base.rarity || "common",
-    passive: base.passive || null,
+    passive: null, // 패시브 전부 비활성화
     facing: base.facing,
     maxHp: finalHp,
     currentHp: finalHp,
@@ -3166,6 +3242,19 @@ function applyEffects(effectList, caster, target, moveKey) {
   effectList.forEach(e => {
     const recipient = (e.target === "enemy") ? target : caster;
     if (!recipient) return;
+
+    // 확률 효과: chance 있으면 굴림 (암습 30%, 블랙아웃 50% 등)
+    if (e.chance !== undefined && Math.random() >= e.chance) {
+      return; // 실패 시 효과 미적용
+    }
+
+    // 공포 상태면 버프(isBuff) 효과를 받을 수 없음
+    const edef = EFFECT_DEFS[e.kind];
+    if (recipient.activeEffects && recipient.activeEffects.some(x => x.kind === "fear")
+        && edef && edef.isBuff && (e.target === "self")) {
+      messages.push(`${recipient.name}은(는) 공포로 강화할 수 없다!`);
+      return;
+    }
 
     // === 즉발 특수 효과 ===
     if (e.kind === "cleanse") {
@@ -3365,7 +3454,16 @@ function setCooldown(mon, moveKey) {
   if (!move.cooldown || move.cooldown <= 0) return;
   if (!mon.cooldowns) mon.cooldowns = {};
   // +1 하는 이유: 이 턴 끝에 -1 되므로 의도한 쿨다운 턴수 유지
-  mon.cooldowns[moveKey] = move.cooldown + 1;
+  let cd = move.cooldown + 1;
+  // 공포 패널티: 공포 상태에서 쿨 스킬 사용 시 쿨+1 (공포당 1회만)
+  if (mon.activeEffects) {
+    const fearEff = mon.activeEffects.find(e => e.kind === "fear");
+    if (fearEff && !fearEff.coolPenaltyUsed) {
+      cd += 1;
+      fearEff.coolPenaltyUsed = true;
+    }
+  }
+  mon.cooldowns[moveKey] = cd;
 }
 // 사용 가능 여부 확인
 function isMoveAvailable(mon, moveKey) {
@@ -3548,18 +3646,13 @@ function calcDamage(attacker, defender, moveKey) {
   // 크리 확률 (임시 비활성화)
   const crit = 1.0;
 
-  // 화상 시 공격력 50% 다운 (기존 상태이상, 새 burn 효과와는 다름)
+  // 화상 시 공격력 50% 다운 (기존 상태이상)
   const burnMod = (attacker.status === "burn") ? 0.5 : 1.0;
-  // 공포 시 받는 데미지 +20%
-  const fearMod = (defender.status === "fear") ? 1.2 : 1.0;
-  // 흑룡 데미지 감소 10%
-  const darkReignMod = (defender.passive === "dark_reign") ? 0.9 : 1.0;
-  // 별정령 교체 첫 공격 +20%
+  // 공포 데미지 보정 제거 (새 공포는 딜에 영향 없음)
+  const fearMod = 1.0;
+  // 패시브 전부 비활성화
+  const darkReignMod = 1.0;
   let starBoostMod = 1.0;
-  if (attacker.passive === "stars_grace" && attacker.starGraceBoost) {
-    starBoostMod = 1.2;
-    attacker.starGraceBoost = false;
-  }
 
   // === JWA식 데미지 공식 ===
   // multiplier가 있으면: 시전자 공격력 × multiplier (예: 0.5, 1.0, 1.8)
@@ -4067,12 +4160,6 @@ async function playerAttack(moveKey) {
       await showMessage(`${label}은(는) 마비되어 움직일 수 없다!`, 700);
       return "blocked";
     }
-    // 공포 50% 행동 불가
-    if (attacker.status === "fear" && Math.random() < 0.50) {
-      const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
-      await showMessage(`😱 ${label}은(는) 공포에 떨어 움직일 수 없다!`, 700);
-      return "blocked";
-    }
     await executeAttack(attacker, defender, attackerSide, defenderSide, mKey);
     return "ok";
   }
@@ -4225,6 +4312,19 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
   const label = (attackerSide === "player") ? attacker.name : `야생의 ${attacker.name}`;
   await showMessage(`${label}의 ${r.move.name}!`, 500);
 
+  // 암흑 상태: 공격기(데미지 있는 스킬)는 100% 빗나감. 회복/버프기(multiplier 0)는 정상.
+  const isAttackMove = (r.move.multiplier === undefined) ? (r.move.power > 0) : (r.move.multiplier > 0);
+  if (isAttackMove && attacker.activeEffects && attacker.activeEffects.some(e => e.kind === "blind")) {
+    const attSp = $(`${attackerSide}-sprite`);
+    attSp.classList.add("attacking");
+    if (attackerSide === "enemy") attSp.classList.add("enemy-attacker");
+    await sleep(200);
+    attSp.classList.remove("attacking", "enemy-attacker");
+    await showMessage(`🌑 ${label}의 공격이 빗나갔다! (암흑)`, 900);
+    setCooldown(attacker, moveKey);
+    return;
+  }
+
   const attSprite = $(`${attackerSide}-sprite`);
   const defSprite = $(`${defenderSide}-sprite`);
 
@@ -4254,6 +4354,23 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
     if (defenderSide === "player") {
       $("player-hp-text").textContent = `${defender.currentHp} / ${defender.maxHp}`;
       renderParty();
+    }
+
+    // 흡혈(lifesteal): 시전자가 흡혈 상태면 입힌 피해의 X% 회복
+    if (attacker.activeEffects) {
+      const ls = attacker.activeEffects.find(e => e.kind === "lifesteal");
+      if (ls && attacker.currentHp > 0) {
+        const drain = Math.floor(r.damage * ls.value / 100);
+        if (drain > 0) {
+          attacker.currentHp = Math.min(attacker.maxHp, attacker.currentHp + drain);
+          popHeal(attackerSide, drain);
+          updateHpBar(attackerSide, attacker);
+          if (attackerSide === "player") {
+            $("player-hp-text").textContent = `${attacker.currentHp} / ${attacker.maxHp}`;
+            renderParty();
+          }
+        }
+      }
     }
 
     await sleep(450);
@@ -4331,6 +4448,14 @@ async function executeAttack(attacker, defender, attackerSide, defenderSide, mov
       updateSpdBadges();
       await showMessage(`⚡ 전류 과부하 폭발! ${defender.name}이(가) 감전됐다!`, 900);
     }
+  }
+
+  // === 파멸의 기운(doom_aura): 스킬 쓸 때마다 50% 확률로 상대에게 공포 ===
+  if (attacker.activeEffects && attacker.activeEffects.some(e => e.kind === "doom_aura")
+      && defender.currentHp > 0 && Math.random() < 0.50) {
+    applyEffects([{ kind: "fear", target: "self", value: 0, duration: 2 }], defender, defender, "doom_aura");
+    renderMonStatus(defenderSide, defender);
+    await showMessage(`👑 파멸의 기운! ${defender.name}이(가) 공포에 휩싸였다!`, 800);
   }
 }
 
@@ -5479,6 +5604,310 @@ async function playSkillEffect(moveKey, moveType, attackerSide, defenderSide) {
       autoRemove(blast, 600);
       shakeScreen();
       await sleep(500);
+      break;
+    }
+
+    // ════════ 어둠 타입 ════════
+
+    case "dark_moon": {
+      // 검은 초승달이 날아가며 베어버림
+      const moon = document.createElement("div");
+      moon.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+        width:50px; height:50px;
+        background:radial-gradient(circle at 65% 35%, transparent 0%, transparent 45%, #6a1b9a 48%, #1a0033 70%);
+        border-radius:50%; filter:drop-shadow(0 0 12px #6a1b9a) drop-shadow(0 0 6px #000);
+        left:${ax}px; top:${ay}px; transform:translate(-50%,-50%) rotate(-30deg);
+        transition:left 0.35s ease-out, top 0.35s ease-out;`;
+      fxLayer.appendChild(moon);
+      await sleep(20);
+      moon.style.left = dx+"px"; moon.style.top = dy+"px";
+      await sleep(350);
+      moon.remove();
+      mkSlash(dx, dy, "#9c27b0", 120, -40, "slash-sw", 400);
+      await sleep(300);
+      break;
+    }
+
+    case "ambush": {
+      // 적 발밑 그림자가 튀어나와 덮침
+      const pool = mkEl("div", { width:"90px", height:"30px",
+        background:"radial-gradient(ellipse, #1a0033 0%, #4a148c 60%, transparent 80%)",
+        borderRadius:"50%", filter:"blur(2px)", opacity:"0",
+        animation:"splash 0.3s forwards" });
+      pos(pool, dx, dy+35);
+      autoRemove(pool, 300);
+      await sleep(200);
+      // 솟아오르는 그림자
+      const shadow = document.createElement("div");
+      shadow.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+        width:60px; height:0px;
+        background:linear-gradient(180deg, #4a148c, #1a0033);
+        border-radius:50% 50% 30% 30%; filter:drop-shadow(0 0 10px #6a1b9a);
+        left:${dx-30}px; top:${dy+30}px; transform-origin:bottom;
+        transition:height 0.25s ease-out;`;
+      fxLayer.appendChild(shadow);
+      await sleep(20);
+      shadow.style.height = "80px";
+      await sleep(250);
+      shadow.style.opacity = "0";
+      shadow.style.transition = "opacity 0.3s";
+      autoRemove(shadow, 300);
+      await sleep(250);
+      break;
+    }
+
+    case "shadow_raid": {
+      // 사방에서 그림자 동시 돌진
+      const dirs = [[-1,-1],[1,-1],[-1,1],[1,1],[0,-1.4],[0,1.4]];
+      dirs.forEach(([ox,oy]) => {
+        const sh = document.createElement("div");
+        const startX = dx + ox*80, startY = dy + oy*80;
+        sh.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:40px; height:18px;
+          background:linear-gradient(90deg, transparent, #4a148c, #1a0033);
+          border-radius:50% 10% 50% 10%; filter:drop-shadow(0 0 8px #6a1b9a);
+          left:${startX}px; top:${startY}px; transform:translate(-50%,-50%);
+          transition:left 0.3s ease-in, top 0.3s ease-in;`;
+        fxLayer.appendChild(sh);
+        requestAnimationFrame(() => { sh.style.left = dx+"px"; sh.style.top = dy+"px"; });
+        autoRemove(sh, 400);
+      });
+      await sleep(320);
+      const imp = mkEl("div", { width:"90px", height:"90px",
+        background:"radial-gradient(circle, #6a1b9a 0%, #1a0033 50%, transparent 72%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #4a148c)",
+        animation:"impact-pop 0.4s forwards" });
+      pos(imp, dx, dy);
+      autoRemove(imp, 400);
+      await sleep(300);
+      break;
+    }
+
+    case "black_flash": {
+      // 검은 검 여러번 베기 + 공간 찢어짐
+      for (let i = 0; i < 3; i++) {
+        const anims = ["slash-claw1","slash-sw","slash-claw3"];
+        mkSlash(dx, dy, "#4a148c", 120, 0, anims[i], 400);
+        // 공간 찢김 (검은 균열)
+        const rift = document.createElement("div");
+        const ang = -40 + i*35;
+        rift.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:110px; height:4px;
+          background:linear-gradient(90deg, transparent, #000, #9c27b0, #000, transparent);
+          filter:drop-shadow(0 0 8px #6a1b9a);
+          left:${dx}px; top:${dy}px;
+          transform-origin:center; transform:translate(-50%,-50%) rotate(${ang}deg) scaleX(0);
+          transition:transform 0.18s;`;
+        fxLayer.appendChild(rift);
+        await sleep(15);
+        rift.style.transform = `translate(-50%,-50%) rotate(${ang}deg) scaleX(1)`;
+        autoRemove(rift, 350);
+        await sleep(120);
+      }
+      await sleep(250);
+      break;
+    }
+
+    case "abyss_fear": {
+      // 화면 가장자리 어두워짐 + 붉은 눈 + 검은 손
+      const vignette = document.createElement("div");
+      vignette.style.cssText = `position:absolute; inset:0; z-index:6; pointer-events:none;
+        background:radial-gradient(circle at center, transparent 30%, rgba(20,0,40,0.85) 100%);
+        opacity:0; transition:opacity 0.4s;`;
+      fxLayer.appendChild(vignette);
+      await sleep(20);
+      vignette.style.opacity = "1";
+      // 붉은 눈
+      const eye = mkEl("div", { width:"40px", height:"20px",
+        background:"radial-gradient(ellipse, #fff 0%, #ff1744 30%, #b71c1c 60%, transparent 80%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 14px #ff1744)",
+        animation:"impact-pop 0.6s forwards" });
+      pos(eye, dx, dy-20);
+      autoRemove(eye, 700);
+      // 검은 손들
+      for (let i = 0; i < 5; i++) {
+        const hand = document.createElement("div");
+        hand.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:14px; height:0px;
+          background:linear-gradient(180deg, #4a148c, #000);
+          border-radius:40% 40% 0 0; filter:drop-shadow(0 0 6px #6a1b9a);
+          left:${dx+(i-2)*22}px; top:${dy+50}px; transform-origin:bottom;
+          transition:height 0.3s ease-out;`;
+        fxLayer.appendChild(hand);
+        await sleep(40);
+        hand.style.height = "70px";
+        autoRemove(hand, 600);
+      }
+      await sleep(400);
+      vignette.style.opacity = "0";
+      autoRemove(vignette, 400);
+      await sleep(300);
+      break;
+    }
+
+    case "blackout": {
+      // 화면 전체 순간 암전 후 여러번 타격
+      const black = document.createElement("div");
+      black.style.cssText = `position:absolute; inset:0; z-index:7; pointer-events:none;
+        background:#000; opacity:0; transition:opacity 0.15s;`;
+      fxLayer.appendChild(black);
+      await sleep(20);
+      black.style.opacity = "1";
+      await sleep(300);
+      black.style.opacity = "0";
+      // 암전 끝나며 연타
+      for (let i = 0; i < 4; i++) {
+        mkSlash(dx + (Math.random()*30-15), dy + (Math.random()*30-15), "#9c27b0", 80, Math.random()*90-45, "slash-claw2", 300);
+        await sleep(90);
+      }
+      autoRemove(black, 200);
+      await sleep(250);
+      break;
+    }
+
+    case "soul_drain": {
+      // 자신 회복 + 적에게서 보라 영혼구체가 빠져나와 자신에게
+      const aura = mkEl("div", { width:"100px", height:"100px",
+        background:"radial-gradient(circle, rgba(156,39,176,0.4) 0%, rgba(74,20,140,0.6) 55%, transparent 75%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 16px #6a1b9a)",
+        animation:"aura-wrap 0.7s forwards" });
+      pos(aura, ax, ay);
+      autoRemove(aura, 700);
+      // 영혼 구체들 적→자신
+      for (let i = 0; i < 5; i++) {
+        const orb = document.createElement("div");
+        orb.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:18px; height:18px;
+          background:radial-gradient(circle at 35% 35%, #e1bee7, #9c27b0);
+          border-radius:50%; filter:drop-shadow(0 0 8px #ce93d8);
+          left:${dx}px; top:${dy}px; transform:translate(-50%,-50%);
+          transition:left 0.4s ease-in, top 0.4s ease-in, opacity 0.4s;`;
+        fxLayer.appendChild(orb);
+        await sleep(60);
+        orb.style.left = ax+"px"; orb.style.top = ay+"px";
+        orb.style.opacity = "0.3";
+        autoRemove(orb, 450);
+      }
+      await sleep(450);
+      break;
+    }
+
+    case "nightmare": {
+      // 검은 안개가 적 감싸고 괴물 등장 + 흔들림
+      const fog = mkEl("div", { width:"120px", height:"120px",
+        background:"radial-gradient(circle, rgba(74,20,140,0.7) 0%, rgba(26,0,51,0.5) 50%, transparent 75%)",
+        borderRadius:"50%", filter:"blur(4px)",
+        animation:"aura-wrap 0.9s forwards" });
+      pos(fog, dx, dy);
+      autoRemove(fog, 900);
+      await sleep(400);
+      // 괴물 (붉은 눈 + 검은 형체)
+      const beast = mkEl("div", { width:"80px", height:"80px",
+        background:"radial-gradient(circle at 40% 40%, #1a0033 0%, #000 70%)",
+        borderRadius:"50% 50% 40% 40%", filter:"drop-shadow(0 0 14px #6a1b9a)",
+        animation:"impact-pop 0.5s forwards" });
+      pos(beast, dx, dy);
+      autoRemove(beast, 500);
+      // 붉은 눈 두개
+      [-12, 12].forEach(ox => {
+        const eye = mkEl("div", { width:"10px", height:"10px",
+          background:"#ff1744", borderRadius:"50%",
+          filter:"drop-shadow(0 0 6px #ff1744)",
+          animation:"impact-pop 0.5s forwards" });
+        pos(eye, dx+ox, dy-8);
+        autoRemove(eye, 500);
+      });
+      shakeScreen();
+      await sleep(450);
+      break;
+    }
+
+    case "dark_annihilation": {
+      // 가장자리 검게 + 흑색 운석 번개와 함께 낙하 + 흔들림
+      const vignette = document.createElement("div");
+      vignette.style.cssText = `position:absolute; inset:0; z-index:6; pointer-events:none;
+        background:radial-gradient(circle at center, transparent 40%, rgba(10,0,20,0.8) 100%);
+        opacity:0; transition:opacity 0.3s;`;
+      fxLayer.appendChild(vignette);
+      await sleep(20);
+      vignette.style.opacity = "1";
+      shakeScreen();
+      for (let i = 0; i < 4; i++) {
+        const ox = (Math.random()*100-50);
+        // 흑색 운석
+        const meteor = document.createElement("div");
+        meteor.style.cssText = `position:absolute; z-index:5; pointer-events:none;
+          width:34px; height:34px;
+          background:radial-gradient(circle at 35% 35%, #6a1b9a, #1a0033 70%, #000);
+          border-radius:50% 40% 50% 30%; filter:drop-shadow(0 0 12px #9c27b0);
+          left:${dx+ox}px; top:${dy-100}px; transform:translate(-50%,-50%);
+          transition:top 0.25s ease-in, left 0.25s ease-in;`;
+        fxLayer.appendChild(meteor);
+        await sleep(20);
+        meteor.style.top = dy+"px"; meteor.style.left = (dx+ox*0.3)+"px";
+        await sleep(230);
+        meteor.remove();
+        const imp = mkEl("div", { width:"80px", height:"80px",
+          background:"radial-gradient(circle, #9c27b0 0%, #1a0033 50%, transparent 72%)",
+          borderRadius:"50%", filter:"drop-shadow(0 0 16px #6a1b9a)",
+          animation:"meteor-impact 0.4s forwards" });
+        pos(imp, dx+ox*0.3, dy);
+        autoRemove(imp, 400);
+        shakeScreen();
+        await sleep(120);
+      }
+      vignette.style.opacity = "0";
+      autoRemove(vignette, 300);
+      await sleep(300);
+      break;
+    }
+
+    case "doom_lord": {
+      // 화면 어두워짐 + 붉은 달 + 거대 용 등장해 삼킴 + 흔들림
+      const dark = document.createElement("div");
+      dark.style.cssText = `position:absolute; inset:0; z-index:6; pointer-events:none;
+        background:rgba(10,0,20,0.85); opacity:0; transition:opacity 0.4s;`;
+      fxLayer.appendChild(dark);
+      await sleep(20);
+      dark.style.opacity = "1";
+      // 붉은 달
+      const moon = mkEl("div", { width:"90px", height:"90px",
+        background:"radial-gradient(circle at 40% 40%, #ff5252 0%, #b71c1c 50%, #4a0000 80%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 30px #ff1744)",
+        animation:"impact-pop 0.8s forwards" });
+      pos(moon, (ax+dx)/2, ay-30);
+      autoRemove(moon, 1400);
+      await sleep(500);
+      // 거대 용
+      const dragon = document.createElement("div");
+      dragon.style.cssText = `position:absolute; z-index:7; pointer-events:none;
+        width:90px; height:90px;
+        background:radial-gradient(ellipse at 45% 40%, #6a1b9a 0%, #1a0033 55%, #000 80%);
+        border-radius:60% 40% 50% 50% / 55% 60% 40% 50%;
+        filter:drop-shadow(0 0 22px #6a1b9a);
+        left:${ax}px; top:${ay}px; transform:translate(-50%,-50%) scale(0.5) rotate(-20deg);
+        transition:left 0.5s cubic-bezier(0.3,0,0.7,1), top 0.5s, transform 0.5s;`;
+      fxLayer.appendChild(dragon);
+      await sleep(20);
+      dragon.style.left = dx+"px"; dragon.style.top = dy+"px";
+      dragon.style.transform = "translate(-50%,-50%) scale(2) rotate(10deg)";
+      shakeScreen();
+      await sleep(500);
+      // 삼킴 - 거대 폭발
+      const blast = mkEl("div", { width:"150px", height:"150px",
+        background:"radial-gradient(circle, #9c27b0 0%, #4a148c 40%, #1a0033 65%, transparent 78%)",
+        borderRadius:"50%", filter:"drop-shadow(0 0 30px #6a1b9a)",
+        animation:"deluge-burst 0.6s forwards" });
+      pos(blast, dx, dy);
+      autoRemove(blast, 600);
+      dragon.style.opacity = "0";
+      dragon.style.transition = "opacity 0.3s";
+      autoRemove(dragon, 300);
+      shakeScreen();
+      await sleep(400);
+      dark.style.opacity = "0";
+      autoRemove(dark, 400);
+      await sleep(350);
       break;
     }
 
