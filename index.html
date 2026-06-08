@@ -2108,6 +2108,78 @@
     margin-left: auto;
     margin-right: auto;
   }
+
+  /* ===== 도감 카드: 신규 카드 디자인 적용 ===== */
+  #collection-screen .collection-card{
+    position:relative; aspect-ratio:5/7; padding:4px; border:none;
+    border-radius:14px; background:#8d97a6;          /* 기본(일반) 테두리 = 회색 */
+    box-shadow:0 5px 14px rgba(0,0,0,0.4);
+    text-align:center; transition:transform 0.12s;
+    --type:141,151,166;
+  }
+  #collection-screen .collection-card.rarity-rare{
+    background:#5cc8ff; --glow:rgba(92,200,255,0.85); animation:ccGlow 2.2s ease-in-out infinite;
+  }
+  #collection-screen .collection-card.rarity-legendary{
+    background:#f7cf4a; --glow:rgba(247,207,74,0.85); animation:ccGlow 2.2s ease-in-out infinite;
+  }
+  @keyframes ccGlow{
+    0%,100%{ box-shadow:0 5px 14px rgba(0,0,0,0.4), 0 0 8px var(--glow); }
+    50%{ box-shadow:0 5px 14px rgba(0,0,0,0.4), 0 0 20px var(--glow); }
+  }
+  /* 미보유(락): 등급 숨기고 중립 회색 */
+  #collection-screen .collection-card.locked{
+    background:#5a606e !important; animation:none !important;
+    box-shadow:0 5px 14px rgba(0,0,0,0.4) !important;
+  }
+
+  #collection-screen .collection-card .cc-inner{
+    position:relative; width:100%; height:100%; border-radius:10px; overflow:hidden;
+    background:
+      radial-gradient(ellipse at 50% 42%, rgba(var(--type),0.12) 20%, rgba(var(--type),0.55) 100%),
+      linear-gradient(180deg,#fbfaf7,#efece5);
+  }
+  #collection-screen .collection-card.locked .cc-inner{
+    background:linear-gradient(180deg,#3a3f4a,#23262e);
+  }
+
+  /* 좌상단 대각 타입 코너 */
+  #collection-screen .cc-corner{
+    position:absolute; top:0; left:0; width:44px; height:44px; z-index:3;
+    background:#6b7384; clip-path:polygon(0 0,100% 0,0 100%);
+  }
+  #collection-screen .rarity-rare .cc-corner{ background:#2f9fdc; }
+  #collection-screen .rarity-legendary .cc-corner{ background:#d9a521; }
+  #collection-screen .cc-corner span{
+    position:absolute; top:4px; left:5px; font-family:'Jua',sans-serif;
+    font-size:11px; color:#1a1f2b; font-weight:700;
+  }
+
+  /* 몬스터 이미지 */
+  #collection-screen .cc-art{
+    position:absolute; top:0; left:0; right:0; bottom:22px;
+    display:flex; align-items:center; justify-content:center; padding-top:8px;
+  }
+  #collection-screen .collection-card .cc-art img{
+    width:82%; height:82%; object-fit:contain; aspect-ratio:auto;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,0.25));
+  }
+  #collection-screen .collection-card.locked .cc-art img{
+    filter:brightness(0) opacity(0.45);
+  }
+
+  /* 이름 (하단 오버레이) */
+  #collection-screen .cc-name{
+    position:absolute; bottom:0; left:0; right:0; text-align:center;
+    font-family:'Black Han Sans',sans-serif; font-size:13px; color:#1a1f2b;
+    padding:5px 3px 6px; letter-spacing:0.3px;
+    background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,0.9) 42%);
+  }
+  #collection-screen .collection-card.locked .cc-name{
+    color:#cfd3da;
+    background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.5) 42%);
+  }
+  #collection-screen .collection-candy{ z-index:4; }
 </style>
 </head>
 <body>
@@ -6301,6 +6373,9 @@ function sortByRarity(ids) {
   });
 }
 
+// 카드 타입 색조 RGB (도감/교체 카드 공용)
+const TYPE_RGB = { fire:'255,90,60', water:'37,99,235', grass:'78,194,78', electric:'245,197,24', dark:'139,92,246' };
+
 function renderCollection() {
   $("collection-count").textContent = `${state.ownedMons.length} / ${ALL_MON_IDS.length}`;
   // 진행 바
@@ -6329,12 +6404,16 @@ function renderCollection() {
     const owned = state.ownedMons.includes(id);
     const candyCount = state.candies[id] || 0;
     const card = document.createElement("div");
-    card.className = `collection-card rarity-${mon.rarity || 'common'}${owned ? '' : ' locked'}`;
+    const rgb = TYPE_RGB[mon.type] || '141,151,166';
+    card.className = `collection-card rarity-${mon.rarity || 'common'} type-${mon.type}${owned ? '' : ' locked'}`;
+    card.style.setProperty('--type', rgb);
     card.innerHTML = `
-      ${owned && candyCount > 0 ? `<div class="collection-candy">🍬 ${candyCount}</div>` : ''}
-      <img src="${IMAGES[id]}" alt="${owned ? mon.name : '???'}">
-      <div class="collection-card-name">${owned ? mon.name : '???'}</div>
-      ${owned ? `<div class="collection-card-type type-${mon.type}">${TYPES[mon.type].name}</div>` : ''}
+      <div class="cc-inner">
+        ${owned ? `<div class="cc-corner"><span>${TYPES[mon.type].name}</span></div>` : ''}
+        ${owned && candyCount > 0 ? `<div class="collection-candy">🍬 ${candyCount}</div>` : ''}
+        <div class="cc-art"><img src="${IMAGES[id]}" alt="${owned ? mon.name : '???'}"></div>
+        <div class="cc-name">${owned ? mon.name : '???'}</div>
+      </div>
     `;
     if (owned) {
       card.onclick = () => openMonDetail(id);
