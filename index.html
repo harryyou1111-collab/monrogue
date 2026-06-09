@@ -2441,6 +2441,14 @@
   .swap-tray .swap-card.disabled{ opacity:0.55; }
   .swap-tray .swap-card:not(.disabled){ cursor:pointer; }
   .swap-tray .swap-card:not(.disabled):active{ transform:scale(0.95); }
+
+  /* 도감 상세 레벨 섹션 */
+  .level-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; font-family:'Jua',sans-serif; }
+  .level-now{ font-size:16px; color:#ffd34e; }
+  .level-stats{ font-size:12px; color:#9aa6ba; }
+  .levelup-btn{ width:100%; padding:11px; border:none; border-radius:11px; font-family:'Jua',sans-serif; font-size:14px; cursor:pointer;
+    background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#3a2207; }
+  .levelup-btn.disabled, .levelup-btn:disabled{ background:#3a3f4a; color:#8a96ad; cursor:default; }
 </style>
 </head>
 <body>
@@ -3455,6 +3463,7 @@ let state = {
   ownedMons: [],     // 영구 보유 몬스터 ID 배열
   metaGems: 0,       // 영구 잼 (뽑기에 사용)
   candies: {},       // 진화용 사탕 { monId: count } (중복 뽑기 시 누적)
+  monLevels: {},     // 몬스터별 영구 레벨 { monId: level }
   // ===== 런 단위 (게임 시작 시 초기화) =====
   party: [],
   activeIdx: 0,
@@ -3484,6 +3493,7 @@ function loadProgress() {
       state.ownedMons = [...STARTER_MON_IDS];
       state.metaGems = 0;
       state.candies = {};
+      state.monLevels = {};
       saveProgress();
       return;
     }
@@ -3493,11 +3503,13 @@ function loadProgress() {
       : [...STARTER_MON_IDS];
     state.metaGems = (typeof data.metaGems === "number") ? data.metaGems : 0;
     state.candies = (data.candies && typeof data.candies === "object") ? data.candies : {};
+    state.monLevels = (data.monLevels && typeof data.monLevels === "object") ? data.monLevels : {};
   } catch(e) {
     console.error("진행도 로드 실패:", e);
     state.ownedMons = [...STARTER_MON_IDS];
     state.metaGems = 0;
     state.candies = {};
+    state.monLevels = {};
   }
 }
 
@@ -3507,6 +3519,7 @@ function saveProgress() {
       ownedMons: state.ownedMons,
       metaGems: state.metaGems,
       candies: state.candies,
+      monLevels: state.monLevels,
       savedAt: Date.now()
     }));
   } catch(e) {
@@ -3526,6 +3539,22 @@ function showScreen(id) {
 function getActive() { return state.party[state.activeIdx]; }
 
 // 몬스터 인스턴스 생성 (레벨 기반 스탯)
+// ===== 레벨업 시스템 =====
+const MAX_LEVEL = 15;
+function levelUpCost(level) { return Math.ceil(level / 3); }   // 1~3렙=1, 4~6=2, 7~9=3, 10~12=4, 13~15=5 (사탕)
+function getMonLevel(id) { return (state.monLevels && state.monLevels[id]) || 1; }
+function tryLevelUp(monId) {
+  const lv = getMonLevel(monId);
+  if (lv >= MAX_LEVEL) return;
+  const cost = levelUpCost(lv);
+  if ((state.candies[monId] || 0) < cost) return;
+  state.candies[monId] -= cost;
+  if (!state.monLevels) state.monLevels = {};
+  state.monLevels[monId] = lv + 1;
+  saveProgress();
+  openMonDetail(monId);   // 상세 새로고침
+}
+
 function makeInstance(monId, level) {
   const base = MONSTERS[monId];
   const factor = 1 + (level - 1) * 0.05;
@@ -4116,7 +4145,7 @@ function startNewRun(monIds) {
   $("battle-flash").classList.remove("flash-hit");
   $("fx-layer").innerHTML = "";
 
-  state.party = ids.map(id => makeInstance(id, 1));   // 선택한 3마리로 파티 구성
+  state.party = ids.map(id => makeInstance(id, getMonLevel(id)));   // 저장된 영구 레벨로 시작
   state.activeIdx = 0;
   state.stage = state.stage || 1;
   state.wave = state.stage;     // 보상/스케일 공식 호환용 (스테이지 번호로 취급)
@@ -6881,10 +6910,31 @@ function setupDexFilters() {
 function openMonDetail(monId) {
   const mon = MONSTERS[monId];
   if (!mon || !state.ownedMons.includes(monId)) return;
+  closeMonDetail();   // 기존 상세 있으면 제거 (레벨업 새로고침 대비)
   const rarity = mon.rarity || 'common';
   const candyCount = state.candies[monId] || 0;
   const rarityLabel = rarity === 'legendary' ? '★ 전설' : rarity === 'rare' ? '◆ 레어' : '일반';
   const statMax = 120;  // 막대 그래프 기준 최대값
+
+  // 레벨 데이터
+  const lv = getMonLevel(monId);
+  const inst = makeInstance(monId, lv);
+  const lvCost = levelUpCost(lv);
+  const isMaxLv = lv >= MAX_LEVEL;
+  const canAfford = candyCount >= lvCost;
+  const lvBtn = isMaxLv
+    ? `<button class="levelup-btn" disabled>최대 레벨 도달</button>`
+    : `<button class="levelup-btn ${canAfford ? '' : 'disabled'}" ${canAfford ? `onclick="tryLevelUp('${monId}')"` : 'disabled'}>🍬 ${lvCost} 사탕으로 레벨업</button>`;
+  const levelHtml = `
+    <div class="detail-section">
+      <div class="detail-section-title">⬆️ 레벨</div>
+      <div class="level-row">
+        <span class="level-now">Lv ${lv}${isMaxLv ? ' (MAX)' : ` / ${MAX_LEVEL}`}</span>
+        <span class="level-stats">HP ${inst.maxHp} · 공격 ${inst.atk}</span>
+      </div>
+      ${lvBtn}
+    </div>
+  `;
 
   // 스킬 HTML
   const movesHtml = mon.moves.map(mvId => {
@@ -6947,6 +6997,8 @@ function openMonDetail(monId) {
           ${renderStatRow('속도', 'spd', mon.stats.spd, statMax)}
           <div style="text-align:right; font-family:'Jua',sans-serif; font-size:12px; color:#888; margin-top:6px;">합계 ${mon.stats.hp + mon.stats.atk + mon.stats.def + mon.stats.spd}</div>
         </div>
+
+        ${levelHtml}
 
         <div class="detail-section">
           <div class="detail-section-title">⚔ 스킬</div>
@@ -7325,6 +7377,6 @@ renderStartScreen();
   </div>
 </div>
 
-  <div id="ver-tag">v51 ✅</div>
+  <div id="ver-tag">v53 ✅</div>
 </body>
 </html>
